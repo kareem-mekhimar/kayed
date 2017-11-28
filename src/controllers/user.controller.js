@@ -3,7 +3,7 @@ import User from "../models/user.model";
 import ApiError from "../helpers/ApiError";
 import jwt from "jsonwebtoken";
 import config from "../config";
-import { writeBase64AndReturnUrl } from "../utils" ;
+import { writeBase64AndReturnUrl } from "../utils";
 
 const { jwtSecret } = config;
 
@@ -37,29 +37,28 @@ const validateSignUpBody = req => {
 }
 
 
-
 export default {
 
     async signUp(req, res, next) {
 
         let result = await validateSignUpBody(req);
 
-        if (! result.isEmpty())
+        if (!result.isEmpty())
             next(new ApiError(422, result.mapped()));
         else {
-            
-            let img = req.body.img ;
-            delete req.body.img ;
+
+            let img = req.body.img;
+            delete req.body.img;
 
             User.create(req.body).then(user => {
-   
-                let id = user.id ;
-                if(img){
-                    user.img = writeBase64AndReturnUrl(img,id,req) ;
+
+                let id = user.id;
+                if (img) {
+                    user.img = writeBase64AndReturnUrl(img, id, req);
                     user.save();
                 }
 
-                
+
                 res.status(201).send({ user, token: generateToken(id) });
             });
         }
@@ -67,7 +66,9 @@ export default {
     },
 
 
-    signIn(req, res, next) {
-        res.send({ token: generateToken(req.user._id) });
+    async signIn(req, res, next) {
+
+        let user = req.user;
+        res.status(200).send({ user, token: generateToken(user.id) });
     }
 }

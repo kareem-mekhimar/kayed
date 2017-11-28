@@ -7,9 +7,39 @@ import passportService from "../services/passport";
 const requireSignIn = passport.authenticate('local', { session: false });
 const router = express.Router();
 
+/**
+ * @swagger
+ * /signin:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     description: Sign in to the api
+         *     parameters:
+         *       - name: body
+         *         description: Credentials
+         *         in: body
+         *         required: true
+         *         schema:
+         *           $ref: '#/definitions/LoginBody'
+         *     responses:
+         *       200:
+         *         description: Returns saved user + your token
+         *       400:
+         *         description: You have made an error maybe you didn't provide a required attribute
+ */
 
+/**
+* @swagger
+* definition:
+*   LoginBody:
+*     properties:
+*       email:
+*         type: string
+*       password:
+*         type: string
+*/
 
-//router.post("/signin", requireSignIn, AuthController.signIn);
+router.post("/signin", requireSignIn, UserController.signIn);
 
 /**
  * @swagger
