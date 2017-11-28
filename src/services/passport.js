@@ -12,7 +12,7 @@ const { jwtSecret } = config ;
 
 
 passport.use(new JwtStrategy({
-    jwtFromRequest: ExtractJwt.fromHeader("Authorization"),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: jwtSecret
 }, (payload, done) => {
     // find user in token
