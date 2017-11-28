@@ -26,10 +26,10 @@ const router = express.Router();
          *         schema:
          *           $ref: '#/definitions/User'
          *     responses:
-         *       200:
-         *         description: Return saved user + your token
-         *         schema:
-         *           $ref: '#/definitions/User'
+         *       201:
+         *         description: Returns saved user + your token
+         *       400:
+         *         description: You have made an error maybe you didn't provide a required attribute
  */
 
 /**
@@ -47,11 +47,12 @@ const router = express.Router();
 *         type: string
 *       phone:
 *         type: string
+*       country:
+*         type: string
 *       img:
-*         type: array
-*          items:
-*             type: string
+*         type: string
 */
+
 
 router.route('/signup').post(UserController.signUp);
 
