@@ -63,7 +63,7 @@ app.use((err, req, res, next) => {
         success: false,
         error: err.message
     });
-    console.log(err);
+     console.log(err);
 });
 
 
