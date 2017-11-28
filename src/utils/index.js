@@ -8,8 +8,6 @@ export function writeBase64AndReturnUrl(base64String,name,req) {
     let mimeType = base64MimeType(base64String) ;
     let extension = mimeType.split("/")[1] ;
 
-    console.log(mimeType);
-    console.log(extension) ;
     
     let base64Data = base64String.split(';base64,').pop();
 
