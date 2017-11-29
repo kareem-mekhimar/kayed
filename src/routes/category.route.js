@@ -29,7 +29,7 @@ const router = express.Router();
  *   get:
  *     tags:
  *       - Categories
- *     description: Get All Categories
+ *     summary: Get all categories
  *     produces:
  *       - application/json
  *     parameters:
@@ -40,6 +40,21 @@ const router = express.Router();
  *     responses:
  *       200:
  *         description: Get An Array of Categories
+ *         example: 
+ *               [
+ *                   {
+ *                       "name": "cars",
+ *                       "id": "5a1d59d25be03c12907a6771"
+ *                   },
+ *                   {
+ *                       "name": "mobiles",
+ *                       "id": "5a1db3a29246d21c0c4056cf"
+ *                   },
+ *                   {
+ *                       "name": "planes",
+ *                       "id": "5a1db488834c400708f70689"
+ *                   }
+ *               ]
  *       404:
  *         description: No Categories Found
 */
@@ -50,7 +65,7 @@ const router = express.Router();
  *   post:
  *     tags:
  *       - Categories
- *     description: create a category
+ *     summary: Add a new category
  *     produces:
  *       - application/json
  *     parameters:
@@ -63,12 +78,17 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/CreateCategory'   
+ *           $ref: '#/definitions/Category'   
  *     responses:
  *       201:
  *         description: Return Created Category
+ *         example:           
+ *                {
+ *                 "name": "test category2",
+ *                 "id": "5a1dbdddc1e5142cb8cb78f6"
+ *                }
  *       400:
- *         description: Bad Request , ORM has failed to save object
+ *         description: Bad Request , Check your inputs
 */
 router.route('/')
     .get(CategoryController.findAll)
@@ -80,7 +100,7 @@ router.route('/')
  *   put:
  *     tags:
  *       - Categories
- *     description: update a category
+ *     summary: Update an existing category
  *     produces:
  *       - application/json
  *     parameters:
@@ -93,13 +113,17 @@ router.route('/')
  *         required: true
  *         type: string
  *       - name: body
- *         description: Category Object
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/UpdateCategory'   
+ *           $ref: "#/definitions/UpdateCategory"
  *     responses:
  *       200:
+ *         example:
+ *               {
+ *                   "name": "planes",
+ *                   "id": "5a1db488834c400708f70689"
+ *               }
  *         description: Return Updated Category
  *       404:
  *         description: Category Not Found
@@ -111,7 +135,7 @@ router.route('/')
  *   delete:
  *     tags:
  *       - Categories
- *     description: delete a category
+ *     summary: Delete a category
  *     produces:
  *       - application/json
  *     parameters:
