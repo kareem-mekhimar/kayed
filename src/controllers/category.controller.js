@@ -37,7 +37,7 @@ export default {
             res.status(201).send(createdCategory);
         }
         catch (err) {
-            next(new ApiError(400, 'Error Happended..'));
+            next(new ApiError(400, 'Invalid Inputs.'));
             console.log(err);
         }
     },

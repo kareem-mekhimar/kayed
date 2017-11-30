@@ -78,7 +78,7 @@ export default {
             res.send(auction)
         }
     },
-
+ 
     async create(req, res, next) {
 
         let result = await validateAuctionBody(req);
