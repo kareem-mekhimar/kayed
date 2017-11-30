@@ -64,8 +64,8 @@ export default {
             }
             res.send(response);
         }catch(err){
-           // next(new ApiError(400, 'Bad Request , Check your inputs'));
-             next(err);
+           next(new ApiError.BadRequest());
+            // next(err);
         }
         
     },
@@ -97,7 +97,7 @@ export default {
             
         }
         catch (err) {
-            next(new ApiError(400, 'Bad Request , Check your inputs'));
+            next(new ApiError.BadRequest());
             //next(err);
         }
     },
@@ -111,8 +111,8 @@ export default {
             else 
                 next(new ApiError.NotFound('Barter'))
         } catch(err) {
-            // next(new ApiError.BadRequest());
-            next(err);
+            next(new ApiError.BadRequest());
+            //next(err);
         }
     },
 
@@ -151,10 +151,11 @@ export default {
             const deletedBarter = await Barter.findByIdAndRemove(id);
             if (deletedBarter)
                 res.status(204).send();
-            next(new ApiError(404, 'Barter Not Found !'));
+            next(new ApiError.NotFound('Barter'));
         }
         catch (err) {
-            next(err);
+            next(new ApiError.BadRequest());
+            //next(err);
         }
     }
 }
