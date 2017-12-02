@@ -89,8 +89,10 @@ export default {
             let imgs = req.body.imgs ;
             delete req.body.imgs ;
 
+            let auction = await Auction.create(req.body) ;
+
             for(let img in imgs){
-                
+                let url = writeBase64AndReturnUrl("auctions/auction") ;
             }
         }
 
