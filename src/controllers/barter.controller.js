@@ -12,20 +12,16 @@ const validateBarter = req => {
     req.checkBody("neededProduct").notEmpty().withMessage("neededProduct is required");
     req.checkBody("relatedUser").notEmpty().withMessage("relatedUser is required").custom(async value => {
         const user = await User.findById(value);
-        if(!user) throw new Error('User doesnt exist') 
+        if(!user) throw new Error("User doesn't exist") 
     }).withMessage('User doesnt exist');
     req.checkBody("relatedCategory").notEmpty().withMessage("relatedCategory is required").custom(async value => {
         const category = await Category.findById(value);
-        if (!category) throw new Error('Category doesnt exist')
-    }).withMessage('Category doesnt exist');
+        if (!category) throw new Error("Category doesn't exist")
+    }).withMessage("Category doesn't exist");
 
     req.checkBody('type').optional().isIn(['TEMP', 'PERM']).withMessage("type of barter should be 'TEMP' OR 'PERM'")
     req.checkBody('finished').optional().isIn(['true','false']).withMessage("finished should be true or false");
-    // req.checkBody('imgs').optional()
-    // .custom(value => {
-    //     if(!Array.isArray(value))
-    //         throw new Error('imgs should be array')
-    // })
+    req.checkBody('imgs').optional().isArray().withMessage("Imgs should be an array of strings 'images 64base'");
     return req.getValidationResult();
 }
 
@@ -64,10 +60,8 @@ export default {
             }
             res.send(response);
         }catch(err){
-           next(new ApiError.BadRequest());
-            // next(err);
-        }
-        
+            next(err);
+        }        
     },
 
 
@@ -75,7 +69,7 @@ export default {
         
         const validationErrors = await validateBarter(req);
         if (!validationErrors.isEmpty())
-            next(new ApiError(422, validationErrors.mapped()));
+            return next(new ApiError(422, validationErrors.mapped()));
 
         try {
             let imgs = req.body.imgs;
@@ -89,16 +83,14 @@ export default {
                     createdBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], createdBarter.id + i, req));
                 }
             }
-            
-            const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
             createdBarter.save();
+                        
+            const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
             
             res.status(201).send(barter);
             
-        }
-        catch (err) {
-            next(new ApiError.BadRequest());
-            //next(err);
+        } catch (err) {
+            next(err);
         }
     },
 
@@ -106,13 +98,11 @@ export default {
         const { id } = req.params;
         try{
             const barter = await Barter.findById(id).populate('relatedCategory relatedUser');
-            if (barter)
-                res.send(barter);
-            else 
-                next(new ApiError.NotFound('Barter'))
+            if (!barter)
+               return next(new ApiError.NotFound('Barter'))        
+            res.send(barter);
         } catch(err) {
-            next(new ApiError.BadRequest());
-            //next(err);
+            next(err);
         }
     },
 
@@ -121,7 +111,7 @@ export default {
 
         const validationErrors = await validateBarter(req);
         if (!validationErrors.isEmpty())
-            next(new ApiError(422, validationErrors.mapped()));
+            return next(new ApiError(422, validationErrors.mapped()));
 
         try {
             let imgs = req.body.imgs;
@@ -129,7 +119,7 @@ export default {
             
             const updatedBarter = await Barter.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser');
             if (!updatedBarter)
-                next(new ApiError.NotFound('Barter'));
+                return next(new ApiError.NotFound('Barter'));
 
             // handle barter imgs
             if(imgs) {
@@ -140,7 +130,7 @@ export default {
             res.status(200).send(updatedBarter);
         }
         catch (err) {
-            next(new ApiError.BadRequest());
+            next(err)
         }
     },
 
@@ -149,13 +139,12 @@ export default {
         const { id } = req.params;
         try {
             const deletedBarter = await Barter.findByIdAndRemove(id);
-            if (deletedBarter)
-                res.status(204).send();
-            next(new ApiError.NotFound('Barter'));
+            if (!deletedBarter)
+                return next(new ApiError.NotFound('Barter'));
+            res.status(204).send();
         }
         catch (err) {
-            next(new ApiError.BadRequest());
-            //next(err);
+            next(err);
         }
     }
 }

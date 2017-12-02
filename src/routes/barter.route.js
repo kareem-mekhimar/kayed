@@ -1,36 +1,51 @@
 import express from "express";
 import BarterController from "../controllers/barter.controller";
-
 const router = express.Router();
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   Barter:
+*     type: "object"
+*     required:
+*     - "title"
+*     - "description"
+*     - "neededProduct"
+*     - "relatedUser"
+*     - "relatedCategory"
 *     properties:
+*       id:
+*         type: string
+*         readOnly: true
 *       title:
 *         type: string
-*         required: true
 *       description:
 *         type: string
-*         required: true
 *       neededProduct:
 *         type: string
-*         required: true
 *       relatedUser:
 *         type: string
-*         required: true
 *       relatedCategory:
 *         type: string
-*         required: true
 *       type:
 *         type: string
+*         enum:
+*         - "TEMP"
+*         - "PERM"
 *       imgs:
 *         type: array
+*         items:
+*           type: string
+*           format: "base64"
 *       finished:
-*         type: string
+*         type: boolean
+*         default: false
 *       barterOffer:
 *         type: string
+*       creationDate:
+*         type: string
+*         format: date-time
+*         readOnly: true
 */
 
 /**
@@ -43,10 +58,6 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: "page"
  *         in: "query"
  *         type: number
@@ -121,10 +132,6 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: body
  *         description: Barter Object
  *         in: body
@@ -161,14 +168,10 @@ router.route('/')
  *   get:
  *     tags:
  *       - Barters
- *     summary: get a barter
+ *     summary: Get a sepcific barter
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: id
  *         in: path
  *         required: true
@@ -209,14 +212,10 @@ router.route('/')
  *   put:
  *     tags:
  *       - Barters
- *     summary: update an existing barter
+ *     summary: Update an existing barter
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: id
  *         in: path
  *         required: true
@@ -249,10 +248,6 @@ router.route('/')
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: id
  *         in: path
  *         required: true

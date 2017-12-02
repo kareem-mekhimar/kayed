@@ -13,9 +13,9 @@ class ApiError extends Error{
         this.message = `${name} Not Found`
     }
 
-    static BadRequest() {
+    static BadRequest(message = 'Bad Request, Check your inputs') {
         this.status = 400;
-        this.message = 'Bad Request, Check your inputs';
+        this.message = message;
     }
 }
 

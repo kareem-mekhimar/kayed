@@ -17,7 +17,7 @@ export default {
         try {
             const allCategories = await Category.find({});
             if (!allCategories)
-                next(new ApiError('404', 'No Categories are found'));
+                return next(new ApiError('404', 'No Categories are found'));
             res.status(200).send(allCategories);
         }
         catch (err) {
@@ -29,7 +29,7 @@ export default {
 
         const validationErrors = await validateCategory(req);
         if (!validationErrors.isEmpty())
-            next(new ApiError(422, validationErrors.mapped()));
+            return next(new ApiError(422, validationErrors.mapped()));
 
         try {
             const createdCategory = await Category.create(req.body);
@@ -37,8 +37,7 @@ export default {
             res.status(201).send(createdCategory);
         }
         catch (err) {
-            next(new ApiError(400, 'Invalid Inputs.'));
-            console.log(err);
+            next(err);
         }
     },
 
@@ -47,13 +46,12 @@ export default {
 
         const validationErrors = await validateCategory(req);
         if (!validationErrors.isEmpty())
-            next(new ApiError(422, validationErrors.mapped()));
+            return next(new ApiError(422, validationErrors.mapped()));
 
         try {
             const updatedCategory = await Category.findByIdAndUpdate(id, req.body, { new: true });
             if (!updatedCategory)
-                next(new ApiError(404, 'Category Not Found !'));
-
+                return next(new ApiError.NotFound('Category'));
             res.status(200).send(updatedCategory);
         }
         catch (err) {
@@ -65,9 +63,10 @@ export default {
         const { id } = req.params;
         try {
             const deletedCategory = await Category.findByIdAndRemove(id);
-            if (deletedCategory)
-                res.status(204).send();
-            next(new ApiError(404, 'Category Not Found !'));
+            if (!deletedCategory)
+                return next(new ApiError.NotFound('Category'));
+                
+            res.status(204).send();
         }
         catch (err) {
             next(err);

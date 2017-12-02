@@ -11,6 +11,20 @@ let swaggerDefinition = {
 
     host: 'localhost:3000',
     basePath: '/api/v1',
+    securityDefinitions: {
+        JWT: {
+            type: "apiKey",
+            description: "Ex: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....",
+            name: "Authorization",
+            in: "header"
+        }
+    },
+    security: [
+        {
+            "JWT": []
+        }
+    ]
+    
 };
 
 
