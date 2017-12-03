@@ -25,11 +25,13 @@ const AuctionSchema = new Schema({
     },
     relatedUser:{
         type: Schema.Types.ObjectId,
-        ref:'user'
+        ref:'user',
+        required:true
     },
     relatedCategory:{
         type: Schema.Types.ObjectId,
-        ref:'category'
+        ref:'category',
+        required:true
     },
     imgs:{
         type:[String]

@@ -16,8 +16,6 @@ export default {
     async findAll(req, res, next) {
         try {
             const allCategories = await Category.find({});
-            if (!allCategories)
-                return next(new ApiError('404', 'No Categories are found'));
             res.status(200).send(allCategories);
         }
         catch (err) {
@@ -33,7 +31,6 @@ export default {
 
         try {
             const createdCategory = await Category.create(req.body);
-            createdCategory.save();
             res.status(201).send(createdCategory);
         }
         catch (err) {

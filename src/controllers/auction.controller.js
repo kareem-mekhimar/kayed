@@ -1,6 +1,8 @@
 import Auction from "../models/auction.model";
+import AuctionOffer from "../models/auction-offer.model"
 import User from "../models/user.model";
 import Category from "../models/category.model";
+import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 
 import { writeBase64AndReturnUrl } from "../utils";
@@ -10,7 +12,7 @@ const validateAuctionBody = req => {
 
     req.checkBody("relatedUser").notEmpty().withMessage("relatedUser Required")
         .custom(value => {
-            return User.findById(id).then(user => {
+            return User.findById(value).then(user => {
                 if (!user)
                     throw new Error("Related user Is Not Found");
             })
@@ -18,7 +20,7 @@ const validateAuctionBody = req => {
 
     req.checkBody("relatedCategory").notEmpty().withMessage("relatedCategory Required")
         .custom(value => {
-            return Category.findById(id).then(category => {
+            return Category.findById(value).then(category => {
                 if (!category)
                     throw new Error("Related category Is Not Found");
             })
@@ -28,7 +30,7 @@ const validateAuctionBody = req => {
     req.checkBody("description").notEmpty().withMessage("Description required");
     req.checkBody("endDate").notEmpty().withMessage("endDate required");
     req.checkBody("startPrice").notEmpty().withMessage("startPrice required").matches(/\d/).withMessage("Invalid Number");
-    req.checkBody("imgs").notEmpty().withMessage("Provide at least one image") ;
+    req.checkBody("imgs").notEmpty().withMessage("Provide at least one image");
 
     return req.getValidationResult();
 }
@@ -39,17 +41,52 @@ export default {
     async findAll(req, res, next) {
         let page = req.query.page;
         let limit = req.query.limit;
+        let category = req.query.category;
+        let startPrice = req.query.startPrice;
+        let endPrice = req.query.endPrice;
+        let finished = req.query.finished;
 
-        let query = Auction.find({}).populate('relatedUser', 'relatedCategory');
+        if (startPrice && endPrice) {
+            if (endPrice < startPrice)
+                return next(new ApiError(400, "startPrice Can't be more than endPrice"));
+        }
+
+
+        let findQuery = Auction.find({});
+        let countQuery = Auction.count() ;
+
+        if (category){
+            findQuery.where("relatedCategory").equals(category);
+            countQuery.where("relatedCategory").equals(category);
+        }
+            
+        if (startPrice){
+            findQuery.where("highestPrice").gte(startPrice);
+            countQuery.where("highestPrice").gte(startPrice);
+        }
+            
+
+        if (endPrice){
+            findQuery.where("highestPrice").lte(endPrice);
+            countQuery.where("highestPrice").gte(endPrice);
+        }
+            
+
+        if (typeof finished !== 'undefined') {
+            findQuery.where("finished").equals(finished);
+            countQuery.where("finished").equals(finished)
+        }
+
+        findQuery.populate('relatedUser relatedCategory');
 
         page = page ? parseInt(page) : 1;
         limit = limit ? limit : 20;
 
-        let results = await query.sort({ _id: -1 })
+        let results = await findQuery.sort({ creationDate: -1 })
             .limit(parseInt(limit))
             .skip((page - 1) * limit);
 
-        let count = await Auction.count();
+        let count = await countQuery
 
         let pageCount = Math.ceil(count / limit);
         let response = new ApiResponse(results, page, pageCount, limit, count);
@@ -70,15 +107,19 @@ export default {
     async findById(req, res, next) {
 
         let id = req.params.id;
-        let auction = await Auction.findById(id).populate('relatedUser', 'relatedCategory');
+        let auction = await Auction.findById(id).populate('relatedUser relatedCategory');
 
         if (!auction) {
             next(new ApiError(404, "Auction with this id not found"));
         } else {
+            let topAuctionOffers = await AuctionOffer.find({ relatedAuction: id }).sort({ price: -1 }).limit(3)
+
+            console.log(topAuctionOffers);
+
             res.send(auction)
         }
     },
- 
+
     async create(req, res, next) {
 
         let result = await validateAuctionBody(req);
@@ -86,13 +127,26 @@ export default {
         if (!result.isEmpty())
             next(new ApiError(422, result.mapped()));
         else {
-            let imgs = req.body.imgs ;
-            delete req.body.imgs ;
 
-            let auction = await Auction.create(req.body) ;
+            try {
+                let imgs = req.body.imgs;
+                delete req.body.imgs;
 
-            for(let img in imgs){
-                let url = writeBase64AndReturnUrl("auctions/auction") ;
+                req.body.highestPrice = req.body.startPrice;
+
+                let auction = await Auction.create(req.body);
+
+                for (let i = 0; i < imgs.length; i++) {
+                    let url = writeBase64AndReturnUrl(imgs[i], "auctions/" + auction.id + new Date().getTime(),req);
+                    auction.imgs.push(url);
+                }
+
+                await auction.save();
+
+                res.status(201).send(auction);
+
+            } catch (error) {
+                next(error)
             }
         }
 
@@ -100,6 +154,16 @@ export default {
 
     async delete(req, res, next) {
         let id = req.params.id;
+
+        let auction = await Auction.findById(id);
+
+        if (!auction)
+            next(new ApiError(404, "Auction with this id not found"));
+        else {
+            auction.remove();
+            res.status(204).end();
+        }
+
     },
 
 }
