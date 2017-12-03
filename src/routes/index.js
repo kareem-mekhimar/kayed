@@ -5,7 +5,6 @@ import authRoute from "./auth.route";
 import userRoute from "./user.route" ;
 import categoryRoute from "./category.route" ;
 import barterRoute from "./barter.route" ;
-import barterOfferRoute from "./barter-offer.route" ;
 import auctionRoute from "./auction.route" ;
 
 const requireAuth = passport.authenticate('jwt',{ session : false }) ;
