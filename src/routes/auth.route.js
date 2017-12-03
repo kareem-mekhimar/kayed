@@ -30,8 +30,11 @@ const router = express.Router();
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   LoginBody:
+*     required:
+*     - "email"
+*     - "password"
 *     properties:
 *       email:
 *         type: string
@@ -48,24 +51,31 @@ router.post("/signin", requireSignIn, UserController.signIn);
  *     tags:
  *       - Auth
  *     description: Sign up to the api
-         *     parameters:
-         *       - name: body
-         *         description: User object
-         *         in: body
-         *         required: true
-         *         schema:
-         *           $ref: '#/definitions/User'
-         *     responses:
-         *       201:
-         *         description: Returns saved user + your token
-         *       400:
-         *         description: You have made an error maybe you didn't provide a required attribute
+ *     parameters:
+ *       - name: body
+ *         description: User object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/User'
+ *     responses:
+ *       201:
+ *         description: Returns saved user + your token
+ *       400:
+ *         description: You have made an error maybe you didn't provide a required attribute
  */
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   User:
+*     required:
+*     - "fullName"
+*     - "email"
+*     - "password"
+*     - "address"
+*     - "phone"
+*     - "country"
 *     properties:
 *       fullName:
 *         type: string

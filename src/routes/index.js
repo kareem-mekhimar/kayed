@@ -13,7 +13,8 @@ const router = express.Router();
 
 router.use("/", authRoute) ;
 router.use("/categories", requireAuth, categoryRoute) ;
+router.use("/barters", requireAuth, barterRoute);
 router.use("/auctions", requireAuth, auctionRoute) ;
-router.use("/barters", requireAuth, barterRoute) ;
+
 
 export default router ;

@@ -6,19 +6,14 @@ const router = express.Router();
 
 /**
 * @swagger
-* definition:
+* definitions:
 *   Category:
+*     required:
+*     - "name"
 *     properties:
 *       id:
 *         type: string
-*       name:
-*         type: string
-*   CreateCategory:
-*     properties:
-*       name:
-*         type: string
-*   UpdateCategory:
-*     properties:
+*         readOnly: true
 *       name:
 *         type: string
 */
@@ -32,11 +27,7 @@ const router = express.Router();
  *     summary: Get all categories
  *     produces:
  *       - application/json
- *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
+
  *     responses:
  *       200:
  *         description: Get An Array of Categories
@@ -69,10 +60,6 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: body
  *         description: Category Object
  *         in: body
@@ -104,10 +91,6 @@ router.route('/')
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: id
  *         in: path
  *         required: true
@@ -116,7 +99,7 @@ router.route('/')
  *         in: body
  *         required: true
  *         schema:
- *           $ref: "#/definitions/UpdateCategory"
+ *           $ref: "#/definitions/Category"
  *     responses:
  *       200:
  *         example:
@@ -139,10 +122,6 @@ router.route('/')
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: Authorization
- *         in: header
- *         required: true
- *         type: string
  *       - name: id
  *         in: path
  *         required: true
