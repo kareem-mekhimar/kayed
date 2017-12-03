@@ -80,7 +80,7 @@ exports.default = {
 
                                     var id = user.id;
                                     if (img) {
-                                        user.img = (0, _utils.writeBase64AndReturnUrl)(img, id, req);
+                                        user.img = (0, _utils.writeBase64AndReturnUrl)("users/" + img, id, req);
                                         user.save();
                                     }
 
