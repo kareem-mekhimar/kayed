@@ -4,6 +4,7 @@ import Category from "../models/category.model";
 
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
+import mongoose from "mongoose" ;
 import { writeBase64AndReturnUrl } from "../utils";
 
 const validateBarter = req => {
@@ -46,7 +47,7 @@ export default {
                                 .limit(limit)
                                 .skip((page - 1) * limit);
                                 
-            const bartersCount = await Barter.count();
+            const bartersCount = await Barter.count(query);
             
             const pageCount = Math.ceil(bartersCount / limit);
             let response = new ApiResponse(barters, page, pageCount, limit, bartersCount);
@@ -64,7 +65,14 @@ export default {
         }        
     },
 
-    
+    handleBarterImgs(imgs) {
+        let imgsUrls;
+        for (let i = 0; i < imgs.length; i++) {
+            imgsUrls.push(writeBase64AndReturnUrl(imgs[i], "barters/"+ mongoose.Types.ObjectId() + i, req));
+        }
+        return imgsUrls
+    },
+
     async createBarter(req, res, next) {
         
         const validationErrors = await validateBarter(req);
@@ -79,13 +87,11 @@ export default {
             // handle barter imgs
             if (imgs) {
                 for (let i = 0; i < imgs.length; i++) {
-                    createdBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], createdBarter.id + i, req));
+                    createdBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], "barters/"+ createdBarter.id + i, req));
                 }
             }
-            createdBarter.save();
-            
-            console.log('IMGs : ', createdBarter.imgs);
-                        
+            await createdBarter.save();
+                                    
             const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
             
             res.status(201).send(barter);
@@ -125,7 +131,7 @@ export default {
             // handle barter imgs
             if(imgs) {
                 for (let i = 0; i < imgs.length; i++) {
-                    updatedBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], updatedBarter.id + i, req));
+                    updatedBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], "barters/"+  updatedBarter.id + i, req));
                 }
             }
             res.status(200).send(updatedBarter);

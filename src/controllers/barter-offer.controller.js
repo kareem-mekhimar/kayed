@@ -6,10 +6,10 @@ import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 
 const validateBarterOffer = (req, isUpdate = false) => {
-    req.checkBody("relatedBarter").notEmpty().withMessage("relatedBarter is Required").custom(async value => {
-        const barter = await Barter.findById(value);
-        if(!barter) throw new Error()
-    }).withMessage('Enter a valid barter id');
+    // req.checkBody("relatedBarter").notEmpty().withMessage("relatedBarter is Required").custom(async value => {
+    //     const barter = await Barter.findById(value);
+    //     if(!barter) throw new Error()
+    // }).withMessage('Enter a valid barter id');
     
     req.checkBody("relatedUser").notEmpty().withMessage("relatedUser is Required").custom(async value => {
         const user = await User.findById(value);
@@ -32,8 +32,14 @@ export default {
         const validationErrors = await validateBarterOffer(req);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
-
+        const { barterId } = req.params;
+            
         try {
+            const barter = await Barter.findById(barterId);
+            if(!barter) 
+                return  next(new ApiError.NotFound('Barter'));
+            else
+                req.body.relatedBarter = barterId;
             const createdBarterOffer = await BarterOffer.create(req.body);
             createdBarterOffer.save();
             

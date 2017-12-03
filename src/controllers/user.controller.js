@@ -25,9 +25,9 @@ const validateUserBody = req => {
         .custom(value => {
             return User.findOne({ email: value }).then(user => {
                 if (user)
-                    throw new Error("Duplicated");
+                    throw new Error("email already exists");
             })
-        }).withMessage("Duplicated");
+        }).withMessage("email already exists");
 
     req.checkBody("password").notEmpty().withMessage("Password required");
     req.checkBody("phone").notEmpty().withMessage("Phone required");
@@ -92,7 +92,7 @@ export default {
                 updatedUser.save();
             }
 
-           res.status(200).send({ updatedUser, token: generateToken(id) });
+            res.status(200).send({ user: updatedUser, token: generateToken(id) });
            
         } catch (err) {
             next(err)

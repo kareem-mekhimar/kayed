@@ -3,7 +3,6 @@ import UserController from "../controllers/user.controller";
 import passport from "passport";
 import passportService from "../services/passport";
 
-
 const requireSignIn = passport.authenticate('local', { session: false });
 const router = express.Router();
 

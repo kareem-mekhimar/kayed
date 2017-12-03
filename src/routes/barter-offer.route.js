@@ -18,6 +18,7 @@ const router = express.Router();
 *         readOnly: true
 *       relatedBarter:
 *         type: string
+*         readOnly: true
 *       relatedUser:
 *         type: string
 *       description:
@@ -36,7 +37,13 @@ const router = express.Router();
 *         - "ACCEPTED"
 *         - "REJECTED"
 *         - "DONE"
+*         readOnly: true
 *         default: "PENDING"
+*   Status:
+*     properties:
+*       status:
+*         type: string
+*
 */
 
 /**
@@ -193,7 +200,7 @@ router.route('/:id/offers')
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/BarterOffer'   
+ *             $ref: "#/definitions/Status"
  *     responses:
  *       200:
  *         description: Return Updated BarterOffer
@@ -219,17 +226,6 @@ router.route('/:id/offers')
  *         description: BarterOffer Not Found
  *       422:
  *         description: |
- *              - relatedBarter is Required
- *              - Enter a valid barter id
- *              ----------------------------
- *              - relatedUser is Required
- *              - Enter a valid user id
- *              ----------------------------
- *              - description is Required 
- *              - offeredProduct is Required 
- *              ----------------------------
- *              - imgs is Required 
- *              - Imgs Should be an array of imgs's urls
  *              ----------------------------
  *              - status: valid status is required
  *              - status should be one of ['PENDING','ACCEPTED','REJECTED','DONE']
