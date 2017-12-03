@@ -40,8 +40,10 @@ const router = express.Router();
 *       finished:
 *         type: boolean
 *         default: false
+*         readOnly: true
 *       barterOffer:
 *         type: string
+*         readOnly: true
 *       creationDate:
 *         type: string
 *         format: date-time
