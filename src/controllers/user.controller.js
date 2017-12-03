@@ -19,15 +19,15 @@ const generateToken = id => {
 }
 
 
-const validateSignUpBody = req => {
+const validateUserBody = req => {
 
     req.checkBody("email").notEmpty().withMessage("Email Required")
         .custom(value => {
             return User.findOne({ email: value }).then(user => {
                 if (user)
-                    throw new Error("Duplicated");
+                    throw new Error("email already exists");
             })
-        }).withMessage("Duplicated");
+        }).withMessage("email already exists");
 
     req.checkBody("password").notEmpty().withMessage("Password required");
     req.checkBody("phone").notEmpty().withMessage("Phone required");
@@ -41,10 +41,10 @@ export default {
 
     async signUp(req, res, next) {
 
-        let result = await validateSignUpBody(req);
+        const validationErrors = await validateUserBody(req);
 
-        if (!result.isEmpty())
-            next(new ApiError(422, result.mapped()));
+        if (!validationErrors.isEmpty())
+            next(new ApiError(422, validationErrors.mapped()));
         else {
 
             let img = req.body.img;
@@ -67,8 +67,35 @@ export default {
 
 
     async signIn(req, res, next) {
-
         let user = req.user;
         res.status(200).send({ user, token: generateToken(user.id) });
+    },
+
+
+    async updateUser(req, res, next) {
+        const { id } = req.params;
+
+        const validationErrors = await validateUserBody(req);
+        if (!validationErrors.isEmpty())
+            return next(new ApiError(422, validationErrors.mapped()));
+
+        try {
+            let img = req.body.img;
+            delete req.body.img;
+
+            const updatedUser = await User.findByIdAndUpdate(id, req.body, { new: true });
+            if (!updatedUser)
+                return next(new ApiError.NotFound('User'));
+
+            if (img) {
+                updatedUser.img = writeBase64AndReturnUrl(img, id, req);
+                updatedUser.save();
+            }
+
+            res.status(200).send({ user: updatedUser, token: generateToken(id) });
+           
+        } catch (err) {
+            next(err)
+        }
     }
 }

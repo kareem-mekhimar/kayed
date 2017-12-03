@@ -42,12 +42,15 @@ const router = express.Router();
 *       finished:
 *         type: boolean
 *         default: false
+*         readOnly: true
 *       barterOffer:
 *         type: string
+*         readOnly: true
 *       creationDate:
 *         type: string
 *         format: date-time
 *         readOnly: true
+*     
 */
 
 /**
@@ -118,11 +121,7 @@ const router = express.Router();
  *                       "limit": 20,
  *                       "totalCount": 4
  *                   }
- *       400:
- *         description: Bad Request , Check your inputs
- *       404:
- *         description: No Categories Found
-*/
+ */
 
 /**
  * @swagger
@@ -148,16 +147,40 @@ const router = express.Router();
  *                   "title": "Samsung Note 8",
  *                   "description": "This is a description for new mobile phone of samsung",
  *                   "neededProduct": "Iphone x",
- *                   "relatedUser": "5a1db2b8a3c9862828910bef",
- *                   "relatedCategory": "5a1db3a29246d21c0c4056cf",
+ *                   "relatedUser": {
+ *                       "fullName": "magdy",
+ *                       "email": "demo@demo.com",
+ *                       "address": "82Fatma El zhraa",
+ *                       "phone": "01157954393",
+ *                       "country": "egypt",
+ *                       "id": "5a1db2b8a3c9862828910bef"
+ *                   },
+ *                   "relatedCategory": {
+ *                       "name": "mobiles",
+ *                       "id": "5a1db3a29246d21c0c4056cf"
+ *                   },
+ *                   "creationDate": "2017-12-03T12:15:05.679Z",
  *                   "finished": false,
  *                   "imgs": [],
  *                   "type": "TEMP",
- *                   "id": "5a1ef08e8eb4c6421c2f9599"
+ *                   "id": "5a23eac99c10230a8c3e6cc5"
  *               }
- *       400:
- *         description: Bad Request , Check your inputs
-*/
+ *       422:
+ *         description: |
+ *              - titles is Required
+ *              - description is Required
+ *              - neededProduct is Required
+ *              ----------------------------
+ *              - relatedUser is Required 
+ *              - User doesn't exist
+ *              ----------------------------
+ *              - relatedCategory is Required 
+ *              - Category doesn't exist
+ *              ----------------------------
+ *              - Optional type: type of barter should be 'TEMP' OR 'PERM'
+ *              - Optional finished: finished should be true or false
+ *              - Optional imgs : Imgs should be an array of strings 'images 64base
+ */
 
 
 
@@ -205,7 +228,7 @@ router.route('/')
  *               "id": "5a1ff0456cd27932acaad627"
  *               }
  *       404:
- *         description: No Categories Found
+ *         description:  Barter Not Found
 */
 
 /**
@@ -236,9 +259,24 @@ router.route('/')
  *                 "name": "test category2",
  *                 "id": "5a1dbdddc1e5142cb8cb78f6"
  *                }
- *       400:
- *         description: Bad Request , Check your inputs
-*/
+ *       404:
+ *         description:  Barter Not Found
+ *       422:
+ *         description: |
+ *              - titles is Required
+ *              - description is Required
+ *              - neededProduct is Required
+ *              ----------------------------
+ *              - relatedUser is Required 
+ *              - User doesn't exist
+ *              ----------------------------
+ *              - relatedCategory is Required 
+ *              - Category doesn't exist
+ *              ----------------------------
+ *              - Optional type: type of barter should be 'TEMP' OR 'PERM'
+ *              - Optional finished: finished should be true or false
+ *              - Optional imgs : Imgs should be an array of strings 'images 64base
+ */
 
 /**
  * @swagger

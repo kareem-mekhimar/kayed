@@ -6,7 +6,7 @@ let swaggerDefinition = {
     info: {
         title: 'Kayed Api',
         version: '1.0.0',
-        description: 'Kayed Rest Api V.1',
+        description: '*Kayed Rest Api | [PostMan v0.1](Kayed.postman_collection.json)*',
     },
 
     host: 'localhost:3000',
