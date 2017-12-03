@@ -93,9 +93,23 @@ const router = express.Router();
  *                   "creationDate": "2017-11-30T14:27:32.457Z",
  *                   "id": "5a2015540031364a2043efa8"
  *               }
- *       400:
- *         description: Bad Request , Check your inputs
-*/
+ *       422:
+ *         description: |
+ *              - relatedBarter is Required
+ *              - Enter a valid barter id
+ *              ----------------------------
+ *              - relatedUser is Required
+ *              - Enter a valid user id
+ *              ----------------------------
+ *              - description is Required 
+ *              - offeredProduct is Required 
+ *              ----------------------------
+ *              - imgs is Required 
+ *              - Imgs Should be an array of imgs's urls
+ *              ----------------------------
+ *              - Optional status: you can't overwrite status it's PENDING by default
+ */
+
 router.route('/:id/offers')
     .post(BarterOfferController.createBarterOffer);
 
@@ -197,8 +211,30 @@ router.route('/:id/offers')
  *                   "id": "5a22beadf76e80383c82cb0a"
  *               }
  *       400:
- *         description: Bad Request , Check your inputs
-*/
+ *         description: | 
+ *              - status should be ACCEPTED or REJECTED IF status of barterOffer is PENDING
+ *              - status should be DONE or REJECTED is IF status of barterOffer is ACCEPTED
+ *              - you can't update DONE or REJECTED offer IF status of barterOffer is DONE OR REJECTED
+ *       404:
+ *         description: BarterOffer Not Found
+ *       422:
+ *         description: |
+ *              - relatedBarter is Required
+ *              - Enter a valid barter id
+ *              ----------------------------
+ *              - relatedUser is Required
+ *              - Enter a valid user id
+ *              ----------------------------
+ *              - description is Required 
+ *              - offeredProduct is Required 
+ *              ----------------------------
+ *              - imgs is Required 
+ *              - Imgs Should be an array of imgs's urls
+ *              ----------------------------
+ *              - status: valid status is required
+ *              - status should be one of ['PENDING','ACCEPTED','REJECTED','DONE']
+ */
+
 
 
 router.route('/:barterId/offers/:offerId')

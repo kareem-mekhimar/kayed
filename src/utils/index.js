@@ -14,7 +14,7 @@ export function writeBase64AndReturnUrl(base64String,name,req) {
     let fileName = name+"."+extension ;
 
     fs.writeFile(__dirname +"/../uploads/"+fileName, base64Data, { encoding: 'base64' }, function (err) {
-        console.log('File created '+err);
+        console.log('File created '+ err);
     });
 
     return appUrl + "/uploads/"+fileName ;

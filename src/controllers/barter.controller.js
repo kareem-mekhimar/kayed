@@ -45,7 +45,7 @@ export default {
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
-                
+                                
             const bartersCount = await Barter.count();
             
             const pageCount = Math.ceil(bartersCount / limit);
@@ -64,7 +64,7 @@ export default {
         }        
     },
 
-
+    
     async createBarter(req, res, next) {
         
         const validationErrors = await validateBarter(req);
@@ -74,9 +74,8 @@ export default {
         try {
             let imgs = req.body.imgs;
             delete req.body.imgs;
-
-            const createdBarter = await Barter.create(req.body);
-
+         
+            const createdBarter = await Barter.create(req.body);               
             // handle barter imgs
             if (imgs) {
                 for (let i = 0; i < imgs.length; i++) {
@@ -84,6 +83,8 @@ export default {
                 }
             }
             createdBarter.save();
+            
+            console.log('IMGs : ', createdBarter.imgs);
                         
             const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
             
