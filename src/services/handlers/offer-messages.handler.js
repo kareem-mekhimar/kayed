@@ -9,7 +9,9 @@ class OfferMessageHandler{
     }
       
     init(){
-       io.of("")
+       io.of("/offers").on("connection",socket =>{
+           console.log("Connection")
+       })
     }
 
     onNewMessage(data){  
