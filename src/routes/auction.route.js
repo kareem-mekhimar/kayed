@@ -241,5 +241,4 @@ router.route('/')
 router.route('/:id')
     .get(AuctionController.findById)
     .delete(AuctionController.delete);
-
 export default router;
