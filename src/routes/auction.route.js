@@ -1,6 +1,8 @@
 
 import express from "express";
 import AuctionController from "../controllers/auction.controller" ;
+import AuctionOfferController from "../controllers/auction-offer.controller" ;
+
 
 const router = express.Router();
 
@@ -44,6 +46,9 @@ const router = express.Router();
 *         readOnly: true
 *       auctionOffer:
 *         type: string
+*         readOnly: true
+*       highestPrice:
+*         type: number
 *         readOnly: true
 *       topBids:
 *         type: object 
