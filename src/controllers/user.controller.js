@@ -98,7 +98,7 @@ export default {
         
         const { id } = req.params;
         checkIfUserExist(id, next);
-        
+
         try {
             let img = req.body.img;
             delete req.body.img;
