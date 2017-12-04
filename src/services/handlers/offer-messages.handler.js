@@ -7,7 +7,7 @@ class OfferMessageHandler{
        this.io  = io ;    
        this.init() ;
     }
-      
+        
     init(){
        io.of("/offers").on("connection",socket =>{
            console.log("Connection") ;
