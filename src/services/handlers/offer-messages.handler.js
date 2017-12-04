@@ -7,12 +7,12 @@ class OfferMessageHandler{
        this.io  = io ;    
        this.init() ;
     }
-    
+      
     init(){
-       
+       io.of("")
     }
 
-    onNewMessage(){
+    onNewMessage(data){  
 
     }
     
