@@ -32,8 +32,6 @@ var _ApiError2 = _interopRequireDefault(_ApiError);
 
 var _utils = require("../utils");
 
-var _utils2 = _interopRequireDefault(_utils);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -237,7 +235,7 @@ exports.default = {
                             _context5.prev = 5;
                             newBarterId = _mongoose2.default.Types.ObjectId();
 
-                            if (req.body.imgs) req.body.imgs = (0, _utils2.default)(req.body.imgs, "barters", newBarterId, req);
+                            if (req.body.imgs) req.body.imgs = (0, _utils.handleImgs)(req.body.imgs, "barters", newBarterId, req);
 
                             _context5.next = 10;
                             return _barter2.default.create(_extends({ _id: newBarterId }, req.body));
@@ -340,7 +338,7 @@ exports.default = {
                             _context7.prev = 6;
 
 
-                            if (req.body.imgs) req.body.imgs = (0, _utils2.default)(req.body.imgs, "barters", id, req);
+                            if (req.body.imgs) req.body.imgs = (0, _utils.handleImgs)(req.body.imgs, "barters", id, req);
 
                             _context7.next = 10;
                             return _barter2.default.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser');

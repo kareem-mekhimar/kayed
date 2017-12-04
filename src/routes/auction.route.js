@@ -1,7 +1,7 @@
 
 import express from "express";
-import AuctionController from "../controllers/auction.controller" ;
-import AuctionOfferController from "../controllers/auction-offer.controller" ;
+import auctionOfferRoute from "./auction-offer.route";
+import AuctionController from "../controllers/auction.controller";
 
 
 const router = express.Router();
@@ -241,5 +241,8 @@ router.route('/')
 router.route('/:id')
     .get(AuctionController.findById)
     .delete(AuctionController.delete);
-  
+
+
+router.use(auctionOfferRoute);
+
 export default router;

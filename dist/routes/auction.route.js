@@ -8,13 +8,13 @@ var _express = require("express");
 
 var _express2 = _interopRequireDefault(_express);
 
+var _auctionOffer = require("./auction-offer.route");
+
+var _auctionOffer2 = _interopRequireDefault(_auctionOffer);
+
 var _auction = require("../controllers/auction.controller");
 
 var _auction2 = _interopRequireDefault(_auction);
-
-var _auctionOffer = require("../controllers/auction-offer.controller");
-
-var _auctionOffer2 = _interopRequireDefault(_auctionOffer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -248,6 +248,8 @@ router.route('/').get(_auction2.default.findAll).post(_auction2.default.create);
 */
 
 router.route('/:id').get(_auction2.default.findById).delete(_auction2.default.delete);
+
+router.use(_auctionOffer2.default);
 
 exports.default = router;
 //# sourceMappingURL=auction.route.js.map
