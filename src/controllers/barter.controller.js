@@ -5,7 +5,7 @@ import mongoose from "mongoose" ;
 
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
-import handleImgs from "../utils";
+import { handleImgs } from "../utils";
 
 const validateBarter = (req, isUpdate = false) => {
     req.checkBody("title").notEmpty().withMessage("titles is Required")
