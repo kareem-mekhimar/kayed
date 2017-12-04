@@ -22,4 +22,12 @@ const AuctionOfferSchema = new Schema({
 }) ;
 
 
+AuctionOfferSchema.set('toJSON', {
+    transform: function (doc, ret, options) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+    }
+}); 
+
 export default mongoose.model("auction-offer",AuctionOfferSchema);

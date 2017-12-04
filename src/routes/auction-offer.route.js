@@ -6,7 +6,7 @@ const router = express.Router();
 /**
 * @swagger
 * definitions:
-*   AucttionOffer:
+*   AuctionOffer:
 *     required:
 *     - "bidder"
 *     - "price"
@@ -46,7 +46,7 @@ const router = express.Router();
  *           $ref: '#/definitions/AuctionOffer'   
  *     responses:
  *       201:
- *         description: Return Created BarterOffer
+ *         description: Return Created Auction Offer
  *         example:           
  *               {
  *                   "relatedBarter": {

@@ -53,24 +53,24 @@ export default {
 
 
         let findQuery = Auction.find({});
-        let countQuery = Auction.count() ;
+        let countQuery = Auction.count();
 
-        if (category){
+        if (category) {
             findQuery.where("relatedCategory").equals(category);
             countQuery.where("relatedCategory").equals(category);
         }
-            
-        if (startPrice){
+
+        if (startPrice) {
             findQuery.where("highestPrice").gte(startPrice);
             countQuery.where("highestPrice").gte(startPrice);
         }
-            
 
-        if (endPrice){
+
+        if (endPrice) {
             findQuery.where("highestPrice").lte(endPrice);
             countQuery.where("highestPrice").gte(endPrice);
         }
-            
+
 
         if (typeof finished !== 'undefined') {
             findQuery.where("finished").equals(finished);
@@ -112,10 +112,26 @@ export default {
         if (!auction) {
             next(new ApiError(404, "Auction with this id not found"));
         } else {
-            let topAuctionOffers = await AuctionOffer.find({ relatedAuction: id }).sort({ price: -1 }).limit(3)
 
-            console.log(topAuctionOffers);
+            auction = { ...auction.toJSON() }
+            let count  = await AuctionOffer.count({ relatedAuction: id }) ;
+            auction.offersCount = count ;
 
+
+            let topAuctionOffers = await AuctionOffer.find({ relatedAuction: id }).sort({ price: -1 }).limit(3).populate("bidder");
+            let topBids = {}
+            if (topAuctionOffers && topAuctionOffers.length > 0) {
+                for (let i = 0 ; i < topAuctionOffers.length ; i++) {       
+                    topBids[i+1] = { 
+                        bidderName: topAuctionOffers[i].bidder.fullName,
+                        bidderImg: topAuctionOffers[i].bidder.img ,
+                        price: topAuctionOffers[i].price
+                     }
+                }
+
+                auction.topBids = topBids ;
+            }
+            
             res.send(auction)
         }
     },
@@ -137,7 +153,7 @@ export default {
                 let auction = await Auction.create(req.body);
 
                 for (let i = 0; i < imgs.length; i++) {
-                    let url = writeBase64AndReturnUrl(imgs[i], "auctions/" + auction.id + new Date().getTime(),req);
+                    let url = writeBase64AndReturnUrl(imgs[i], "auctions/" + auction.id + new Date().getTime(), req);
                     auction.imgs.push(url);
                 }
 

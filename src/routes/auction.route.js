@@ -50,6 +50,9 @@ const router = express.Router();
 *       highestPrice:
 *         type: number
 *         readOnly: true
+*       offersCount:
+*         type: number
+*         readOnly: true
 *       topBids:
 *         type: object 
 *         readOnly: true   
