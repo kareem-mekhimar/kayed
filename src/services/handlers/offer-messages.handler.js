@@ -10,12 +10,12 @@ class OfferMessageHandler{
       
     init(){
        io.of("/offers").on("connection",socket =>{
-           console.log("Connection")
+           console.log("Connection") ;
        })
     }
 
     onNewMessage(data){  
-
+      
     }
     
 }
