@@ -1,5 +1,7 @@
 import express from "express";
 import BarterController from "../controllers/barter.controller";
+import barterOfferRoute from "./barter-offer.route" ;
+
 const router = express.Router();
 
 /**
@@ -300,5 +302,8 @@ router.route('/:id')
     .get(BarterController.findById)
     .put(BarterController.updateBarter)
     .delete(BarterController.deleteBarter);
+
+
+router.use(barterOfferRoute)
 
 export default router;

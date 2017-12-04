@@ -7,7 +7,7 @@ const router = express.Router();
  * /users/{id}:
  *   put:
  *     tags:
- *       - Auth
+ *       - User
  *     summary: Update an existing user
  *     produces:
  *       - application/json
