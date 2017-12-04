@@ -1,4 +1,3 @@
-
 import OfferMessage from "../../models/offer-message.model" ;
 
 class OfferMessageHandler{
@@ -9,13 +8,27 @@ class OfferMessageHandler{
     }
         
     init(){
-       this.io.of("/offers").on("connection",socket =>{
+       let nsp = this.io.of("/offers") ;
+       
+       nsp.on("connection",socket =>{
            console.log("Connection") ;
+
+           socket.on("join",data => {
+               socket.room = data.offerId ;
+               socket.join(data.offerId) ;
+           });
+
+           socket.on("newMessage",async data => {
+               let message = await OfferMessage.create(data) ;
+               message = await OfferMessage.findById(message.id).populate("relatedUser") ;
+              
+               nsp.sockets.in(socket.room).emit("newMessage",message) ;
+           });
        })
     }
 
     onNewMessage(data){  
-      
+       
     }
     
 }
