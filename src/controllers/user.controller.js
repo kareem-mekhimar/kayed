@@ -65,7 +65,7 @@ export default {
 
                 let id = user.id;
                 if (img) {
-                    user.img = writeBase64AndReturnUrl(img, id, req);
+                    user.img = writeBase64AndReturnUrl(img, "users/"+id, req);
                     user.save();
                 }
 
