@@ -86,7 +86,7 @@ export default {
     async updateUser(req, res, next) {
         const { id } = req.params;
 
-        const validationErrors = await validateUserBody(req);
+        const validationErrors = await validateUserBody(req, true);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
 
