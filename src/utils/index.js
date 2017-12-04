@@ -1,7 +1,7 @@
 
 import fs from "fs";
 import url from "url" ;
-
+import mongoose from "mongoose" ;
 
 export function writeBase64AndReturnUrl(base64String,name,req) {
     
@@ -18,6 +18,14 @@ export function writeBase64AndReturnUrl(base64String,name,req) {
     });
 
     return appUrl + "/uploads/"+fileName ;
+}
+export function handleImgs(imgs, folderName="", relatedId, req) {
+  let imgsUrls = [];
+  folderName = folderName ? folderName + "/" : "";
+  for (let i = 0; i < imgs.length; i++) {
+      imgsUrls.push(writeBase64AndReturnUrl(imgs[i], folderName + relatedId + i , req));
+  }
+  return imgsUrls;
 }
 
 

@@ -1,13 +1,13 @@
 import Barter from "../models/barter.model";
 import User from "../models/user.model";
 import Category from "../models/category.model";
+import mongoose from "mongoose" ;
 
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
-import mongoose from "mongoose" ;
-import { writeBase64AndReturnUrl } from "../utils";
+import handleImgs from "../utils";
 
-const validateBarter = req => {
+const validateBarter = (req, isUpdate = false) => {
     req.checkBody("title").notEmpty().withMessage("titles is Required")
     req.checkBody("description").notEmpty().withMessage("description is required");
     req.checkBody("neededProduct").notEmpty().withMessage("neededProduct is required");
@@ -23,6 +23,14 @@ const validateBarter = req => {
     req.checkBody('type').optional().isIn(['TEMP', 'PERM']).withMessage("type of barter should be 'TEMP' OR 'PERM'")
     req.checkBody('finished').optional().isIn(['true','false']).withMessage("finished should be true or false");
     req.checkBody('imgs').optional().isArray().withMessage("Imgs should be an array of strings 'images 64base'");
+    
+    if (isUpdate)
+        req.checkParams('id').custom(async value => {
+            let barter = await Barter.findById(value);
+            if (!barter)
+                throw new Error('Barter Not Found');
+        }).withMessage('Barter Not Found');
+
     return req.getValidationResult();
 }
 
@@ -65,33 +73,19 @@ export default {
         }        
     },
 
-    handleBarterImgs(imgs) {
-        let imgsUrls;
-        for (let i = 0; i < imgs.length; i++) {
-            imgsUrls.push(writeBase64AndReturnUrl(imgs[i], "barters/"+ mongoose.Types.ObjectId() + i, req));
-        }
-        return imgsUrls
-    },
-
     async createBarter(req, res, next) {
         
         const validationErrors = await validateBarter(req);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
 
-        try {
-            let imgs = req.body.imgs;
-            delete req.body.imgs;
-         
-            const createdBarter = await Barter.create(req.body);               
-            // handle barter imgs
-            if (imgs) {
-                for (let i = 0; i < imgs.length; i++) {
-                    createdBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], "barters/"+ createdBarter.id + i, req));
-                }
-            }
-            await createdBarter.save();
-                                    
+        try {         
+            const newBarterId = mongoose.Types.ObjectId();
+            if (req.body.imgs)
+                req.body.imgs = handleImgs(req.body.imgs, "barters", newBarterId , req);
+
+            const createdBarter = await Barter.create({_id: newBarterId , ...req.body});               
+
             const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
             
             res.status(201).send(barter);
@@ -114,26 +108,20 @@ export default {
     },
 
     async updateBarter(req, res, next) {
-        const { id } = req.params;
 
-        const validationErrors = await validateBarter(req);
+        const validationErrors = await validateBarter(req, true);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
-
+        
+        const { id } = req.params;
+            
         try {
-            let imgs = req.body.imgs;
-            delete req.body.imgs;
+
+            if (req.body.imgs)
+                req.body.imgs = handleImgs(req.body.imgs, "barters", id , req);
             
             const updatedBarter = await Barter.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser');
-            if (!updatedBarter)
-                return next(new ApiError.NotFound('Barter'));
 
-            // handle barter imgs
-            if(imgs) {
-                for (let i = 0; i < imgs.length; i++) {
-                    updatedBarter.imgs.push(writeBase64AndReturnUrl(imgs[i], "barters/"+  updatedBarter.id + i, req));
-                }
-            }
             res.status(200).send(updatedBarter);
         }
         catch (err) {

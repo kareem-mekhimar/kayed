@@ -19,20 +19,31 @@ const generateToken = id => {
 }
 
 
-const validateUserBody = req => {
-
-    req.checkBody("email").notEmpty().withMessage("Email Required")
+const validateUserBody = (req, isUpdate = false) => {
+    if(isUpdate){
+        req.checkBody("email").notEmpty().withMessage("Email Required")
+        .custom(value => {
+            if (req.user.email !== value) {
+                return User.findOne({ email: value }).then(user => {
+                    if (user)
+                        throw new Error("email already taken");
+                })
+            } 
+        }).withMessage("email already taken");
+    } else {
+        req.checkBody("email").notEmpty().withMessage("Email Required")
         .custom(value => {
             return User.findOne({ email: value }).then(user => {
                 if (user)
                     throw new Error("email already exists");
             })
         }).withMessage("email already exists");
-
+    }
     req.checkBody("password").notEmpty().withMessage("Password required");
     req.checkBody("phone").notEmpty().withMessage("Phone required");
     req.checkBody("fullName").notEmpty().withMessage("FullName required");
     req.checkBody("country").notEmpty().withMessage("Country required");
+
     return req.getValidationResult();
 }
 
@@ -75,7 +86,7 @@ export default {
     async updateUser(req, res, next) {
         const { id } = req.params;
 
-        const validationErrors = await validateUserBody(req);
+        const validationErrors = await validateUserBody(req, true);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
 
