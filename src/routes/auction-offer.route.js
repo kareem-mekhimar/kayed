@@ -49,56 +49,45 @@ const router = express.Router();
  *         description: Return Created Auction Offer
  *         example:           
  *               {
- *                   "relatedBarter": {
- *                       "title": "Samsung Note 8",
- *                       "description": "This is a description for new mobile phone of samsung",
- *                       "neededProduct": "Iphone x",
- *                       "relatedUser": "5a1db2b8a3c9862828910bef",
- *                       "relatedCategory": "5a1db3a29246d21c0c4056cf",
- *                       "creationDate": "2017-11-30T11:49:25.392Z",
- *                       "finished": false,
- *                       "imgs": [],
- *                       "type": "TEMP",
- *                       "id": "5a1ff0456cd27932acaad627"
- *                   },
- *                   "relatedUser": {
- *                       "fullName": "magdy",
- *                       "email": "demo@demo.com",
- *                       "address": "82 Fatma El zhraa",
- *                       "phone": "01157954393",
- *                       "country": "egypt",
- *                       "id": "5a1db2b8a3c9862828910bef"
- *                   },
- *                   "description": "Samsung Note",
- *                   "offeredProduct": "TV Samsung",
- *                   "status": "PENDING",
+ *               "bidder": {
+ *                   "fullName": "Magdy",
+ *                   "email": "xx@xx.com",
+ *                   "address": "82 Fatma",
+ *                   "phone": "01157954393",
+ *                   "country": "Egypt",
+ *                   "id": "5a23d9a74bc62c0014489e3b"
+ *               },
+ *               "price": 12000,
+ *               "relatedAuction": {
+ *                   "title": "new Car",
+ *                   "description": "Full HD , 3d support",
+ *                   "startPrice": 10000,
+ *                   "endDate": "2017-12-05T22:00:00.000Z",
+ *                   "relatedUser": "5a23d9a74bc62c0014489e3b",
+ *                   "relatedCategory": "5a25841337560312b08bb05b",
+ *                   "highestPrice": 12000,
+ *                   "creationDate": "2017-12-04T17:24:29.201Z",
+ *                   "finished": false,
  *                   "imgs": [
- *                       "https://wallpaperbrowse.com/media/images/maxresdefault_9As8F3D.jpg"
+ *                   "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
  *                   ],
- *                   "creationDate": "2017-11-30T14:27:32.457Z",
- *                   "id": "5a2015540031364a2043efa8"
+ *                   "id": "5a2584cd37560312b08bb05c"
+ *               },
+ *               "id": "5a258970adcca41228e246d3"
  *               }
+ *       404: 
+ *         description: Auction Not Found
  *       422:
  *         description: |
- *              - relatedBarter is Required
- *              - Enter a valid barter id
+ *              - bidder Required
+ *              - bidder user Is Not Found
  *              ----------------------------
- *              - relatedUser is Required
- *              - Enter a valid user id
- *              ----------------------------
- *              - description is Required 
- *              - offeredProduct is Required 
- *              ----------------------------
- *              - imgs is Required 
- *              - Imgs Should be an array of imgs's urls
- *              ----------------------------
- *              - Optional status: you can't overwrite status it's PENDING by default
+ *              - price required
+ *              - Invalid Number
+ *              - price must be more than highest price
  */
 
 router.route('/:auctionId/offers')
     .post(AuctionOfferController.create);
-
-
-
 
 export default router;

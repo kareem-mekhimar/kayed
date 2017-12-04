@@ -21,7 +21,6 @@ passport.use(new JwtStrategy({
             return done(null, false);
 
         return done(null, user)
-
     })
 }));
 

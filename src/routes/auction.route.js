@@ -98,41 +98,71 @@ const router = express.Router();
  *       200:
  *         description: Get An Array of Auctions
  *         example: 
+ *               {
+ *               "links": {
+ *                   "self": "http://localhost:3000/api/v1/auctions?page=1&limit=2",
+ *                   "next": "http://localhost:3000/api/v1/auctions?page=2&limit=2",
+ *                   "last": "http://localhost:3000/api/v1/auctions?page=2&limit=2"
+ *               },
+ *               "data": [
  *                   {
- *                       "links": {
- *                           "self": "http://localhost:3000/api/v1/barters?page=1&limit=20"
- *                       },
- *                       "data": [
- *                           {
- *                              "title": "Samsung",
- *                              "description": "Ay haga2",
- *                              "neededProduct": "IPHone2",
- *                              "relatedUser": "5a1db2b8a3c9862828910bef",
- *                              "relatedCategory": "5a1d59d25be03c12907a6771",
- *                              "creationDate": "2017-11-29T17:06:59.354Z",
- *                              "finished": false,
- *                              "imgs": [],
- *                              "type": "TEMP",
- *                              "id": "5a1ee933d75f0e2338e6222c"
- *                           },
- *                           {
- *                               "title": "BMW",
- *                               "description": "Ay haga2",
- *                               "neededProduct": "IPHone2",
- *                               "relatedUser": "5a1db2b8a3c9862828910bef",
- *                               "relatedCategory": "5a1d59d25be03c12907a6771",
- *                               "creationDate": "2017-11-29T17:05:51.703Z",
- *                               "finished": false,
- *                               "imgs": [],
- *                               "type": "TEMP",
- *                               "id": "5a1ee8efc25fa638dc9fdef2"
- *                           }
- *                       ],
- *                       "page": 1,
- *                       "pageCount": 1,
- *                       "limit": 20,
- *                       "totalCount": 4
+ *                   "title": "opel astra",
+ *                   "description": "good car",
+ *                   "startPrice": 1000,
+ *                   "relatedCategory": {
+ *                       "name": "سيارات",
+ *                       "id": "5a2442fb4311cd0014c1bfb9"
+ *                   },
+ *                   "relatedUser": {
+ *                       "email": "hazem.tarek@gmail.com",
+ *                       "fullName": "Hazem Tarek",
+ *                       "phone": "01014466503",
+ *                       "country": "مصر",
+ *                       "address": "بورسعيد",
+ *                       "id": "5a24117b4bc62c0014489e43"
+ *                   },
+ *                   "endDate": "2017-12-24T00:00:00.000Z",
+ *                   "highestPrice": 1000,
+ *                   "creationDate": "2017-12-04T16:14:53.719Z",
+ *                   "finished": false,
+ *                   "imgs": [
+ *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093721.jpeg",
+ *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg",
+ *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg"
+ *                   ],
+ *                   "id": "5a25747dcda9950014db1bc1"
+ *                   },
+ *                   {
+ *                   "title": "oppo",
+ *                   "description": "good device",
+ *                   "startPrice": 100000,
+ *                   "relatedCategory": {
+ *                       "name": "مجديات",
+ *                       "id": "5a2443970b92ff001421a3b9"
+ *                   },
+ *                   "relatedUser": {
+ *                       "email": "hazem.tarek@gmail.com",
+ *                       "fullName": "Hazem Tarek",
+ *                       "phone": "01014466503",
+ *                       "country": "مصر",
+ *                       "address": "بورسعيد",
+ *                       "id": "5a24117b4bc62c0014489e43"
+ *                   },
+ *                   "endDate": "2017-12-31T00:00:00.000Z",
+ *                   "highestPrice": 100001,
+ *                   "creationDate": "2017-12-03T19:27:58.447Z",
+ *                   "finished": false,
+ *                   "imgs": [
+ *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a24503e7585730014f103c61512329278453.jpeg"
+ *                   ],
+ *                   "id": "5a24503e7585730014f103c6"
  *                   }
+ *               ],
+ *               "page": 1,
+ *               "pageCount": 2,
+ *               "limit": "2",
+ *               "totalCount": 4
+ *               }
 */
 
 /**
@@ -156,25 +186,41 @@ const router = express.Router();
  *         description: Return Created Auction
  *         example:           
  *               {
- *                   "title": "Samsung Note 8",
- *                   "description": "This is a description for new mobile phone of samsung",
- *                   "neededProduct": "Iphone x",
- *                   "relatedUser": "5a1db2b8a3c9862828910bef",
- *                   "relatedCategory": "5a1db3a29246d21c0c4056cf",
- *                   "finished": false,
- *                   "imgs": [],
- *                   "type": "TEMP",
- *                   "id": "5a1ef08e8eb4c6421c2f9599"
+ *               "title": "new Car",
+ *               "description": "Full HD , 3d support",
+ *               "startPrice": 10000,
+ *               "endDate": "2017-12-05T22:00:00.000Z",
+ *               "relatedUser": "5a23d9a74bc62c0014489e3b",
+ *               "relatedCategory": "5a25841337560312b08bb05b",
+ *               "highestPrice": 10000,
+ *               "creationDate": "2017-12-04T17:24:29.201Z",
+ *               "finished": false,
+ *               "imgs": [
+ *                   "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+ *               ],
+ *               "id": "5a2584cd37560312b08bb05c"
  *               }
  *       422:
- *         description: Bad Request , Check your inputs
+ *         description: |
+ *              - relatedUser is Required
+ *              - Related user Is Not Found
+ *              ----------------------------
+ *              - relatedCategory is Required 
+ *              - Related category Is Not Found
+ *              ----------------------------
+ *              - title is Required 
+ *              - description is Required 
+ *              - endDate is Required 
+ *              ----------------------------
+ *              - startPrice is Required 
+ *              - Invalid Number
+ *              ----------------------------
+ *              - Provide at least one image
 */
 
 router.route('/')
     .get(AuctionController.findAll)
     .post(AuctionController.create)
-
-
 
 /**
  * @swagger
@@ -195,29 +241,33 @@ router.route('/')
  *         description: Get an Auction
  *         example: 
  *               {
- *              "title": "Samsung Note 8",
- *            "description": "This is a description for new mobile phone of samsung",
- *               "neededProduct": "Iphone x",
+ *               "title": "new Car",
+ *               "description": "Full HD , 3d support",
+ *               "startPrice": 10000,
+ *               "endDate": "2017-12-05T22:00:00.000Z",
  *               "relatedUser": {
- *                   "fullName": "magdy",
- *                   "email": "demo@demo.com",
- *                   "address": "ASasasas",
+ *                   "fullName": "Magdy",
+ *                   "email": "xx@xx.com",
+ *                   "address": "82 Fatma",
  *                   "phone": "01157954393",
- *                   "country": "egypt",
- *                   "id": "5a1db2b8a3c9862828910bef"
+ *                   "country": "Egypt",
+ *                   "id": "5a23d9a74bc62c0014489e3b"
  *               },
  *               "relatedCategory": {
- *                   "name": "mobiles",
- *                   "id": "5a1db3a29246d21c0c4056cf"
+ *                   "name": "تلفزيونات",
+ *                   "id": "5a25841337560312b08bb05b"
  *               },
- *               "creationDate": "2017-11-30T11:49:25.392Z",
+ *               "highestPrice": 10000,
+ *               "creationDate": "2017-12-04T17:24:29.201Z",
  *               "finished": false,
- *               "imgs": [],
- *               "type": "TEMP",
- *               "id": "5a1ff0456cd27932acaad627"
+ *               "imgs": [
+ *                   "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+ *               ],
+ *               "id": "5a2584cd37560312b08bb05c",
+ *               "offersCount": 0
  *               }
  *       404:
- *         description: No Categories Found
+ *         description: Auction with this id not found
 */
 
 /**
@@ -238,7 +288,7 @@ router.route('/')
  *       204:
  *         description: Successed. No Content
  *       404:
- *         description: Auction Not Found
+ *         description: Auction with this id not found
 */
 
 router.route('/:id')
