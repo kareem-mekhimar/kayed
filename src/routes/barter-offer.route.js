@@ -31,7 +31,7 @@ const router = express.Router();
 *         type: array
 *         items:
 *           type: string
-*           format: "URL"
+*           format: "base64"
 *       status:
 *         type: string
 *         enum:

@@ -80,7 +80,7 @@ const router = express.Router();
  *         description: TEMP - PERM
  *       - name: "finished"
  *         in: "query"
- *         type: string
+ *         type: boolean
  *         description: true - false
  *     responses:
  *       200:

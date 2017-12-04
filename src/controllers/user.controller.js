@@ -1,5 +1,8 @@
 import User from "../models/user.model";
+import Barter from "../models/barter.model";
+import Auction from "../models/auction.model";
 
+import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import jwt from "jsonwebtoken";
 import config from "../config";
@@ -49,6 +52,11 @@ const validateUserBody = (req, isUpdate = false) => {
     return req.getValidationResult();
 }
 
+const checkIfUserExist = async (id, next)  => {
+    const user = await User.findById(id);
+    if(!user)
+        return next(new ApiError.NotFound('User'));
+}
 
 export default {
 
@@ -90,7 +98,7 @@ export default {
         
         const { id } = req.params;
         checkIfUserExist(id, next);
-            
+
         try {
             let img = req.body.img;
             delete req.body.img;
@@ -111,11 +119,6 @@ export default {
         }
     },
 
-    async checkIfUserExist(id, next) {
-        const user = await User.findById(id);
-        if(!user)
-            return next(new ApiError.NotFound('User'));
-    },
 
     async getUserBarters(req, res, next) {
         let { id } = req.params;
@@ -127,15 +130,49 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const userBarters = await Barter.find({ _id : req.user.id }).populate('relatedCategory relatedUser')
+            const userBarters = await Barter.find({ relatedUser: id}).populate('relatedCategory relatedUser')
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+            
+            const userBartersCount = await Barter.count({ relatedUser : id});
+            
+            const pageCount = Math.ceil(userBartersCount / limit);
+            let response = new ApiResponse(userBarters, page, pageCount, limit, userBartersCount);
+            response.addSelfLink(req);
+
+            if (page > 1) {
+                response.addPrevLink(req);
+            }
+            if (page < pageCount) {
+                response.addNextLink(req);
+            }
+            res.send(response);
+        } catch(err){
+            next(err);
+        }
+    },
+
+
+    async getUserAuctions(req, res, next) {
+        let { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        let { page, limit } = req.query;
+        
+        page = page ? parseInt(page) : 1;
+        limit = limit ? parseInt(limit) : 20;
+
+        try { 
+            const userAuctions = await Auction.find({ relatedUser: id }).populate('relatedCategory relatedUser')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
                                 
-            const userBartersCount = await Barter.count();
+            const userAuctionsCount = await Auction.count({ relatedUser : id});
             
-            const pageCount = Math.ceil(userBartersCount / limit);
-            let response = new ApiResponse(userBarters, page, pageCount, limit, userBartersCount);
+            const pageCount = Math.ceil(userAuctionsCount / limit);
+            let response = new ApiResponse(userAuctions, page, pageCount, limit, userAuctionsCount);
             response.addSelfLink(req);
 
             if (page > 1) {
