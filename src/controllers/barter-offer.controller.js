@@ -29,7 +29,43 @@ const validateBarterOffer = (req, isUpdate = false) => {
 }
 
 export default {
-    
+    async findAll(req, res, next) {
+        let { barterId } = req.params
+        let { page, limit, status } = req.query;
+        let query = {
+            relatedBarter: barterId
+        };
+
+        if(status && ['PENDING','ACCEPTED','REJECTED','DONE'].includes(status))
+            query.status = status;            
+            
+        page = page ? parseInt(page) : 1;
+        limit = limit ? parseInt(limit) : 20;
+
+        try { 
+            const barterOffers = await BarterOffer.find(query).populate('relatedBarter relatedUser')
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+                                
+            const barterOffersCount = await BarterOffer.count(query);
+            
+            const pageCount = Math.ceil(barterOffersCount / limit);
+            let response = new ApiResponse(barterOffers, page, pageCount, limit, barterOffersCount);
+            response.addSelfLink(req);
+
+            if (page > 1) {
+                response.addPrevLink(req);
+            }
+            if (page < pageCount) {
+                response.addNextLink(req);
+            }
+            res.send(response);
+        }catch(err){
+            next(err);
+        }        
+    },
+
     async createBarterOffer(req, res, next) {   
         const validationErrors = await validateBarterOffer(req);
         if (!validationErrors.isEmpty())

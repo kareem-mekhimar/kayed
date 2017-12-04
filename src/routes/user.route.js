@@ -52,5 +52,8 @@ const router = express.Router();
 
 router.route('/:id').put(UserController.updateUser);
 
+router.route('/:id/barters').put(UserController.getUserBarters);
+// router.route('/:id/auctions').put(UserController.getUserAuctions);
+
 
 export default router;

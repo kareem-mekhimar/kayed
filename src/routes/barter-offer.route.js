@@ -46,6 +46,117 @@ const router = express.Router();
 *
 */
 
+
+/**
+ * @swagger
+ * /barters/{barterId}/offers:
+ *   get:
+ *     tags:
+ *       - BarterOffer
+ *     summary: Get all BarterOffers
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: barterId
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: "page"
+ *         in: "query"
+ *         type: number
+ *         default: 1
+ *       - name: "limit"
+ *         in: "query"
+ *         type: number
+ *         default: 20
+ *       - name: "status"
+ *         in: "query"
+ *         type: string
+ *         description: PENDING - ACCEPTED - REJECTED - DONE
+ *     responses:
+ *       200:
+ *         description: Get An Array of BartersOffers
+ *         example: 
+ *               {
+ *               "links": {
+ *                   "self": "http://localhost:3000/api/v1/barters/5a249e4148d6362638faeb9d/offers?page=1&limit=20"
+ *               },
+ *               "data": [
+ *                   {
+ *                   "relatedUser": {
+ *                       "fullName": "Magdyxa",
+ *                       "email": "x2a@x2a.com",
+ *                       "address": "82 Fatma",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a1db2b8a3c9862828910bef"
+ *                   },
+ *                   "description": "Samsung Note B",
+ *                   "offeredProduct": "LG TV 2018",
+ *                   "relatedBarter": {
+ *                       "title": "Samsung A",
+ *                       "description": "assasasaasasas",
+ *                       "neededProduct": "AAAAK",
+ *                       "relatedUser": "5a23d9a74bc62c0014489e3b",
+ *                       "relatedCategory": "5a24430e4311cd0014c1bfba",
+ *                       "barterOffer": "5a2532c7cb4ed22fc0831e61",
+ *                       "creationDate": "2017-12-04T01:00:49.846Z",
+ *                       "finished": true,
+ *                       "imgs": [
+ *                       "http://localhost:3000/uploads/barters/5a249e4148d6362638faeb9d0.jpeg"
+ *                       ],
+ *                       "type": "TEMP",
+ *                       "id": "5a249e4148d6362638faeb9d"
+ *                   },
+ *                   "status": "PENDING",
+ *                   "imgs": [
+ *                       "http://localhost:3000/uploads/barter-offers/5a25341ecb4ed22fc0831e620.jpeg"
+ *                   ],
+ *                   "creationDate": "2017-12-04T11:40:14.678Z",
+ *                   "id": "5a25341ecb4ed22fc0831e62"
+ *                   },
+ *                   {
+ *                   "relatedUser": {
+ *                       "fullName": "Magdyxa",
+ *                       "email": "x2a@x2a.com",
+ *                       "address": "82 Fatma",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a1db2b8a3c9862828910bef"
+ *                   },
+ *                   "description": "Samsung Note A",
+ *                   "offeredProduct": "LG TV 2017",
+ *                   "relatedBarter": {
+ *                       "title": "Samsung A",
+ *                       "description": "assasasaasasas",
+ *                       "neededProduct": "AAAAK",
+ *                       "relatedUser": "5a23d9a74bc62c0014489e3b",
+ *                       "relatedCategory": "5a24430e4311cd0014c1bfba",
+ *                       "barterOffer": "5a2532c7cb4ed22fc0831e61",
+ *                       "creationDate": "2017-12-04T01:00:49.846Z",
+ *                       "finished": true,
+ *                       "imgs": [
+ *                       "http://localhost:3000/uploads/barters/5a249e4148d6362638faeb9d0.jpeg"
+ *                       ],
+ *                       "type": "TEMP",
+ *                       "id": "5a249e4148d6362638faeb9d"
+ *                   },
+ *                   "status": "DONE",
+ *                   "imgs": [
+ *                       "http://localhost:3000/uploads/barter-offers/5a2532c7cb4ed22fc0831e610.jpeg"
+ *                   ],
+ *                   "creationDate": "2017-12-04T11:34:31.576Z",
+ *                   "id": "5a2532c7cb4ed22fc0831e61"
+ *                   }
+ *               ],
+ *               "page": 1,
+ *               "pageCount": 1,
+ *               "limit": 20,
+ *               "totalCount": 2
+ *               }
+ */
+
+
 /**
  * @swagger
  * /barters/{barterId}/offers:
@@ -118,6 +229,7 @@ const router = express.Router();
  */
 
 router.route('/:barterId/offers')
+    .get(BarterOfferController.findAll)
     .post(BarterOfferController.createBarterOffer);
 
 /**

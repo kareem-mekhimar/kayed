@@ -20,15 +20,17 @@ const generateToken = id => {
 
 
 const validateUserBody = (req, isUpdate = false) => {
-    if(isUpdate){
+    if(isUpdate) {
         req.checkBody("email").notEmpty().withMessage("Email Required")
-        .custom(value => {
+        .custom(async value => {
+            console.log(req.user.email);
+            console.log(value);
             if (req.user.email !== value) {
-                return User.findOne({ email: value }).then(user => {
-                    if (user)
-                        throw new Error("email already taken");
-                })
-            } 
+                console.log("IM HERE: ")
+                const user = await User.findOne({ email: value, _id: { $ne: req.user.id } })
+                if (user)
+                    throw new Error("email already taken");
+            }
         }).withMessage("email already taken");
     } else {
         req.checkBody("email").notEmpty().withMessage("Email Required")
@@ -51,9 +53,8 @@ const validateUserBody = (req, isUpdate = false) => {
 export default {
 
     async signUp(req, res, next) {
-
         const validationErrors = await validateUserBody(req);
-
+        
         if (!validationErrors.isEmpty())
             next(new ApiError(422, validationErrors.mapped()));
         else {
@@ -68,8 +69,6 @@ export default {
                     user.img = writeBase64AndReturnUrl(img, "users/"+id, req);
                     user.save();
                 }
-
-
                 res.status(201).send({ user, token: generateToken(id) });
             });
         }
@@ -84,12 +83,14 @@ export default {
 
 
     async updateUser(req, res, next) {
-        const { id } = req.params;
 
         const validationErrors = await validateUserBody(req, true);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
-
+        
+        const { id } = req.params;
+        checkIfUserExist(id, next);
+            
         try {
             let img = req.body.img;
             delete req.body.img;
@@ -107,6 +108,45 @@ export default {
            
         } catch (err) {
             next(err)
+        }
+    },
+
+    async checkIfUserExist(id, next) {
+        const user = await User.findById(id);
+        if(!user)
+            return next(new ApiError.NotFound('User'));
+    },
+
+    async getUserBarters(req, res, next) {
+        let { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        let { page, limit } = req.query;
+        
+        page = page ? parseInt(page) : 1;
+        limit = limit ? parseInt(limit) : 20;
+
+        try { 
+            const userBarters = await Barter.find({ _id : req.user.id }).populate('relatedCategory relatedUser')
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+                                
+            const userBartersCount = await Barter.count();
+            
+            const pageCount = Math.ceil(userBartersCount / limit);
+            let response = new ApiResponse(userBarters, page, pageCount, limit, userBartersCount);
+            response.addSelfLink(req);
+
+            if (page > 1) {
+                response.addPrevLink(req);
+            }
+            if (page < pageCount) {
+                response.addNextLink(req);
+            }
+            res.send(response);
+        } catch(err){
+            next(err);
         }
     }
 }
