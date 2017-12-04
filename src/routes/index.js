@@ -12,9 +12,9 @@ const requireAuth = passport.authenticate('jwt',{ session : false }) ;
 
 const router = express.Router();
   
-
 router.use("/", authRoute);
 router.use("/users", requireAuth, userRoute);
+
 router.use("/categories", requireAuth, categoryRoute) ;
 
 router.use("/barters", requireAuth, barterRoute);

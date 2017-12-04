@@ -117,7 +117,7 @@ const router = express.Router();
  *              - Optional status: you can't overwrite status it's PENDING by default
  */
 
-router.route('/:id/offers')
+router.route('/:barterId/offers')
     .post(BarterOfferController.createBarterOffer);
 
 /**
