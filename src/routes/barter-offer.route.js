@@ -1,5 +1,7 @@
 import express from "express";
 import BarterOfferController from "../controllers/barter-offer.controller";
+import offerMessageRoute from "../routes/offer-message.route" ;
+
 const router = express.Router();
 
 /**
@@ -231,6 +233,10 @@ const router = express.Router();
 router.route('/:barterId/offers')
     .get(BarterOfferController.findAll)
     .post(BarterOfferController.createBarterOffer);
+
+    
+router.use(offerMessageRoute) ;
+
 
 /**
  * @swagger
