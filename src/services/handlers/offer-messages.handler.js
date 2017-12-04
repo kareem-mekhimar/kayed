@@ -9,7 +9,7 @@ class OfferMessageHandler{
     }
         
     init(){
-       io.of("/offers").on("connection",socket =>{
+       this.io.of("/offers").on("connection",socket =>{
            console.log("Connection") ;
        })
     }

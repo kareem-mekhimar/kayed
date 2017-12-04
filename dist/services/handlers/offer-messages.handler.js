@@ -25,7 +25,7 @@ var OfferMessageHandler = function () {
    _createClass(OfferMessageHandler, [{
       key: "init",
       value: function init() {
-         io.of("/offers").on("connection", function (socket) {
+         this.io.of("/offers").on("connection", function (socket) {
             console.log("Connection");
          });
       }

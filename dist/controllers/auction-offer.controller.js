@@ -2,7 +2,7 @@
 
 Object.defineProperty(exports, "__esModule", {
     value: true
-});  
+});
 
 var _auctionOffer = require("../models/auction-offer.model");
 
