@@ -34,7 +34,8 @@ var OfferMessageHandler = function () {
             nsp.on("connection", function (socket) {
                 console.log("Connection");
 
-                socket.on("join", function (data) {
+                socket.on("offerJoin", function (data) {
+                    console.log("join");
                     socket.room = data.offerId;
                     socket.join(data.offerId);
                 });
@@ -46,21 +47,24 @@ var OfferMessageHandler = function () {
                             while (1) {
                                 switch (_context.prev = _context.next) {
                                     case 0:
-                                        _context.next = 2;
+                                        console.log(data);
+                                        _context.next = 3;
                                         return _offerMessage2.default.create(data);
 
-                                    case 2:
+                                    case 3:
                                         message = _context.sent;
-                                        _context.next = 5;
+
+                                        console.log(message);
+                                        _context.next = 7;
                                         return _offerMessage2.default.findById(message.id).populate("relatedUser");
 
-                                    case 5:
+                                    case 7:
                                         message = _context.sent;
 
 
-                                        nsp.sockets.in(socket.room).emit("newMessage", message);
+                                        nsp.to(socket.room).emit("newMessage", message);
 
-                                    case 7:
+                                    case 9:
                                     case "end":
                                         return _context.stop();
                                 }

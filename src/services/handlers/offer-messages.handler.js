@@ -13,16 +13,19 @@ class OfferMessageHandler{
        nsp.on("connection",socket =>{
            console.log("Connection") ;
 
-           socket.on("join",data => {
+           socket.on("offerJoin",data => {
+               console.log("join")
                socket.room = data.offerId ;
                socket.join(data.offerId) ;
            });
 
            socket.on("newMessage",async data => {
+               console.log(data) ;
                let message = await OfferMessage.create(data) ;
+               console.log(message);
                message = await OfferMessage.findById(message.id).populate("relatedUser") ;
               
-               nsp.sockets.in(socket.room).emit("newMessage",message) ;
+               nsp.to(socket.room).emit("newMessage",message) ;
            });
        })
     }
