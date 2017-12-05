@@ -64,14 +64,15 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-            var page, limit, category, startPrice, endPrice, finished, findQuery, countQuery, results, count, pageCount, response;
+            var page, limit, categories, startPrice, endPrice, finished, findQuery, countQuery, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, category, results, count, pageCount, response;
+
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
                             page = req.query.page;
                             limit = req.query.limit;
-                            category = req.query.category;
+                            categories = req.query.categories;
                             startPrice = req.query.startPrice;
                             endPrice = req.query.endPrice;
                             finished = req.query.finished;
@@ -92,11 +93,72 @@ exports.default = {
                             findQuery = _auction2.default.find({});
                             countQuery = _auction2.default.count();
 
+                            if (!categories) {
+                                _context.next = 37;
+                                break;
+                            }
 
-                            if (category) {
+                            categories = categories.split(',');
+
+                            if (!(categories > 1)) {
+                                _context.next = 35;
+                                break;
+                            }
+
+                            _iteratorNormalCompletion = true;
+                            _didIteratorError = false;
+                            _iteratorError = undefined;
+                            _context.prev = 17;
+
+                            for (_iterator = categories[Symbol.iterator](); !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                                category = _step.value;
+
+                                console.log(category);
                                 findQuery.where("relatedCategory").equals(category);
                                 countQuery.where("relatedCategory").equals(category);
                             }
+                            _context.next = 25;
+                            break;
+
+                        case 21:
+                            _context.prev = 21;
+                            _context.t0 = _context["catch"](17);
+                            _didIteratorError = true;
+                            _iteratorError = _context.t0;
+
+                        case 25:
+                            _context.prev = 25;
+                            _context.prev = 26;
+
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+
+                        case 28:
+                            _context.prev = 28;
+
+                            if (!_didIteratorError) {
+                                _context.next = 31;
+                                break;
+                            }
+
+                            throw _iteratorError;
+
+                        case 31:
+                            return _context.finish(28);
+
+                        case 32:
+                            return _context.finish(25);
+
+                        case 33:
+                            _context.next = 37;
+                            break;
+
+                        case 35:
+                            findQuery.where("relatedCategory").equals(categories);
+                            countQuery.where("relatedCategory").equals(categories);
+
+                        case 37:
 
                             if (startPrice) {
                                 findQuery.where("highestPrice").gte(startPrice);
@@ -118,15 +180,15 @@ exports.default = {
                             page = page ? parseInt(page) : 1;
                             limit = limit ? limit : 20;
 
-                            _context.next = 20;
+                            _context.next = 45;
                             return findQuery.sort({ creationDate: -1 }).limit(parseInt(limit)).skip((page - 1) * limit);
 
-                        case 20:
+                        case 45:
                             results = _context.sent;
-                            _context.next = 23;
+                            _context.next = 48;
                             return countQuery;
 
-                        case 23:
+                        case 48:
                             count = _context.sent;
                             pageCount = Math.ceil(count / limit);
                             response = new _ApiResponse2.default(results, page, pageCount, limit, count);
@@ -143,12 +205,12 @@ exports.default = {
 
                             res.send(response);
 
-                        case 30:
+                        case 55:
                         case "end":
                             return _context.stop();
                     }
                 }
-            }, _callee, _this);
+            }, _callee, _this, [[17, 21, 25, 33], [26,, 28, 32]]);
         }))();
     },
     findById: function findById(req, res, next) {

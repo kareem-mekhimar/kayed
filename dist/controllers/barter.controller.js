@@ -146,23 +146,55 @@ var validateBarter = function validateBarter(req) {
 
     return req.getValidationResult();
 };
+var checkIfValidIds = function checkIfValidIds(categories, next) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = categories[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var category = _step.value;
+
+            if (!_mongoose2.default.Types.ObjectId.isValid(category)) return next(new _ApiError2.default.BadRequest(400, 'you have sent an invalid category id: ', category));
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+};
 
 exports.default = {
     findAll: function findAll(req, res, next) {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var _req$query, page, limit, category, type, finished, query, barters, bartersCount, pageCount, response;
+            var _req$query, page, limit, categories, type, finished, query, barters, bartersCount, pageCount, response;
 
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
                     switch (_context4.prev = _context4.next) {
                         case 0:
-                            _req$query = req.query, page = _req$query.page, limit = _req$query.limit, category = _req$query.category, type = _req$query.type, finished = _req$query.finished;
+                            _req$query = req.query, page = _req$query.page, limit = _req$query.limit, categories = _req$query.categories, type = _req$query.type, finished = _req$query.finished;
                             query = {};
 
 
-                            if (category) query.relatedCategory = category;
+                            if (categories) {
+                                categories = categories.split(',');
+                                checkIfValidIds(categories, next);
+                                if (categories.length > 1) {
+                                    query.relatedCategory = { $in: categories };
+                                } else query.relatedCategory = categories[0];
+                            }
                             if (type) query.type = type;
                             if (finished) query.finished = finished;
 

@@ -62,29 +62,25 @@ var validateUserBody = function validateUserBody(req) {
                     while (1) {
                         switch (_context.prev = _context.next) {
                             case 0:
-                                console.log(req.user.email);
-                                console.log(value);
-
                                 if (!(req.user.email !== value)) {
-                                    _context.next = 9;
+                                    _context.next = 6;
                                     break;
                                 }
 
-                                console.log("IM HERE: ");
-                                _context.next = 6;
-                                return _user2.default.findOne({ email: value, _id: { $ne: req.user.id } });
+                                _context.next = 3;
+                                return _user2.default.findOne({ email: value, _id: { $ne: req.user._id } });
 
-                            case 6:
+                            case 3:
                                 user = _context.sent;
 
                                 if (!user) {
-                                    _context.next = 9;
+                                    _context.next = 6;
                                     break;
                                 }
 
                                 throw new Error("email already taken");
 
-                            case 9:
+                            case 6:
                             case "end":
                                 return _context.stop();
                         }
@@ -258,7 +254,7 @@ exports.default = {
                                 updatedUser.save();
                             }
 
-                            res.status(200).send({ user: updatedUser, token: generateToken(id) });
+                            res.status(200).send({ user: updatedUser });
 
                             _context5.next = 22;
                             break;
