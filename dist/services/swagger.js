@@ -14,7 +14,7 @@ var swaggerDefinition = {
     info: {
         title: 'Kayed Api',
         version: '1.0.0',
-        description: 'Kayed Rest Api'
+        description: 'Kayed Rest Api' 
     },
 
     host: 'kayed-api.herokuapp.com',
