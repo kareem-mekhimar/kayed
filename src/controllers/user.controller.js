@@ -1,7 +1,8 @@
 import User from "../models/user.model";
 import Barter from "../models/barter.model";
 import Auction from "../models/auction.model";
-
+import FavBarter from "../models/fav-barter.model";
+import FavAuction from "../models/fav-auction.model";
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import jwt from "jsonwebtoken";
@@ -180,6 +181,155 @@ export default {
             }
             res.send(response);
         } catch(err){
+            next(err);
+        }
+    }, 
+
+
+    async getUserFavoriteBarters(req, res, next) {
+        let { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        let { page, limit } = req.query;
+        
+        page = page ? parseInt(page) : 1;
+        limit = limit ? parseInt(limit) : 20;
+
+        try { 
+            const userFavBarters = await FavBarter.find({ user: id }) //.populate('barter')
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+            
+            const userFavBartersCount = await FavBarter.count({ user : id});
+            
+            const pageCount = Math.ceil(userFavBartersCount / limit);
+            let response = new ApiResponse(userFavBarters, page, pageCount, limit, userFavBartersCount);
+            response.addSelfLink(req);
+
+            if (page > 1) {
+                response.addPrevLink(req);
+            }
+            if (page < pageCount) {
+                response.addNextLink(req);
+            }
+            res.send(response);
+        } catch(err){
+            next(err);
+        }
+    },
+
+
+    async getUserFavoriteAuctions(req, res, next) {
+        let { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        let { page, limit } = req.query;
+        
+        page = page ? parseInt(page) : 1;
+        limit = limit ? parseInt(limit) : 20;
+
+        try { 
+            const userFavAuctions = await FavAuction.find({ user: id }) //.populate('barter')
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+            
+            const userFavAuctionsCount = await FavAuction.count({ user : id});
+            
+            const pageCount = Math.ceil(userFavAuctionsCount / limit);
+            let response = new ApiResponse(userFavAuctions, page, pageCount, limit, userFavAuctionsCount);
+            response.addSelfLink(req);
+
+            if (page > 1) {
+                response.addPrevLink(req);
+            }
+            if (page < pageCount) {
+                response.addNextLink(req);
+            }
+            res.send(response);
+        } catch(err){
+            next(err);
+        }
+    },
+
+
+    async updateFavBarter(req, res, next) {
+        const { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        if(!req.body.barter) {
+            return next(new ApiError(422, 'barter is required'))
+        };
+
+        try {
+            const barter = await Barter.findById(req.body.barter);
+            if(!barter)
+                return next(new ApiError.NotFound('Barter'))
+
+            const userFavBarter = await FavBarter.findOne({ user: id , barter: barter.id });
+            if (!userFavBarter) {
+                const createdUserFavBarter = await FavBarter.create({ user: id , barter: req.body.barter });
+                res.status(200).send(createdUserFavBarter);
+            }
+            // Already Exist Nothing to do..
+            res.send();
+        }
+        catch (err) {
+            next(err);
+        }
+    },
+
+
+    async updateFavAuction(req, res, next) {
+        const { id } = req.params;
+        checkIfUserExist(id, next);
+        
+        if(!req.body.auction) {
+            return next(new ApiError(422, 'auction is required'))
+        };
+
+        try {
+            const auction = await Auction.findById(req.body.auction);
+            if(!auction)
+                return next(new ApiError.NotFound('Auction'))
+
+            const userFavAuction = await FavBarter.findOne({ user: id , auction: auction.id });
+            if (!userFavAuction) {
+                const createdUserFavAuction= await FavAuction.create({ user: id , auction: req.body.auction });
+                res.status(200).send(createdUserFavAuction);
+            }
+            // Already Exist Nothing to do..
+            res.send();
+        }
+        catch (err) {
+            next(err);
+        }
+    },
+
+    async deleteFavBarter(req, res, next) {
+        const { id, barterId } = req.params;
+        try {
+            const deletedFavBarter = await FavBarter.findOne({ user : id, barter: barterId}).remove();
+            if (!deletedFavBarter)
+                return next(new ApiError.NotFound('User FavouriteBarter'));
+            res.status(204).send();
+        }
+        catch (err) {
+            next(err);
+        }
+    },
+    
+    
+    async deleteFavAuction(req, res, next) {
+        const { id, auctionId } = req.params;
+        try {
+            const deletedFavAuction = await FavAuction.findOne({ user : id, auction: auctionId}).remove();
+            if (!deletedFavAuction)
+                return next(new ApiError.NotFound('User FavouriteAuction'));
+            res.status(204).send();
+        }
+        catch (err) {
             next(err);
         }
     }
