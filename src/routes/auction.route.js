@@ -80,10 +80,10 @@ const router = express.Router();
  *         in: "query"
  *         type: number
  *         default: 20
- *       - name: "category"
+ *       - name: "categories"
  *         in: "query"
  *         type: string
- *         description: Category id 
+ *         description: "EX : id1,id2,id3,.."
  *       - name: "finished"
  *         in: "query"
  *         type: boolean

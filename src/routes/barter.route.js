@@ -71,9 +71,10 @@ const router = express.Router();
  *         in: "query"
  *         type: number
  *         default: 20
- *       - name: "category"
+ *       - name: "categories"
  *         in: "query"
- *         type: id
+ *         type: string
+ *         description: "EX: id1,id2,id3"
  *       - name: "type"
  *         in: "query"
  *         type: string

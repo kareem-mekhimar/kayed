@@ -42,7 +42,7 @@ export default {
     async findAll(req, res, next) {
         let page = req.query.page;
         let limit = req.query.limit;
-        let category = req.query.category;
+        let categories = req.query.categories;
         let startPrice = req.query.startPrice;
         let endPrice = req.query.endPrice;
         let finished = req.query.finished;
@@ -56,9 +56,19 @@ export default {
         let findQuery = Auction.find({});
         let countQuery = Auction.count();
 
-        if (category) {
-            findQuery.where("relatedCategory").equals(category);
-            countQuery.where("relatedCategory").equals(category);
+        if (categories) {
+            categories = categories.split(',')
+            if(categories > 1){ 
+                for(let category of categories){
+                    console.log(category)
+                    findQuery.where("relatedCategory").equals(category);
+                    countQuery.where("relatedCategory").equals(category);              
+                }
+            }
+            else {
+                findQuery.where("relatedCategory").equals(categories);
+                countQuery.where("relatedCategory").equals(categories);
+            }
         }
 
         if (startPrice) {

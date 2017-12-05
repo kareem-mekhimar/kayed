@@ -26,11 +26,8 @@ const validateUserBody = (req, isUpdate = false) => {
     if(isUpdate) {
         req.checkBody("email").notEmpty().withMessage("Email Required")
         .custom(async value => {
-            console.log(req.user.email);
-            console.log(value);
             if (req.user.email !== value) {
-                console.log("IM HERE: ")
-                const user = await User.findOne({ email: value, _id: { $ne: req.user.id } })
+                const user = await User.findOne({ email: value, _id: { $ne: req.user._id } })
                 if (user)
                     throw new Error("email already taken");
             }
@@ -112,7 +109,7 @@ export default {
                 updatedUser.save();
             }
 
-            res.status(200).send({ user: updatedUser, token: generateToken(id) });
+            res.status(200).send({ user: updatedUser });
            
         } catch (err) {
             next(err)

@@ -33,17 +33,29 @@ const validateBarter = (req, isUpdate = false) => {
 
     return req.getValidationResult();
 }
+const checkIfValidIds = (categories, next) => { 
+    for(let category of categories) {
+        if(!mongoose.Types.ObjectId.isValid(category))
+            return next(new ApiError.BadRequest(400, 'you have sent an invalid category id: ', category))
+    }
+} 
 
 export default {
     async findAll(req, res, next) {
-        let { page, limit , category , type , finished } = req.query;
+        let { page, limit , categories , type , finished } = req.query;
         let query = {};
         
-        if(category)
-            query.relatedCategory = category;
-        if(type)
+        if (categories){
+            categories = categories.split(',');
+            checkIfValidIds(categories, next);
+            if (categories.length > 1) {
+                query.relatedCategory = { $in: categories }
+            }
+            else query.relatedCategory = categories[0];
+        }
+        if (type)
             query.type = type;
-        if(finished)
+        if (finished)
             query.finished = finished;
 
         page = page ? parseInt(page) : 1;
