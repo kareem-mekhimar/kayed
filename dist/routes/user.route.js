@@ -17,6 +17,44 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var router = _express2.default.Router();
 
 /**
+* @swagger
+* definitions:
+*   FavBarter:
+*     type: "object"
+*     required:
+*     - "barter"
+*     properties:
+*       user:
+*         type: string
+*         readOnly: true
+*       barter:
+*         type: string
+*       creationDate:
+*         type: string
+*         format: date-time
+*         readOnly: true
+*/
+
+/**
+* @swagger
+* definitions:
+*   FavAuction:
+*     type: "object"
+*     required:
+*     - "auction"
+*     properties:
+*       user:
+*         type: string
+*         readOnly: true
+*       auction:
+*         type: string
+*       creationDate:
+*         type: string
+*         format: date-time
+*         readOnly: true
+*/
+
+/**
  * @swagger
  * /users/{id}:
  *   put:
@@ -152,6 +190,8 @@ router.route('/:id').put(_user2.default.updateUser);
  *                   "limit": 2,
  *                   "totalCount": 4
  *               }
+ *       404:
+ *         description:  User Not Found
  */
 router.route('/:id/barters').get(_user2.default.getUserBarters);
 
@@ -219,8 +259,229 @@ router.route('/:id/barters').get(_user2.default.getUserBarters);
  *               "limit": 1,
  *               "totalCount": 2
  *               }
+ *       404:
+ *         description:  User Not Found
  */
 router.route('/:id/auctions').get(_user2.default.getUserAuctions);
+
+/**
+ * @swagger
+ * /users/{id}/favourites/barters:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get all favourite barters of user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: User Id
+ *         type: string
+ *       - name: "page"
+ *         in: "query"
+ *         type: number
+ *       - name: "limit"
+ *         in: "query"
+ *         type: number
+ *     responses:
+ *       200:
+ *         description: Get An Array of User Favourite Barters
+ *         example: 
+ *               {
+ *               "links": {
+ *                       "self": "http://localhost:3000/api/v1/users/5a2698c11287c23b1868278b/favourites/barters?page=1&limit=20"
+ *               },
+ *               "data": [
+ *                       {
+ *                       "user": "5a2698c11287c23b1868278b",
+ *                       "barter": "5a2552c020d3b60014b4fc4e",
+ *                       "creationDate": "2017-12-05T19:11:33.471Z",
+ *                       "id": "5a26ef65c862504b24f8c229"
+ *                       }
+ *               ],
+ *               "page": 1,
+ *               "pageCount": 1,
+ *               "limit": 20,
+ *               "totalCount": 1
+ *               }
+ *       404:
+ *         description:  User Not Found
+ */
+
+/**
+ * @swagger
+ * /users/{id}/favourites/barters:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Create User Favourite barter
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: body
+ *         description: FavBarter Object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/FavBarter'   
+ *     responses:
+ *       200:
+ *         description: Return Updated Favourite Barter
+ *         example:
+ *               {
+ *               "user": "5a2698c11287c23b1868278b",
+ *               "barter": "5a2552c020d3b60014b4fc4e",
+ *               "creationDate": "2017-12-05T19:11:33.471Z",
+ *               "id": "5a26ef65c862504b24f8c229"
+ *               }
+ *       404:
+ *         description:  User Not Found
+ *       422:
+ *         description: barter is required
+ */
+
+router.route('/:id/favourites/barters').get(_user2.default.getUserFavoriteBarters).put(_user2.default.updateFavBarter);
+/**
+ * @swagger
+ * /users/{id}/favourites/barters/{barterId}:
+ *   delete:
+ *     tags:
+ *       - User
+ *     summary: Delete User Favourite barter
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: barterId
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       204:
+ *         description: Successed. No Content
+ *       404:
+ *         description: User FavouriteBarter Not Found
+*/
+router.route('/:id/favourites/barters/:barterId').delete(_user2.default.deleteFavBarter);
+
+/**
+* @swagger
+* /users/{id}/favourites/auctions:
+*   get:
+*     tags:
+*       - User
+*     summary: Get all favourite auctions of user
+*     produces:
+*       - application/json
+*     parameters:
+*       - name: id
+*         in: path
+*         required: true
+*         description: User Id
+*         type: string
+*       - name: "page"
+*         in: "query"
+*         type: number
+*       - name: "limit"
+*         in: "query"
+*         type: number
+*     responses:
+*       200:
+*         description: Get An Array of User Favourite Auctions
+*         example:
+*                {
+*                "links": {
+*                        "self": "http://localhost:3000/api/v1/users/5a2698c11287c23b1868278b/favourites/auctions?page=1&limit=20"
+*                },
+*                "data": [
+*                        {
+*                        "user": "5a2698c11287c23b1868278b",
+*                        "auction": "5a2584cd37560312b08bb05c",
+*                        "creationDate": "2017-12-05T19:09:54.712Z",
+*                        "id": "5a26ef02c862504b24f8c228"
+*                        }
+*                ],
+*                "page": 1,
+*                "pageCount": 1,
+*                "limit": 20,
+*                "totalCount": 1
+*                }
+*       404:
+*         description:  User Not Found
+*/
+
+/**
+ * @swagger
+ * /users/{id}/favourites/auctions:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Update an existing User Favourite Auction
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: body
+ *         description: FavBarter Object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/FavAuction'   
+ *     responses:
+ *       200:
+ *         description: Return Updated Favourite Auction
+ *         example:
+ *               {
+ *               "user": "5a2698c11287c23b1868278b",
+ *               "auction": "5a2584cd37560312b08bb05c",
+ *               "creationDate": "2017-12-05T19:09:54.712Z",
+ *               "id": "5a26ef02c862504b24f8c228"
+ *               }
+ *       404:
+ *         description:  User Not Found
+ *       422:
+ *         description: auction is required
+ */
+
+router.route('/:id/favourites/auctions').get(_user2.default.getUserFavoriteAuctions).put(_user2.default.updateFavAuction);
+
+/**
+ * @swagger
+ * /users/{id}/favourites/auctions/{auctionId}:
+ *   delete:
+ *     tags:
+ *       - User
+ *     summary: Delete User Favourite Auction
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: auctionId
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       204:
+ *         description: Successed. No Content
+ *       404:
+ *         description: User FavouriteAuction Not Found
+*/
+router.route('/:id/favourites/auctions/:auctionId').delete(_user2.default.deleteFavAuction);
 
 exports.default = router;
 //# sourceMappingURL=user.route.js.map

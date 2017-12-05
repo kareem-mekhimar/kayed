@@ -16,6 +16,14 @@ var _auction = require("../models/auction.model");
 
 var _auction2 = _interopRequireDefault(_auction);
 
+var _favBarter = require("../models/fav-barter.model");
+
+var _favBarter2 = _interopRequireDefault(_favBarter);
+
+var _favAuction = require("../models/fav-auction.model");
+
+var _favAuction2 = _interopRequireDefault(_favAuction);
+
 var _ApiResponse = require("../helpers/ApiResponse");
 
 var _ApiResponse2 = _interopRequireDefault(_ApiResponse);
@@ -391,6 +399,370 @@ exports.default = {
                     }
                 }
             }, _callee7, _this5, [[5, 20]]);
+        }))();
+    },
+    getUserFavoriteBarters: function getUserFavoriteBarters(req, res, next) {
+        var _this6 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8() {
+            var id, _req$query3, page, limit, userFavBarters, userFavBartersCount, pageCount, response;
+
+            return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                while (1) {
+                    switch (_context8.prev = _context8.next) {
+                        case 0:
+                            id = req.params.id;
+
+                            checkIfUserExist(id, next);
+
+                            _req$query3 = req.query, page = _req$query3.page, limit = _req$query3.limit;
+
+
+                            page = page ? parseInt(page) : 1;
+                            limit = limit ? parseInt(limit) : 20;
+
+                            _context8.prev = 5;
+                            _context8.next = 8;
+                            return _favBarter2.default.find({ user: id }) //.populate('barter')
+                            .sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
+
+                        case 8:
+                            userFavBarters = _context8.sent;
+                            _context8.next = 11;
+                            return _favBarter2.default.count({ user: id });
+
+                        case 11:
+                            userFavBartersCount = _context8.sent;
+                            pageCount = Math.ceil(userFavBartersCount / limit);
+                            response = new _ApiResponse2.default(userFavBarters, page, pageCount, limit, userFavBartersCount);
+
+                            response.addSelfLink(req);
+
+                            if (page > 1) {
+                                response.addPrevLink(req);
+                            }
+                            if (page < pageCount) {
+                                response.addNextLink(req);
+                            }
+                            res.send(response);
+                            _context8.next = 23;
+                            break;
+
+                        case 20:
+                            _context8.prev = 20;
+                            _context8.t0 = _context8["catch"](5);
+
+                            next(_context8.t0);
+
+                        case 23:
+                        case "end":
+                            return _context8.stop();
+                    }
+                }
+            }, _callee8, _this6, [[5, 20]]);
+        }))();
+    },
+    getUserFavoriteAuctions: function getUserFavoriteAuctions(req, res, next) {
+        var _this7 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9() {
+            var id, _req$query4, page, limit, userFavAuctions, userFavAuctionsCount, pageCount, response;
+
+            return regeneratorRuntime.wrap(function _callee9$(_context9) {
+                while (1) {
+                    switch (_context9.prev = _context9.next) {
+                        case 0:
+                            id = req.params.id;
+
+                            checkIfUserExist(id, next);
+
+                            _req$query4 = req.query, page = _req$query4.page, limit = _req$query4.limit;
+
+
+                            page = page ? parseInt(page) : 1;
+                            limit = limit ? parseInt(limit) : 20;
+
+                            _context9.prev = 5;
+                            _context9.next = 8;
+                            return _favAuction2.default.find({ user: id }) //.populate('barter')
+                            .sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
+
+                        case 8:
+                            userFavAuctions = _context9.sent;
+                            _context9.next = 11;
+                            return _favAuction2.default.count({ user: id });
+
+                        case 11:
+                            userFavAuctionsCount = _context9.sent;
+                            pageCount = Math.ceil(userFavAuctionsCount / limit);
+                            response = new _ApiResponse2.default(userFavAuctions, page, pageCount, limit, userFavAuctionsCount);
+
+                            response.addSelfLink(req);
+
+                            if (page > 1) {
+                                response.addPrevLink(req);
+                            }
+                            if (page < pageCount) {
+                                response.addNextLink(req);
+                            }
+                            res.send(response);
+                            _context9.next = 23;
+                            break;
+
+                        case 20:
+                            _context9.prev = 20;
+                            _context9.t0 = _context9["catch"](5);
+
+                            next(_context9.t0);
+
+                        case 23:
+                        case "end":
+                            return _context9.stop();
+                    }
+                }
+            }, _callee9, _this7, [[5, 20]]);
+        }))();
+    },
+    updateFavBarter: function updateFavBarter(req, res, next) {
+        var _this8 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10() {
+            var id, barter, userFavBarter, createdUserFavBarter;
+            return regeneratorRuntime.wrap(function _callee10$(_context10) {
+                while (1) {
+                    switch (_context10.prev = _context10.next) {
+                        case 0:
+                            id = req.params.id;
+
+                            checkIfUserExist(id, next);
+
+                            if (req.body.barter) {
+                                _context10.next = 4;
+                                break;
+                            }
+
+                            return _context10.abrupt("return", next(new _ApiError2.default(422, 'barter is required')));
+
+                        case 4:
+                            ;
+
+                            _context10.prev = 5;
+                            _context10.next = 8;
+                            return _barter2.default.findById(req.body.barter);
+
+                        case 8:
+                            barter = _context10.sent;
+
+                            if (barter) {
+                                _context10.next = 11;
+                                break;
+                            }
+
+                            return _context10.abrupt("return", next(new _ApiError2.default.NotFound('Barter')));
+
+                        case 11:
+                            _context10.next = 13;
+                            return _favBarter2.default.findOne({ user: id, barter: barter.id });
+
+                        case 13:
+                            userFavBarter = _context10.sent;
+
+                            if (userFavBarter) {
+                                _context10.next = 19;
+                                break;
+                            }
+
+                            _context10.next = 17;
+                            return _favBarter2.default.create({ user: id, barter: req.body.barter });
+
+                        case 17:
+                            createdUserFavBarter = _context10.sent;
+
+                            res.status(200).send(createdUserFavBarter);
+
+                        case 19:
+                            // Already Exist Nothing to do..
+                            res.send();
+                            _context10.next = 25;
+                            break;
+
+                        case 22:
+                            _context10.prev = 22;
+                            _context10.t0 = _context10["catch"](5);
+
+                            next(_context10.t0);
+
+                        case 25:
+                        case "end":
+                            return _context10.stop();
+                    }
+                }
+            }, _callee10, _this8, [[5, 22]]);
+        }))();
+    },
+    updateFavAuction: function updateFavAuction(req, res, next) {
+        var _this9 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11() {
+            var id, auction, userFavAuction, createdUserFavAuction;
+            return regeneratorRuntime.wrap(function _callee11$(_context11) {
+                while (1) {
+                    switch (_context11.prev = _context11.next) {
+                        case 0:
+                            id = req.params.id;
+
+                            checkIfUserExist(id, next);
+
+                            if (req.body.auction) {
+                                _context11.next = 4;
+                                break;
+                            }
+
+                            return _context11.abrupt("return", next(new _ApiError2.default(422, 'auction is required')));
+
+                        case 4:
+                            ;
+
+                            _context11.prev = 5;
+                            _context11.next = 8;
+                            return _auction2.default.findById(req.body.auction);
+
+                        case 8:
+                            auction = _context11.sent;
+
+                            if (auction) {
+                                _context11.next = 11;
+                                break;
+                            }
+
+                            return _context11.abrupt("return", next(new _ApiError2.default.NotFound('Auction')));
+
+                        case 11:
+                            _context11.next = 13;
+                            return _favBarter2.default.findOne({ user: id, auction: auction.id });
+
+                        case 13:
+                            userFavAuction = _context11.sent;
+
+                            if (userFavAuction) {
+                                _context11.next = 19;
+                                break;
+                            }
+
+                            _context11.next = 17;
+                            return _favAuction2.default.create({ user: id, auction: req.body.auction });
+
+                        case 17:
+                            createdUserFavAuction = _context11.sent;
+
+                            res.status(200).send(createdUserFavAuction);
+
+                        case 19:
+                            // Already Exist Nothing to do..
+                            res.send();
+                            _context11.next = 25;
+                            break;
+
+                        case 22:
+                            _context11.prev = 22;
+                            _context11.t0 = _context11["catch"](5);
+
+                            next(_context11.t0);
+
+                        case 25:
+                        case "end":
+                            return _context11.stop();
+                    }
+                }
+            }, _callee11, _this9, [[5, 22]]);
+        }))();
+    },
+    deleteFavBarter: function deleteFavBarter(req, res, next) {
+        var _this10 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
+            var _req$params, id, barterId, deletedFavBarter;
+
+            return regeneratorRuntime.wrap(function _callee12$(_context12) {
+                while (1) {
+                    switch (_context12.prev = _context12.next) {
+                        case 0:
+                            _req$params = req.params, id = _req$params.id, barterId = _req$params.barterId;
+                            _context12.prev = 1;
+                            _context12.next = 4;
+                            return _favBarter2.default.findOne({ user: id, barter: barterId }).remove();
+
+                        case 4:
+                            deletedFavBarter = _context12.sent;
+
+                            if (deletedFavBarter) {
+                                _context12.next = 7;
+                                break;
+                            }
+
+                            return _context12.abrupt("return", next(new _ApiError2.default.NotFound('User FavouriteBarter')));
+
+                        case 7:
+                            res.status(204).send();
+                            _context12.next = 13;
+                            break;
+
+                        case 10:
+                            _context12.prev = 10;
+                            _context12.t0 = _context12["catch"](1);
+
+                            next(_context12.t0);
+
+                        case 13:
+                        case "end":
+                            return _context12.stop();
+                    }
+                }
+            }, _callee12, _this10, [[1, 10]]);
+        }))();
+    },
+    deleteFavAuction: function deleteFavAuction(req, res, next) {
+        var _this11 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee13() {
+            var _req$params2, id, auctionId, deletedFavAuction;
+
+            return regeneratorRuntime.wrap(function _callee13$(_context13) {
+                while (1) {
+                    switch (_context13.prev = _context13.next) {
+                        case 0:
+                            _req$params2 = req.params, id = _req$params2.id, auctionId = _req$params2.auctionId;
+                            _context13.prev = 1;
+                            _context13.next = 4;
+                            return _favAuction2.default.findOne({ user: id, auction: auctionId }).remove();
+
+                        case 4:
+                            deletedFavAuction = _context13.sent;
+
+                            if (deletedFavAuction) {
+                                _context13.next = 7;
+                                break;
+                            }
+
+                            return _context13.abrupt("return", next(new _ApiError2.default.NotFound('User FavouriteAuction')));
+
+                        case 7:
+                            res.status(204).send();
+                            _context13.next = 13;
+                            break;
+
+                        case 10:
+                            _context13.prev = 10;
+                            _context13.t0 = _context13["catch"](1);
+
+                            next(_context13.t0);
+
+                        case 13:
+                        case "end":
+                            return _context13.stop();
+                    }
+                }
+            }, _callee13, _this11, [[1, 10]]);
         }))();
     }
 };
