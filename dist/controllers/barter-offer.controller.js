@@ -207,28 +207,32 @@ exports.default = {
                         case 12:
                             createdBarterOffer = _context4.sent;
                             _context4.next = 15;
-                            return _barterOffer2.default.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
+                            return _barter2.default.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
                         case 15:
+                            _context4.next = 17;
+                            return _barterOffer2.default.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
+
+                        case 17:
                             barterOffer = _context4.sent;
 
 
                             res.status(201).send(barterOffer);
-                            _context4.next = 22;
+                            _context4.next = 24;
                             break;
 
-                        case 19:
-                            _context4.prev = 19;
+                        case 21:
+                            _context4.prev = 21;
                             _context4.t0 = _context4["catch"](6);
 
                             next(_context4.t0);
 
-                        case 22:
+                        case 24:
                         case "end":
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this2, [[6, 19]]);
+            }, _callee4, _this2, [[6, 21]]);
         }))();
     },
     findById: function findById(req, res, next) {

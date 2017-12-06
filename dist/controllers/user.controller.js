@@ -423,7 +423,13 @@ exports.default = {
 
                             _context8.prev = 5;
                             _context8.next = 8;
-                            return _favBarter2.default.find({ user: id }).populate('barter user').sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
+                            return _favBarter2.default.find({ user: id }).populate({
+                                path: 'barter',
+                                model: 'barter',
+                                populate: {
+                                    path: 'relatedUser relatedCategory'
+                                }
+                            }).sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
 
                         case 8:
                             userFavBarters = _context8.sent;
@@ -483,7 +489,13 @@ exports.default = {
 
                             _context9.prev = 5;
                             _context9.next = 8;
-                            return _favAuction2.default.find({ user: id }).populate('auction user').sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
+                            return _favAuction2.default.find({ user: id }).populate({
+                                path: 'auction',
+                                model: 'auction',
+                                populate: {
+                                    path: 'relatedUser relatedCategory'
+                                }
+                            }).sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
 
                         case 8:
                             userFavAuctions = _context9.sent;
