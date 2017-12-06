@@ -285,8 +285,28 @@ router.route('/:id/auctions').get(UserController.getUserAuctions);
  *               },
  *               "data": [
  *                       {
- *                       "user": "5a2698c11287c23b1868278b",
- *                       "barter": "5a2552c020d3b60014b4fc4e",
+ *                       "user": {
+ *                               "fullName": "Magdy",
+ *                               "email": "demo2@demo2.com",
+ *                               "address": "82 Fatma",
+ *                               "phone": "01157954393",
+ *                               "country": "Egypt",
+ *                               "id": "5a2698c11287c23b1868278b"
+ *                       },
+ *                       "barter": {
+ *                               "title": "Samsung A+",
+ *                               "description": "THE BEST SAMSUNG EVER MADE",
+ *                               "neededProduct": "TV Samsung 40 inch",
+ *                               "relatedCategory": "5a2442fb4311cd0014c1bfb9",
+ *                               "relatedUser": "5a23dfd04bc62c0014489e3c",
+ *                               "creationDate": "2017-12-04T13:50:56.910Z",
+ *                              "finished": false,
+ *                               "imgs": [
+ *                               "http://kayed-api.herokuapp.com/uploads/barters/5a2552c020d3b60014b4fc4e0.jpeg"
+ *                               ],
+ *                               "type": "TEMP",
+ *                               "id": "5a2552c020d3b60014b4fc4e"
+ *                       },
  *                       "creationDate": "2017-12-05T19:11:33.471Z",
  *                       "id": "5a26ef65c862504b24f8c229"
  *                       }
@@ -399,8 +419,29 @@ router.route('/:id/favourites/barters/:barterId').delete(UserController.deleteFa
 *                },
 *                "data": [
 *                        {
-*                        "user": "5a2698c11287c23b1868278b",
-*                        "auction": "5a2584cd37560312b08bb05c",
+*                        "user": {
+*                                "fullName": "Magdy",
+*                                "email": "demo2@demo2.com",
+*                                "address": "82 Fatma",
+*                                "phone": "01157954393",
+*                                "country": "Egypt",
+*                                "id": "5a2698c11287c23b1868278b"
+*                        },
+*                        "auction": {
+*                                "title": "new Car",
+*                                "description": "Full HD , 3d support",
+*                                "startPrice": 10000,
+*                                "endDate": "2017-12-05T22:00:00.000Z",
+*                                "relatedUser": "5a23d9a74bc62c0014489e3b",
+*                                "relatedCategory": "5a25841337560312b08bb05b",
+*                                "highestPrice": 12000,
+*                                "creationDate": "2017-12-04T17:24:29.201Z",
+*                                "finished": false,
+*                                "imgs": [
+*                                "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+*                                ],
+*                                "id": "5a2584cd37560312b08bb05c"
+*                        },
 *                        "creationDate": "2017-12-05T19:09:54.712Z",
 *                        "id": "5a26ef02c862504b24f8c228"
 *                        }
@@ -421,7 +462,7 @@ router.route('/:id/favourites/barters/:barterId').delete(UserController.deleteFa
  *   put:
  *     tags:
  *       - User
- *     summary: Update an existing User Favourite Auction
+ *     summary: Create User Favourite Auction
  *     produces:
  *       - application/json
  *     parameters:
@@ -482,7 +523,5 @@ router.route('/:id/favourites/auctions')
  *         description: User FavouriteAuction Not Found
 */
 router.route('/:id/favourites/auctions/:auctionId').delete(UserController.deleteFavAuction);
-
-
 
 export default router;
