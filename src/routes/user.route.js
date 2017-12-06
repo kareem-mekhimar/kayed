@@ -285,22 +285,27 @@ router.route('/:id/auctions').get(UserController.getUserAuctions);
  *               },
  *               "data": [
  *                       {
- *                       "user": {
- *                               "fullName": "Magdy",
- *                               "email": "demo2@demo2.com",
- *                               "address": "82 Fatma",
- *                               "phone": "01157954393",
- *                               "country": "Egypt",
- *                               "id": "5a2698c11287c23b1868278b"
- *                       },
+ *                       "user": "5a2698c11287c23b1868278b",
  *                       "barter": {
- *                               "title": "Samsung A+",
- *                               "description": "THE BEST SAMSUNG EVER MADE",
- *                               "neededProduct": "TV Samsung 40 inch",
- *                               "relatedCategory": "5a2442fb4311cd0014c1bfb9",
- *                               "relatedUser": "5a23dfd04bc62c0014489e3c",
+ *                               "title": "بي",
+ *                               "description": "  بي ي ر",
+ *                               "neededProduct": "ررثقر",
+ *                               "relatedCategory": {
+ *                               "name": "سيارات",
+ *                               "id": "5a2442fb4311cd0014c1bfb9"
+ *                               },
+ *                               "relatedUser": {
+ *                               "email": "marmar@mar.com",
+ *                               "fullName": "maradona",
+ *                               "phone": "123455",
+ *                               "country": "مصر",
+ *                               "address": "بوسعيد",
+ *                               "id": "5a23dfd04bc62c0014489e3c"
+ *                               },
  *                               "creationDate": "2017-12-04T13:50:56.910Z",
- *                              "finished": false,
+ *                               "offerUsers": [],
+ *                               "favUsers": [],
+ *                               "finished": false,
  *                               "imgs": [
  *                               "http://kayed-api.herokuapp.com/uploads/barters/5a2552c020d3b60014b4fc4e0.jpeg"
  *                               ],
@@ -419,21 +424,24 @@ router.route('/:id/favourites/barters/:barterId').delete(UserController.deleteFa
 *                },
 *                "data": [
 *                        {
-*                        "user": {
-*                                "fullName": "Magdy",
-*                                "email": "demo2@demo2.com",
-*                                "address": "82 Fatma",
-*                                "phone": "01157954393",
-*                                "country": "Egypt",
-*                                "id": "5a2698c11287c23b1868278b"
-*                        },
+*                        "user": "5a2698c11287c23b1868278b",
 *                        "auction": {
 *                                "title": "new Car",
 *                                "description": "Full HD , 3d support",
 *                                "startPrice": 10000,
 *                                "endDate": "2017-12-05T22:00:00.000Z",
-*                                "relatedUser": "5a23d9a74bc62c0014489e3b",
-*                                "relatedCategory": "5a25841337560312b08bb05b",
+*                                "relatedUser": {
+*                                "fullName": "Magdyxy",
+*                                "email": "x2x@x2x.com",
+*                                "address": "82 Fatma",
+*                                "phone": "01157954393",
+*                                "country": "Egypt",
+*                                "id": "5a23d9a74bc62c0014489e3b"
+*                                },
+*                                "relatedCategory": {
+*                                "name": "تلفزيونات",
+*                                "id": "5a25841337560312b08bb05b"
+*                                },
 *                                "highestPrice": 12000,
 *                                "creationDate": "2017-12-04T17:24:29.201Z",
 *                                "finished": false,

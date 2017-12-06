@@ -80,9 +80,11 @@ export default {
             req.body.relatedBarter = barterId;
             
             let createdBarterOffer = await BarterOffer.create({_id : newBarterOfferId, ...req.body});
+            
+            await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
             const barterOffer = await BarterOffer.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
-            
+                        
             res.status(201).send(barterOffer);            
         }
         catch (err) {
