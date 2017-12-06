@@ -196,7 +196,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const userFavBarters = await FavBarter.find({ user: id }) //.populate('barter')
+            const userFavBarters = await FavBarter.find({ user: id }).populate('barter user')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
@@ -230,7 +230,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const userFavAuctions = await FavAuction.find({ user: id }) //.populate('barter')
+            const userFavAuctions = await FavAuction.find({ user: id }).populate('auction user')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
