@@ -66,7 +66,7 @@ export default {
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
-                                
+
             const bartersCount = await Barter.count(query);
             
             const pageCount = Math.ceil(bartersCount / limit);

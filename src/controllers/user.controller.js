@@ -196,10 +196,16 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const userFavBarters = await FavBarter.find({ user: id }).populate('barter user')
-                                .sort({ creationDate: -1 })
-                                .limit(limit)
-                                .skip((page - 1) * limit);
+            const userFavBarters = await FavBarter.find({ user: id }).populate({
+                path: 'barter',
+                model: 'barter',
+                populate: {
+                  path: 'relatedUser relatedCategory'
+                }
+              })
+            .sort({ creationDate: -1 })
+            .limit(limit)
+            .skip((page - 1) * limit);
             
             const userFavBartersCount = await FavBarter.count({ user : id});
             
@@ -230,10 +236,16 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const userFavAuctions = await FavAuction.find({ user: id }).populate('auction user')
-                                .sort({ creationDate: -1 })
-                                .limit(limit)
-                                .skip((page - 1) * limit);
+            const userFavAuctions = await FavAuction.find({ user: id }).populate({
+                path: 'auction',
+                model: 'auction',
+                populate: {
+                  path: 'relatedUser relatedCategory'
+                }
+            })
+            .sort({ creationDate: -1 })
+            .limit(limit)
+            .skip((page - 1) * limit);
             
             const userFavAuctionsCount = await FavAuction.count({ user : id});
             
