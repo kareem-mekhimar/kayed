@@ -17,7 +17,7 @@ const FavAuctionSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, { strict: false });
 
 FavAuctionSchema.set('toJSON', {
     transform: function (doc, ret, options) {

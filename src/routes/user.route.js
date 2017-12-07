@@ -117,70 +117,48 @@ router.route('/:id').put(UserController.updateUser);
  *         description: Get An Array of User Barters
  *         example: 
  *               {
- *                   "links": {
- *                       "self": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=1&limit=2",
- *                       "next": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=2&limit=2",
- *                       "last": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=2&limit=2"
- *                   },
- *                   "data": [
+ *               "links": {
+ *                       "self": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=1&limit=1",
+ *                       "next": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=2&limit=1",
+ *                       "last": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/barters?page=5&limit=1"
+ *               },
+ *               "data": [
  *                       {
- *                           "title": "Samsung Note 8",
- *                           "description": "This is a description for new mobile phone of samsung",
- *                           "neededProduct": "Iphone x",
- *                           "relatedUser": {
- *                               "fullName": "Magdy",
- *                               "email": "xx@xx.com",
+ *                       "title": "Samsung Note 8",
+ *                       "description": "This is a description for new mobile phone of samsung",
+ *                       "neededProduct": "Iphone x",
+ *                       "relatedUser": {
+ *                               "fullName": "Magdyxy",
+ *                               "email": "x2x@x2x.com",
  *                               "address": "82 Fatma",
  *                               "phone": "01157954393",
  *                               "country": "Egypt",
  *                               "id": "5a23d9a74bc62c0014489e3b"
- *                           },
- *                           "relatedCategory": {
- *                               "name": "موبايلات",
- *                               "id": "5a24430e4311cd0014c1bfba"
- *                           },
- *                           "creationDate": "2017-12-04T13:44:49.293Z",
- *                           "finished": false,
- *                           "imgs": [
- *                               "http://localhost:3000/uploads/barters/5a255151f4bb6f343470b7e60.jpeg"
- *                           ],
- *                           "type": "TEMP",
- *                           "id": "5a255151f4bb6f343470b7e6"
  *                       },
- *                       {
- *                           "title": "Samsung A",
- *                           "description": "assasasaasasas",
- *                           "neededProduct": "AAAAK",
- *                           "relatedUser": {
- *                               "fullName": "Magdy",
- *                               "email": "xx@xx.com",
- *                               "address": "82 Fatma",
- *                               "phone": "01157954393",
- *                               "country": "Egypt",
- *                               "id": "5a23d9a74bc62c0014489e3b"
- *                           },
- *                           "relatedCategory": {
+ *                       "relatedCategory": {
  *                               "name": "موبايلات",
  *                               "id": "5a24430e4311cd0014c1bfba"
- *                           },
- *                           "barterOffer": "5a2532c7cb4ed22fc0831e61",
- *                           "creationDate": "2017-12-04T01:00:49.846Z",
- *                           "finished": true,
- *                           "imgs": [
- *                               "http://localhost:3000/uploads/barters/5a249e4148d6362638faeb9d0.jpeg"
- *                           ],
- *                           "type": "TEMP",
- *                           "id": "5a249e4148d6362638faeb9d"
+ *                       },
+ *                       "creationDate": "2017-12-06T21:02:28.264Z",
+ *                       "finished": false,
+ *                       "imgs": [
+ *                               "http://localhost:3000/uploads/barters/5a285ae4b23b592ca4bf42030.jpeg"
+ *                       ],
+ *                       "type": "TEMP",
+ *                       "id": "5a285ae4b23b592ca4bf4203",
+ *                       "inMyOffers": true,
+ *                       "inMyFavourites": false
  *                       }
- *                   ],
- *                   "page": 1,
- *                   "pageCount": 2,
- *                   "limit": 2,
- *                   "totalCount": 4
+ *               ],
+ *               "page": 1,
+ *               "pageCount": 5,
+ *               "limit": 1,
+ *               "totalCount": 5
  *               }
  *       404:
  *         description:  User Not Found
  */
+
 router.route('/:id/barters').get(UserController.getUserBarters);
 
 /**
@@ -209,47 +187,46 @@ router.route('/:id/barters').get(UserController.getUserBarters);
  *         example: 
  *               {
  *               "links": {
- *                   "self": "http://localhost:3000/api/v1/users/5a24117b4bc62c0014489e43/auctions?page=1&limit=1",
- *                   "next": "http://localhost:3000/api/v1/users/5a24117b4bc62c0014489e43/auctions?page=2&limit=1",
- *                   "last": "http://localhost:3000/api/v1/users/5a24117b4bc62c0014489e43/auctions?page=2&limit=1"
+ *                       "self": "http://localhost:3000/api/v1/users/5a23d9a74bc62c0014489e3b/auctions?page=1&limit=20"
  *               },
  *               "data": [
- *                   {
- *                   "title": "opel astra",
- *                   "description": "good car",
- *                   "startPrice": 1000,
- *                   "relatedCategory": {
- *                       "name": "سيارات",
- *                       "id": "5a2442fb4311cd0014c1bfb9"
- *                   },
- *                   "relatedUser": {
- *                       "email": "hazem.tarek@gmail.com",
- *                       "fullName": "Hazem Tarek",
- *                       "phone": "01014466503",
- *                       "country": "مصر",
- *                       "address": "بورسعيد",
- *                       "id": "5a24117b4bc62c0014489e43"
- *                   },
- *                   "endDate": "2017-12-24T00:00:00.000Z",
- *                   "highestPrice": 1000,
- *                   "creationDate": "2017-12-04T16:14:53.719Z",
- *                   "finished": false,
- *                   "imgs": [
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093721.jpeg",
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg",
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg"
- *                   ],
- *                   "id": "5a25747dcda9950014db1bc1"
- *                   }
+ *                       {
+ *                       "title": "new Car",
+ *                       "description": "Full HD , 3d support",
+ *                       "startPrice": 10000,
+ *                       "endDate": "2017-12-05T22:00:00.000Z",
+ *                       "relatedUser": {
+ *                               "fullName": "Magdyxy",
+ *                               "email": "x2x@x2x.com",
+ *                               "address": "82 Fatma",
+ *                               "phone": "01157954393",
+ *                               "country": "Egypt",
+ *                               "id": "5a23d9a74bc62c0014489e3b"
+ *                       },
+ *                       "relatedCategory": {
+ *                               "name": "تلفزيونات",
+ *                               "id": "5a25841337560312b08bb05b"
+ *                       },
+ *                       "highestPrice": 12000,
+ *                       "creationDate": "2017-12-04T17:24:29.201Z",
+ *                       "finished": false,
+ *                       "favUsers": [],
+ *                       "imgs": [
+ *                               "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+ *                       ],
+ *                       "id": "5a2584cd37560312b08bb05c",
+ *                       "inMyFavourites": false
+ *                       }
  *               ],
  *               "page": 1,
- *               "pageCount": 2,
- *               "limit": 1,
- *               "totalCount": 2
+ *               "pageCount": 1,
+ *               "limit": 20,
+ *               "totalCount": 1
  *               }
  *       404:
  *         description:  User Not Found
  */
+
 router.route('/:id/auctions').get(UserController.getUserAuctions);
 
 
@@ -504,7 +481,6 @@ router.route('/:id/favourites/barters/:barterId').delete(UserController.deleteFa
 router.route('/:id/favourites/auctions')
         .get(UserController.getUserFavoriteAuctions)
         .put(UserController.updateFavAuction);
-
 
 /**
  * @swagger

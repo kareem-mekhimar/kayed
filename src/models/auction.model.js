@@ -40,6 +40,10 @@ const AuctionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:'auction-offer'
     },
+    favUsers: { 
+        type: [Schema.Types.ObjectId], 
+        ref: 'user'
+    },
     finished:{
         type: Boolean,
         default: false
@@ -57,6 +61,7 @@ AuctionSchema.set('toJSON', {
         ret.id = ret._id;
         delete ret._id;
         delete ret.__v;
+        delete ret.favUsers;
     }
 }); 
 

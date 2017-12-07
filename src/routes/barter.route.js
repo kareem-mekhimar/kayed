@@ -87,41 +87,72 @@ const router = express.Router();
  *       200:
  *         description: Get An Array of Barters
  *         example: 
- *                   {
- *                       "links": {
- *                           "self": "http://localhost:3000/api/v1/barters?page=1&limit=20"
- *                       },
- *                       "data": [
- *                           {
- *                              "title": "Samsung",
- *                              "description": "Ay haga2",
- *                              "neededProduct": "IPHone2",
- *                              "relatedUser": "5a1db2b8a3c9862828910bef",
- *                              "relatedCategory": "5a1d59d25be03c12907a6771",
- *                              "creationDate": "2017-11-29T17:06:59.354Z",
- *                              "finished": false,
- *                              "imgs": [],
- *                              "type": "TEMP",
- *                              "id": "5a1ee933d75f0e2338e6222c"
+ *               {
+ *                   "links": {
+ *                       "self": "http://localhost:3000/api/v1/barters?page=1&limit=2",
+ *                       "next": "http://localhost:3000/api/v1/barters?page=2&limit=2",
+ *                       "last": "http://localhost:3000/api/v1/barters?page=5&limit=2"
+ *                   },
+ *                   "data": [
+ *                       {
+ *                           "title": "اقف4الا",
+ *                           "description": "5ا54ا",
+ *                           "neededProduct": "ا45ا",
+ *                           "relatedCategory": {
+ *                               "name": "اكسسوارات",
+ *                               "id": "5a2443740b92ff001421a3b8"
  *                           },
- *                           {
- *                               "title": "BMW",
- *                               "description": "Ay haga2",
- *                               "neededProduct": "IPHone2",
- *                               "relatedUser": "5a1db2b8a3c9862828910bef",
- *                               "relatedCategory": "5a1d59d25be03c12907a6771",
- *                               "creationDate": "2017-11-29T17:05:51.703Z",
- *                               "finished": false,
- *                               "imgs": [],
- *                               "type": "TEMP",
- *                               "id": "5a1ee8efc25fa638dc9fdef2"
- *                           }
- *                       ],
- *                       "page": 1,
- *                       "pageCount": 1,
- *                       "limit": 20,
- *                       "totalCount": 4
- *                   }
+ *                           "relatedUser": {
+ *                               "email": "mish@mish.com",
+ *                               "fullName": "miso",
+ *                               "phone": "123456",
+ *                               "country": "السعودية",
+ *                               "address": "جدة",
+ *                               "img": "http://kayed-api.herokuapp.com/uploads/5a284d13656ea20014103b22.jpeg",
+ *                               "id": "5a284d13656ea20014103b22"
+ *                           },
+ *                           "creationDate": "2017-12-06T20:04:18.390Z",
+ *                           "finished": false,
+ *                           "imgs": [
+ *                               "http://kayed-api.herokuapp.com/uploads/barters/5a284d42656ea20014103b230.jpeg"
+ *                           ],
+ *                           "type": "TEMP",
+ *                           "id": "5a284d42656ea20014103b23",
+ *                           "inMyOffers": true,
+ *                           "inMyFavourites": false
+ *                       },
+ *                       {
+ *                           "title": "Samsung Note 8",
+ *                           "description": "This is a description for new mobile phone of samsung",
+ *                           "neededProduct": "Iphone x",
+ *                           "relatedUser": {
+ *                               "fullName": "Magdyxy",
+ *                               "email": "x2x@x2x.com",
+ *                               "address": "82 Fatma",
+ *                               "phone": "01157954393",
+ *                               "country": "Egypt",
+ *                               "id": "5a23d9a74bc62c0014489e3b"
+ *                           },
+ *                           "relatedCategory": {
+ *                               "name": "موبايلات",
+ *                               "id": "5a24430e4311cd0014c1bfba"
+ *                           },
+ *                           "creationDate": "2017-12-06T21:02:28.264Z",
+ *                           "finished": false,
+ *                           "imgs": [
+ *                               "http://localhost:3000/uploads/barters/5a285ae4b23b592ca4bf42030.jpeg"
+ *                           ],
+ *                           "type": "TEMP",
+ *                           "id": "5a285ae4b23b592ca4bf4203",
+ *                           "inMyOffers": true,
+ *                           "inMyFavourites": false
+ *                       }
+ *                   ],
+ *                   "page": 1,
+ *                   "pageCount": 5,
+ *                   "limit": 2,
+ *                   "totalCount": 10
+ *               }
  */
 
 /**
@@ -188,6 +219,7 @@ const router = express.Router();
 router.route('/')
     .get(BarterController.findAll)
     .post(BarterController.createBarter)
+
 /**
  * @swagger
  * /barters/{id}:
@@ -207,26 +239,30 @@ router.route('/')
  *         description: Get a barter
  *         example: 
  *               {
- *              "title": "Samsung Note 8",
- *            "description": "This is a description for new mobile phone of samsung",
- *               "neededProduct": "Iphone x",
- *               "relatedUser": {
- *                   "fullName": "magdy",
- *                   "email": "demo@demo.com",
- *                   "address": "ASasasas",
- *                   "phone": "01157954393",
- *                   "country": "egypt",
- *                   "id": "5a1db2b8a3c9862828910bef"
- *               },
- *               "relatedCategory": {
- *                   "name": "mobiles",
- *                   "id": "5a1db3a29246d21c0c4056cf"
- *               },
- *               "creationDate": "2017-11-30T11:49:25.392Z",
- *               "finished": false,
- *               "imgs": [],
- *               "type": "TEMP",
- *               "id": "5a1ff0456cd27932acaad627"
+ *                   "title": "Samsung Note 8",
+ *                   "description": "This is a description for new mobile phone of samsung",
+ *                   "neededProduct": "Iphone x",
+ *                   "relatedUser": {
+ *                       "fullName": "Magdyxy",
+ *                       "email": "x2x@x2x.com",
+ *                       "address": "82 Fatma",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a23d9a74bc62c0014489e3b"
+ *                   },
+ *                   "relatedCategory": {
+ *                       "name": "موبايلات",
+ *                       "id": "5a24430e4311cd0014c1bfba"
+ *                   },
+ *                   "creationDate": "2017-12-06T21:02:28.264Z",
+ *                   "finished": false,
+ *                   "imgs": [
+ *                       "http://localhost:3000/uploads/barters/5a285ae4b23b592ca4bf42030.jpeg"
+ *                   ],
+ *                   "type": "TEMP",
+ *                   "id": "5a285ae4b23b592ca4bf4203",
+ *                   "inMyOffers": false,
+ *                   "inMyFavourites": true
  *               }
  *       404:
  *         description:  Barter Not Found
@@ -256,10 +292,44 @@ router.route('/')
  *       201:
  *         description: Return Updated Barter
  *         example:           
- *                {
- *                 "name": "test category2",
- *                 "id": "5a1dbdddc1e5142cb8cb78f6"
- *                }
+ *               {
+ *                   "title": "Samsung A",
+ *                   "description": "assasasaasasas",
+ *                   "neededProduct": "AAAAK",
+ *                   "relatedUser": {
+ *                       "fullName": "Magdyxy",
+ *                       "email": "x2x@x2x.com",
+ *                       "address": "82 Fatma",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a23d9a74bc62c0014489e3b"
+ *                   },
+ *                   "relatedCategory": {
+ *                       "name": "موبايلات",
+ *                       "id": "5a24430e4311cd0014c1bfba"
+ *                   },
+ *                   "barterOffer": {
+ *                       "relatedUser": "5a1db2b8a3c9862828910bef",
+ *                       "description": "Samsung Note A",
+ *                       "offeredProduct": "LG TV 2017",
+ *                       "relatedBarter": "5a249e4148d6362638faeb9d",
+ *                       "status": "DONE",
+ *                       "imgs": [
+ *                           "http://localhost:3000/uploads/barter-offers/5a2532c7cb4ed22fc0831e610.jpeg"
+ *                       ],
+ *                       "creationDate": "2017-12-04T11:34:31.576Z",
+ *                       "id": "5a2532c7cb4ed22fc0831e61"
+ *                   },
+ *                   "creationDate": "2017-12-04T01:00:49.846Z",
+ *                   "finished": true,
+ *                   "imgs": [
+ *                       "http://localhost:3000/uploads/barters/5a249e4148d6362638faeb9d0.jpeg"
+ *                   ],
+ *                   "type": "TEMP",
+ *                   "id": "5a249e4148d6362638faeb9d",
+ *                   "inMyOffers": true,
+ *                   "inMyFavourites": false
+ *               }
  *       404:
  *         description:  Barter Not Found
  *       422:
