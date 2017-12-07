@@ -31,7 +31,7 @@ function isInAll_MyOffers_favourites(items, req) {
                     var _userId = _step2.value;
 
                     if (_userId == req.user.id) {
-                        inMyFavourites = true;
+                        isInMyFavourites = true;
                         break;
                     }
                 }
