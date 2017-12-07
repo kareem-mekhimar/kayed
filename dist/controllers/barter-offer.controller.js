@@ -323,7 +323,7 @@ exports.default = {
         var _this4 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
-            var validationErrors, _req$params2, barterId, offerId, barterOffer, barter, updatedBarterOffer;
+            var validationErrors, _req$params2, barterId, offerId, barterOffer, updatedBarterOffer;
 
             return regeneratorRuntime.wrap(function _callee7$(_context7) {
                 while (1) {
@@ -400,46 +400,28 @@ exports.default = {
                             });
 
                         case 26:
-                            if (!(req.body.status === 'REJECTED')) {
-                                _context7.next = 33;
-                                break;
-                            }
-
-                            _context7.next = 29;
-                            return _barter2.default.findById(barterId);
-
-                        case 29:
-                            barter = _context7.sent;
-
-                            barter.offerUsers = barter.offerUsers.filter(function (user) {
-                                user != barterOffer.relatedUser.id;
-                            });
-                            console.log("Rejected offer in :", barter);
-                            barter.save();
-
-                        case 33:
-                            _context7.next = 35;
+                            _context7.next = 28;
                             return _barterOffer2.default.findByIdAndUpdate(offerId, { status: req.body.status }, { new: true });
 
-                        case 35:
+                        case 28:
                             updatedBarterOffer = _context7.sent;
 
                             res.status(200).send(updatedBarterOffer);
-                            _context7.next = 42;
+                            _context7.next = 35;
                             break;
 
-                        case 39:
-                            _context7.prev = 39;
+                        case 32:
+                            _context7.prev = 32;
                             _context7.t1 = _context7["catch"](6);
 
                             next(_context7.t1);
 
-                        case 42:
+                        case 35:
                         case "end":
                             return _context7.stop();
                     }
                 }
-            }, _callee7, _this4, [[6, 39]]);
+            }, _callee7, _this4, [[6, 32]]);
         }))();
     }
 };

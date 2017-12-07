@@ -16,6 +16,10 @@ var _barterOffer = require("./barter-offer.route");
 
 var _barterOffer2 = _interopRequireDefault(_barterOffer);
 
+var _userOffers = require("./user.offers.route");
+
+var _userOffers2 = _interopRequireDefault(_userOffers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -384,6 +388,7 @@ router.route('/').get(_barter2.default.findAll).post(_barter2.default.createBart
 router.route('/:id').get(_barter2.default.findById).put(_barter2.default.updateBarter).delete(_barter2.default.deleteBarter);
 
 router.use(_barterOffer2.default);
+router.use(_userOffers2.default);
 
 exports.default = router;
 //# sourceMappingURL=barter.route.js.map
