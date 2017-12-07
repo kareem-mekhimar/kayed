@@ -108,16 +108,50 @@ var validateBarterOffer = function validateBarterOffer(req) {
     return req.getValidationResult();
 };
 
+var registerMeInBarter = function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(barterId, req) {
+        var wantedBarter;
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            while (1) {
+                switch (_context3.prev = _context3.next) {
+                    case 0:
+                        _context3.next = 2;
+                        return _barter2.default.findById(barterId).where('offerUsers').equals(req.user.id);
+
+                    case 2:
+                        wantedBarter = _context3.sent;
+
+                        if (wantedBarter) {
+                            _context3.next = 6;
+                            break;
+                        }
+
+                        _context3.next = 6;
+                        return _barter2.default.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
+
+                    case 6:
+                    case "end":
+                        return _context3.stop();
+                }
+            }
+        }, _callee3, undefined);
+    }));
+
+    return function registerMeInBarter(_x4, _x5) {
+        return _ref3.apply(this, arguments);
+    };
+}();
+
 exports.default = {
     findAll: function findAll(req, res, next) {
         var _this = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
             var barterId, _req$query, page, limit, status, query, barterOffers, barterOffersCount, pageCount, response;
 
-            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
-                    switch (_context3.prev = _context3.next) {
+                    switch (_context4.prev = _context4.next) {
                         case 0:
                             barterId = req.params.barterId;
                             _req$query = req.query, page = _req$query.page, limit = _req$query.limit, status = _req$query.status;
@@ -131,17 +165,17 @@ exports.default = {
                             page = page ? parseInt(page) : 1;
                             limit = limit ? parseInt(limit) : 20;
 
-                            _context3.prev = 6;
-                            _context3.next = 9;
+                            _context4.prev = 6;
+                            _context4.next = 9;
                             return _barterOffer2.default.find(query).populate('relatedBarter relatedUser').sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
 
                         case 9:
-                            barterOffers = _context3.sent;
-                            _context3.next = 12;
+                            barterOffers = _context4.sent;
+                            _context4.next = 12;
                             return _barterOffer2.default.count(query);
 
                         case 12:
-                            barterOffersCount = _context3.sent;
+                            barterOffersCount = _context4.sent;
                             pageCount = Math.ceil(barterOffersCount / limit);
                             response = new _ApiResponse2.default(barterOffers, page, pageCount, limit, barterOffersCount);
 
@@ -154,70 +188,6 @@ exports.default = {
                                 response.addNextLink(req);
                             }
                             res.send(response);
-                            _context3.next = 24;
-                            break;
-
-                        case 21:
-                            _context3.prev = 21;
-                            _context3.t0 = _context3["catch"](6);
-
-                            next(_context3.t0);
-
-                        case 24:
-                        case "end":
-                            return _context3.stop();
-                    }
-                }
-            }, _callee3, _this, [[6, 21]]);
-        }))();
-    },
-    createBarterOffer: function createBarterOffer(req, res, next) {
-        var _this2 = this;
-
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var validationErrors, barterId, newBarterOfferId, createdBarterOffer, barterOffer;
-            return regeneratorRuntime.wrap(function _callee4$(_context4) {
-                while (1) {
-                    switch (_context4.prev = _context4.next) {
-                        case 0:
-                            _context4.next = 2;
-                            return validateBarterOffer(req);
-
-                        case 2:
-                            validationErrors = _context4.sent;
-
-                            if (validationErrors.isEmpty()) {
-                                _context4.next = 5;
-                                break;
-                            }
-
-                            return _context4.abrupt("return", next(new _ApiError2.default(422, validationErrors.mapped())));
-
-                        case 5:
-                            barterId = req.params.barterId;
-                            _context4.prev = 6;
-                            newBarterOfferId = _mongoose2.default.Types.ObjectId();
-
-                            if (req.body.imgs) req.body.imgs = (0, _utils.handleImgs)(req.body.imgs, "barter-offers", newBarterOfferId, req);
-                            req.body.relatedBarter = barterId;
-
-                            _context4.next = 12;
-                            return _barterOffer2.default.create(_extends({ _id: newBarterOfferId }, req.body));
-
-                        case 12:
-                            createdBarterOffer = _context4.sent;
-                            _context4.next = 15;
-                            return _barter2.default.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
-
-                        case 15:
-                            _context4.next = 17;
-                            return _barterOffer2.default.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
-
-                        case 17:
-                            barterOffer = _context4.sent;
-
-
-                            res.status(201).send(barterOffer);
                             _context4.next = 24;
                             break;
 
@@ -232,52 +202,118 @@ exports.default = {
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this2, [[6, 21]]);
+            }, _callee4, _this, [[6, 21]]);
+        }))();
+    },
+    createBarterOffer: function createBarterOffer(req, res, next) {
+        var _this2 = this;
+
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+            var validationErrors, barterId, newBarterOfferId, createdBarterOffer, barterOffer;
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                            _context5.next = 2;
+                            return validateBarterOffer(req);
+
+                        case 2:
+                            validationErrors = _context5.sent;
+
+                            if (validationErrors.isEmpty()) {
+                                _context5.next = 5;
+                                break;
+                            }
+
+                            return _context5.abrupt("return", next(new _ApiError2.default(422, validationErrors.mapped())));
+
+                        case 5:
+                            barterId = req.params.barterId;
+                            _context5.prev = 6;
+                            newBarterOfferId = _mongoose2.default.Types.ObjectId();
+
+                            if (req.body.imgs) req.body.imgs = (0, _utils.handleImgs)(req.body.imgs, "barter-offers", newBarterOfferId, req);
+                            req.body.relatedBarter = barterId;
+
+                            _context5.next = 12;
+                            return _barterOffer2.default.create(_extends({ _id: newBarterOfferId }, req.body));
+
+                        case 12:
+                            createdBarterOffer = _context5.sent;
+                            _context5.next = 15;
+                            return _barter2.default.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
+
+                        case 15:
+
+                            registerMeInBarter(barterId, req);
+                            _context5.next = 18;
+                            return _barterOffer2.default.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
+
+                        case 18:
+                            barterOffer = _context5.sent;
+
+
+                            res.status(201).send(barterOffer);
+                            _context5.next = 25;
+                            break;
+
+                        case 22:
+                            _context5.prev = 22;
+                            _context5.t0 = _context5["catch"](6);
+
+                            next(_context5.t0);
+
+                        case 25:
+                        case "end":
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, _this2, [[6, 22]]);
         }))();
     },
     findById: function findById(req, res, next) {
         var _this3 = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
             var _req$params, barterId, offerId, barterOffer;
 
-            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+            return regeneratorRuntime.wrap(function _callee6$(_context6) {
                 while (1) {
-                    switch (_context5.prev = _context5.next) {
+                    switch (_context6.prev = _context6.next) {
                         case 0:
                             _req$params = req.params, barterId = _req$params.barterId, offerId = _req$params.offerId;
-                            _context5.prev = 1;
-                            _context5.next = 4;
+                            _context6.prev = 1;
+                            _context6.next = 4;
                             return _barterOffer2.default.findOne({ _id: offerId, relatedBarter: barterId }).populate('relatedBarter relatedUser');
 
                         case 4:
-                            barterOffer = _context5.sent;
+                            barterOffer = _context6.sent;
 
                             if (barterOffer) {
-                                _context5.next = 7;
+                                _context6.next = 7;
                                 break;
                             }
 
-                            return _context5.abrupt("return", next(new _ApiError2.default.NotFound('BarterOffer')));
+                            return _context6.abrupt("return", next(new _ApiError2.default.NotFound('BarterOffer')));
 
                         case 7:
 
                             res.send(barterOffer);
-                            _context5.next = 13;
+                            _context6.next = 13;
                             break;
 
                         case 10:
-                            _context5.prev = 10;
-                            _context5.t0 = _context5["catch"](1);
+                            _context6.prev = 10;
+                            _context6.t0 = _context6["catch"](1);
 
-                            next(_context5.t0);
+                            next(_context6.t0);
 
                         case 13:
                         case "end":
-                            return _context5.stop();
+                            return _context6.stop();
                     }
                 }
-            }, _callee5, _this3, [[1, 10]]);
+            }, _callee6, _this3, [[1, 10]]);
         }))();
     },
 
@@ -286,106 +322,124 @@ exports.default = {
     updateBarterOffer: function updateBarterOffer(req, res, next) {
         var _this4 = this;
 
-        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-            var validationErrors, _req$params2, barterId, offerId, barterOffer, updatedBarterOffer;
+        return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
+            var validationErrors, _req$params2, barterId, offerId, barterOffer, barter, updatedBarterOffer;
 
-            return regeneratorRuntime.wrap(function _callee6$(_context6) {
+            return regeneratorRuntime.wrap(function _callee7$(_context7) {
                 while (1) {
-                    switch (_context6.prev = _context6.next) {
+                    switch (_context7.prev = _context7.next) {
                         case 0:
-                            _context6.next = 2;
+                            _context7.next = 2;
                             return validateBarterOffer(req, true);
 
                         case 2:
-                            validationErrors = _context6.sent;
+                            validationErrors = _context7.sent;
 
                             if (validationErrors.isEmpty()) {
-                                _context6.next = 5;
+                                _context7.next = 5;
                                 break;
                             }
 
-                            return _context6.abrupt("return", next(new _ApiError2.default(422, validationErrors.mapped())));
+                            return _context7.abrupt("return", next(new _ApiError2.default(422, validationErrors.mapped())));
 
                         case 5:
                             _req$params2 = req.params, barterId = _req$params2.barterId, offerId = _req$params2.offerId;
-                            _context6.prev = 6;
-                            _context6.next = 9;
-                            return _barterOffer2.default.findOne({ _id: offerId, relatedBarter: barterId });
+                            _context7.prev = 6;
+                            _context7.next = 9;
+                            return _barterOffer2.default.findOne({ _id: offerId, relatedBarter: barterId }).populate('relatedUser');
 
                         case 9:
-                            barterOffer = _context6.sent;
+                            barterOffer = _context7.sent;
 
                             if (barterOffer) {
-                                _context6.next = 12;
+                                _context7.next = 12;
                                 break;
                             }
 
-                            return _context6.abrupt("return", next(new _ApiError2.default.NotFound('BarterOffer')));
+                            return _context7.abrupt("return", next(new _ApiError2.default.NotFound('BarterOffer')));
 
                         case 12:
-                            _context6.t0 = barterOffer.status;
-                            _context6.next = _context6.t0 === 'PENDING' ? 15 : _context6.t0 === 'ACCEPTED' ? 18 : _context6.t0 === 'REJECTED' ? 21 : _context6.t0 === 'DONE' ? 21 : 23;
+                            _context7.t0 = barterOffer.status;
+                            _context7.next = _context7.t0 === 'PENDING' ? 15 : _context7.t0 === 'ACCEPTED' ? 18 : _context7.t0 === 'REJECTED' ? 21 : _context7.t0 === 'DONE' ? 21 : 23;
                             break;
 
                         case 15:
                             if (req.body.status === 'ACCEPTED' || req.body.status === 'REJECTED') {
-                                _context6.next = 17;
+                                _context7.next = 17;
                                 break;
                             }
 
-                            return _context6.abrupt("return", next(new _ApiError2.default(400, 'status should be ACCEPTED or REJECTED')));
+                            return _context7.abrupt("return", next(new _ApiError2.default(400, 'status should be ACCEPTED or REJECTED')));
 
                         case 17:
-                            return _context6.abrupt("break", 23);
+                            return _context7.abrupt("break", 23);
 
                         case 18:
                             if (req.body.status === 'DONE' || req.body.status === 'REJECTED') {
-                                _context6.next = 20;
+                                _context7.next = 20;
                                 break;
                             }
 
-                            return _context6.abrupt("return", next(new _ApiError2.default(400, 'status should be DONE or REJECTED')));
+                            return _context7.abrupt("return", next(new _ApiError2.default(400, 'status should be DONE or REJECTED')));
 
                         case 20:
-                            return _context6.abrupt("break", 23);
+                            return _context7.abrupt("break", 23);
 
                         case 21:
-                            return _context6.abrupt("return", next(new _ApiError2.default(400, "you can't update DONE or REJECTED offer")));
+                            return _context7.abrupt("return", next(new _ApiError2.default(400, "you can't update DONE or REJECTED offer")));
 
                         case 23:
                             if (!(req.body.status === 'DONE')) {
-                                _context6.next = 26;
+                                _context7.next = 26;
                                 break;
                             }
 
-                            _context6.next = 26;
+                            _context7.next = 26;
                             return _barter2.default.findByIdAndUpdate(barterId, {
                                 barterOffer: barterOffer.id, finished: true
                             });
 
                         case 26:
-                            _context6.next = 28;
+                            if (!(req.body.status === 'REJECTED')) {
+                                _context7.next = 33;
+                                break;
+                            }
+
+                            _context7.next = 29;
+                            return _barter2.default.findById(barterId);
+
+                        case 29:
+                            barter = _context7.sent;
+
+                            barter.offerUsers = barter.offerUsers.filter(function (user) {
+                                user != barterOffer.relatedUser.id;
+                            });
+                            console.log("Rejected offer in :", barter);
+                            barter.save();
+
+                        case 33:
+                            _context7.next = 35;
                             return _barterOffer2.default.findByIdAndUpdate(offerId, { status: req.body.status }, { new: true });
 
-                        case 28:
-                            updatedBarterOffer = _context6.sent;
+                        case 35:
+                            updatedBarterOffer = _context7.sent;
 
                             res.status(200).send(updatedBarterOffer);
-                            _context6.next = 35;
+                            _context7.next = 42;
                             break;
 
-                        case 32:
-                            _context6.prev = 32;
-                            _context6.t1 = _context6["catch"](6);
+                        case 39:
+                            _context7.prev = 39;
+                            _context7.t1 = _context7["catch"](6);
 
-                            next(_context6.t1);
+                            next(_context7.t1);
 
-                        case 35:
+                        case 42:
                         case "end":
-                            return _context6.stop();
+                            return _context7.stop();
                     }
                 }
-            }, _callee6, _this4, [[6, 32]]);
+            }, _callee7, _this4, [[6, 39]]);
         }))();
     }
 };

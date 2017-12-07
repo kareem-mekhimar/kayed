@@ -26,7 +26,13 @@ const validateBarterOffer = (req, isUpdate = false) => {
     }).withMessage('Barter Not Found');
     
     return req.getValidationResult();
-}
+};
+
+const registerMeInBarter = async (barterId, req) => {
+    const wantedBarter =  await Barter.findById(barterId).where('offerUsers').equals(req.user.id);
+    if(!wantedBarter)
+        await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });    
+};
 
 export default {
     async findAll(req, res, next) {
@@ -66,6 +72,7 @@ export default {
         }        
     },
 
+
     async createBarterOffer(req, res, next) {   
         const validationErrors = await validateBarterOffer(req);
         if (!validationErrors.isEmpty())
@@ -83,6 +90,7 @@ export default {
             
             await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
+            registerMeInBarter(barterId, req);            
             const barterOffer = await BarterOffer.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
                         
             res.status(201).send(barterOffer);            
@@ -115,7 +123,7 @@ export default {
         
         const { barterId, offerId } = req.params;
         try {
-            const barterOffer = await BarterOffer.findOne({ _id : offerId , relatedBarter: barterId } );
+            const barterOffer = await BarterOffer.findOne({ _id : offerId , relatedBarter: barterId } ).populate('relatedUser');
             if(!barterOffer)
                 return next(new ApiError.NotFound('BarterOffer'));
     
@@ -139,6 +147,16 @@ export default {
                     barterOffer: barterOffer.id , finished: true 
                 });
             }
+
+
+            if (req.body.status === 'REJECTED'){
+                let barter = await Barter.findById(barterId);
+                barter.offerUsers = barter.offerUsers.filter(user => { 
+                    user != barterOffer.relatedUser.id });
+                console.log("Rejected offer in :" , barter);
+                barter.save();
+            }
+
             const updatedBarterOffer = await BarterOffer.findByIdAndUpdate(offerId, { status: req.body.status} , { new: true });
             res.status(200).send(updatedBarterOffer);    
         }

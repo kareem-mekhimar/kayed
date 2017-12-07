@@ -17,7 +17,7 @@ const FavBarterSchema = new Schema({
         type: Date,
         default: Date.now
     }
-});
+}, { strict: false });
 
 FavBarterSchema.set('toJSON', {
     transform: function (doc, ret, options) {

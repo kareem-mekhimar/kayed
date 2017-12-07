@@ -42,6 +42,8 @@ var _config2 = _interopRequireDefault(_config);
 
 var _utils = require("../utils");
 
+var _BarterAuctionHelper = require("../helpers/Barter&AuctionHelper");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -312,6 +314,10 @@ exports.default = {
 
                         case 11:
                             userBartersCount = _context6.sent;
+
+
+                            userBarters = (0, _BarterAuctionHelper.isInAll_MyOffers_favourites)(userBarters, req);
+
                             pageCount = Math.ceil(userBartersCount / limit);
                             response = new _ApiResponse2.default(userBarters, page, pageCount, limit, userBartersCount);
 
@@ -324,21 +330,21 @@ exports.default = {
                                 response.addNextLink(req);
                             }
                             res.send(response);
-                            _context6.next = 23;
+                            _context6.next = 24;
                             break;
 
-                        case 20:
-                            _context6.prev = 20;
+                        case 21:
+                            _context6.prev = 21;
                             _context6.t0 = _context6["catch"](5);
 
                             next(_context6.t0);
 
-                        case 23:
+                        case 24:
                         case "end":
                             return _context6.stop();
                     }
                 }
-            }, _callee6, _this4, [[5, 20]]);
+            }, _callee6, _this4, [[5, 21]]);
         }))();
     },
     getUserAuctions: function getUserAuctions(req, res, next) {
@@ -372,6 +378,10 @@ exports.default = {
 
                         case 11:
                             userAuctionsCount = _context7.sent;
+
+
+                            userAuctions = (0, _BarterAuctionHelper.isInAll_MyOffers_favourites)(userAuctions, req, false);
+
                             pageCount = Math.ceil(userAuctionsCount / limit);
                             response = new _ApiResponse2.default(userAuctions, page, pageCount, limit, userAuctionsCount);
 
@@ -384,21 +394,21 @@ exports.default = {
                                 response.addNextLink(req);
                             }
                             res.send(response);
-                            _context7.next = 23;
+                            _context7.next = 24;
                             break;
 
-                        case 20:
-                            _context7.prev = 20;
+                        case 21:
+                            _context7.prev = 21;
                             _context7.t0 = _context7["catch"](5);
 
                             next(_context7.t0);
 
-                        case 23:
+                        case 24:
                         case "end":
                             return _context7.stop();
                     }
                 }
-            }, _callee7, _this5, [[5, 20]]);
+            }, _callee7, _this5, [[5, 21]]);
         }))();
     },
     getUserFavoriteBarters: function getUserFavoriteBarters(req, res, next) {
@@ -423,11 +433,11 @@ exports.default = {
 
                             _context8.prev = 5;
                             _context8.next = 8;
-                            return _favBarter2.default.find({ user: id }).populate({
+                            return _favBarter2.default.find({ user: id }).select('barter').populate({
                                 path: 'barter',
                                 model: 'barter',
                                 populate: {
-                                    path: 'relatedUser relatedCategory'
+                                    path: 'relatedUser relatedCategory barterOffer'
                                 }
                             }).sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
 
@@ -489,7 +499,7 @@ exports.default = {
 
                             _context9.prev = 5;
                             _context9.next = 8;
-                            return _favAuction2.default.find({ user: id }).populate({
+                            return _favAuction2.default.find({ user: id }).select('auction').populate({
                                 path: 'auction',
                                 model: 'auction',
                                 populate: {
@@ -578,36 +588,41 @@ exports.default = {
                             userFavBarter = _context10.sent;
 
                             if (userFavBarter) {
-                                _context10.next = 19;
+                                _context10.next = 21;
                                 break;
                             }
 
-                            _context10.next = 17;
+                            barter.favUsers.push(id);
+                            barter.save();
+
+                            _context10.next = 19;
                             return _favBarter2.default.create({ user: id, barter: req.body.barter });
 
-                        case 17:
+                        case 19:
                             createdUserFavBarter = _context10.sent;
 
                             res.status(200).send(createdUserFavBarter);
 
-                        case 19:
+                        case 21:
+                            console.log("Fav Barter ", barter.favUsers);
+
                             // Already Exist Nothing to do..
                             res.send();
-                            _context10.next = 25;
+                            _context10.next = 28;
                             break;
 
-                        case 22:
-                            _context10.prev = 22;
+                        case 25:
+                            _context10.prev = 25;
                             _context10.t0 = _context10["catch"](5);
 
                             next(_context10.t0);
 
-                        case 25:
+                        case 28:
                         case "end":
                             return _context10.stop();
                     }
                 }
-            }, _callee10, _this8, [[5, 22]]);
+            }, _callee10, _this8, [[5, 25]]);
         }))();
     },
     updateFavAuction: function updateFavAuction(req, res, next) {
@@ -655,43 +670,46 @@ exports.default = {
                             userFavAuction = _context11.sent;
 
                             if (userFavAuction) {
-                                _context11.next = 19;
+                                _context11.next = 21;
                                 break;
                             }
 
-                            _context11.next = 17;
+                            auction.favUsers.push(id);
+                            auction.save();
+
+                            _context11.next = 19;
                             return _favAuction2.default.create({ user: id, auction: req.body.auction });
 
-                        case 17:
+                        case 19:
                             createdUserFavAuction = _context11.sent;
 
                             res.status(200).send(createdUserFavAuction);
 
-                        case 19:
+                        case 21:
                             // Already Exist Nothing to do..
                             res.send();
-                            _context11.next = 25;
+                            _context11.next = 27;
                             break;
 
-                        case 22:
-                            _context11.prev = 22;
+                        case 24:
+                            _context11.prev = 24;
                             _context11.t0 = _context11["catch"](5);
 
                             next(_context11.t0);
 
-                        case 25:
+                        case 27:
                         case "end":
                             return _context11.stop();
                     }
                 }
-            }, _callee11, _this9, [[5, 22]]);
+            }, _callee11, _this9, [[5, 24]]);
         }))();
     },
     deleteFavBarter: function deleteFavBarter(req, res, next) {
         var _this10 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee12() {
-            var _req$params, id, barterId, deletedFavBarter;
+            var _req$params, id, barterId, deletedFavBarter, barter;
 
             return regeneratorRuntime.wrap(function _callee12$(_context12) {
                 while (1) {
@@ -713,29 +731,40 @@ exports.default = {
                             return _context12.abrupt("return", next(new _ApiError2.default.NotFound('User FavouriteBarter')));
 
                         case 7:
+                            _context12.next = 9;
+                            return _barter2.default.findById(barterId);
+
+                        case 9:
+                            barter = _context12.sent;
+
+                            barter.favUsers = barter.favUsers.filter(function (user) {
+                                user != id;
+                            });
+                            barter.save();
+
                             res.status(204).send();
-                            _context12.next = 13;
+                            _context12.next = 18;
                             break;
 
-                        case 10:
-                            _context12.prev = 10;
+                        case 15:
+                            _context12.prev = 15;
                             _context12.t0 = _context12["catch"](1);
 
                             next(_context12.t0);
 
-                        case 13:
+                        case 18:
                         case "end":
                             return _context12.stop();
                     }
                 }
-            }, _callee12, _this10, [[1, 10]]);
+            }, _callee12, _this10, [[1, 15]]);
         }))();
     },
     deleteFavAuction: function deleteFavAuction(req, res, next) {
         var _this11 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee13() {
-            var _req$params2, id, auctionId, deletedFavAuction;
+            var _req$params2, id, auctionId, deletedFavAuction, auction;
 
             return regeneratorRuntime.wrap(function _callee13$(_context13) {
                 while (1) {
@@ -757,22 +786,33 @@ exports.default = {
                             return _context13.abrupt("return", next(new _ApiError2.default.NotFound('User FavouriteAuction')));
 
                         case 7:
+                            _context13.next = 9;
+                            return _auction2.default.findById(auctionId);
+
+                        case 9:
+                            auction = _context13.sent;
+
+                            auction.favUsers = auction.favUsers.filter(function (user) {
+                                user != id;
+                            });
+                            auction.save();
+
                             res.status(204).send();
-                            _context13.next = 13;
+                            _context13.next = 18;
                             break;
 
-                        case 10:
-                            _context13.prev = 10;
+                        case 15:
+                            _context13.prev = 15;
                             _context13.t0 = _context13["catch"](1);
 
                             next(_context13.t0);
 
-                        case 13:
+                        case 18:
                         case "end":
                             return _context13.stop();
                     }
                 }
-            }, _callee13, _this11, [[1, 10]]);
+            }, _callee13, _this11, [[1, 15]]);
         }))();
     }
 };

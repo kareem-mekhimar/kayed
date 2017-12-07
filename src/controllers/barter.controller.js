@@ -6,6 +6,7 @@ import mongoose from "mongoose" ;
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import { handleImgs } from "../utils";
+import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
 
 const validateBarter = (req, isUpdate = false) => {
     req.checkBody("title").notEmpty().withMessage("titles is Required")
@@ -38,7 +39,7 @@ const checkIfValidIds = (categories, next) => {
         if(!mongoose.Types.ObjectId.isValid(category))
             return next(new ApiError.BadRequest(400, 'you have sent an invalid category id: ', category))
     }
-} 
+}
 
 export default {
     async findAll(req, res, next) {
@@ -62,7 +63,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            const barters = await Barter.find(query).populate('relatedCategory relatedUser')
+            let barters = await Barter.find(query).populate('relatedCategory relatedUser')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
@@ -70,6 +71,9 @@ export default {
             const bartersCount = await Barter.count(query);
             
             const pageCount = Math.ceil(bartersCount / limit);
+
+            barters = isInAll_MyOffers_favourites(barters, req);
+
             let response = new ApiResponse(barters, page, pageCount, limit, bartersCount);
             response.addSelfLink(req);
 
@@ -110,9 +114,11 @@ export default {
     async findById(req, res, next) {
         const { id } = req.params;
         try{
-            const barter = await Barter.findById(id).populate('relatedCategory relatedUser');
+            let barter = await Barter.findById(id).populate('relatedCategory relatedUser barterOffer');
             if (!barter)
-               return next(new ApiError.NotFound('Barter'))        
+               return next(new ApiError.NotFound('Barter'));
+           
+            barter = isIn_MyOffers_favourites(barter, req);
             res.send(barter);
         } catch(err) {
             next(err);
@@ -132,10 +138,10 @@ export default {
             if (req.body.imgs)
                 req.body.imgs = handleImgs(req.body.imgs, "barters", id , req);
             
-            const updatedBarter = await Barter.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser');
-
+            let updatedBarter = await Barter.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser barterOffer');
+            updatedBarter = isIn_MyOffers_favourites(updatedBarter, req);
             res.status(200).send(updatedBarter);
-        }
+        } 
         catch (err) {
             next(err)
         }

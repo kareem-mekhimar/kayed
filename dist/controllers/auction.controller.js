@@ -30,6 +30,8 @@ var _ApiError = require("../helpers/ApiError");
 
 var _ApiError2 = _interopRequireDefault(_ApiError);
 
+var _BarterAuctionHelper = require("../helpers/Barter&AuctionHelper");
+
 var _utils = require("../utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -185,10 +187,13 @@ exports.default = {
 
                         case 45:
                             results = _context.sent;
-                            _context.next = 48;
+
+
+                            results = (0, _BarterAuctionHelper.isInAll_MyOffers_favourites)(results, req, false);
+                            _context.next = 49;
                             return countQuery;
 
-                        case 48:
+                        case 49:
                             count = _context.sent;
                             pageCount = Math.ceil(count / limit);
                             response = new _ApiResponse2.default(results, page, pageCount, limit, count);
@@ -205,7 +210,7 @@ exports.default = {
 
                             res.send(response);
 
-                        case 55:
+                        case 56:
                         case "end":
                             return _context.stop();
                     }
@@ -217,7 +222,8 @@ exports.default = {
         var _this2 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var id, auction, count, topAuctionOffers, topBids, i;
+            var id, auction, count, topAuctionOffers, topBids, i, isInMyFavourites, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, userId;
+
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -235,7 +241,7 @@ exports.default = {
                             }
 
                             next(new _ApiError2.default(404, "Auction with this id not found"));
-                            _context2.next = 19;
+                            _context2.next = 48;
                             break;
 
                         case 8:
@@ -268,14 +274,79 @@ exports.default = {
                                 auction.topBids = topBids;
                             }
 
+                            isInMyFavourites = false;
+                            _iteratorNormalCompletion2 = true;
+                            _didIteratorError2 = false;
+                            _iteratorError2 = undefined;
+                            _context2.prev = 22;
+                            _iterator2 = auction.favUsers[Symbol.iterator]();
+
+                        case 24:
+                            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                                _context2.next = 32;
+                                break;
+                            }
+
+                            userId = _step2.value;
+
+                            if (!(userId == req.user.id)) {
+                                _context2.next = 29;
+                                break;
+                            }
+
+                            isInMyFavourites = true;
+                            return _context2.abrupt("break", 32);
+
+                        case 29:
+                            _iteratorNormalCompletion2 = true;
+                            _context2.next = 24;
+                            break;
+
+                        case 32:
+                            _context2.next = 38;
+                            break;
+
+                        case 34:
+                            _context2.prev = 34;
+                            _context2.t0 = _context2["catch"](22);
+                            _didIteratorError2 = true;
+                            _iteratorError2 = _context2.t0;
+
+                        case 38:
+                            _context2.prev = 38;
+                            _context2.prev = 39;
+
+                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                _iterator2.return();
+                            }
+
+                        case 41:
+                            _context2.prev = 41;
+
+                            if (!_didIteratorError2) {
+                                _context2.next = 44;
+                                break;
+                            }
+
+                            throw _iteratorError2;
+
+                        case 44:
+                            return _context2.finish(41);
+
+                        case 45:
+                            return _context2.finish(38);
+
+                        case 46:
+                            auction.inMyFavourites = isInMyFavourites;
+
                             res.send(auction);
 
-                        case 19:
+                        case 48:
                         case "end":
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this2);
+            }, _callee2, _this2, [[22, 34, 38, 46], [39,, 41, 45]]);
         }))();
     },
     create: function create(req, res, next) {

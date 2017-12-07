@@ -32,6 +32,8 @@ var _ApiError2 = _interopRequireDefault(_ApiError);
 
 var _utils = require("../utils");
 
+var _BarterAuctionHelper = require("../helpers/Barter&AuctionHelper");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -213,6 +215,10 @@ exports.default = {
                         case 13:
                             bartersCount = _context4.sent;
                             pageCount = Math.ceil(bartersCount / limit);
+
+
+                            barters = (0, _BarterAuctionHelper.isInAll_MyOffers_favourites)(barters, req);
+
                             response = new _ApiResponse2.default(barters, page, pageCount, limit, bartersCount);
 
                             response.addSelfLink(req);
@@ -224,21 +230,21 @@ exports.default = {
                                 response.addNextLink(req);
                             }
                             res.send(response);
-                            _context4.next = 25;
+                            _context4.next = 26;
                             break;
 
-                        case 22:
-                            _context4.prev = 22;
+                        case 23:
+                            _context4.prev = 23;
                             _context4.t0 = _context4["catch"](7);
 
                             next(_context4.t0);
 
-                        case 25:
+                        case 26:
                         case "end":
                             return _context4.stop();
                     }
                 }
-            }, _callee4, _this, [[7, 22]]);
+            }, _callee4, _this, [[7, 23]]);
         }))();
     },
     createBarter: function createBarter(req, res, next) {
@@ -312,7 +318,7 @@ exports.default = {
                             id = req.params.id;
                             _context6.prev = 1;
                             _context6.next = 4;
-                            return _barter2.default.findById(id).populate('relatedCategory relatedUser');
+                            return _barter2.default.findById(id).populate('relatedCategory relatedUser barterOffer');
 
                         case 4:
                             barter = _context6.sent;
@@ -325,22 +331,24 @@ exports.default = {
                             return _context6.abrupt("return", next(new _ApiError2.default.NotFound('Barter')));
 
                         case 7:
+
+                            barter = (0, _BarterAuctionHelper.isIn_MyOffers_favourites)(barter, req);
                             res.send(barter);
-                            _context6.next = 13;
+                            _context6.next = 14;
                             break;
 
-                        case 10:
-                            _context6.prev = 10;
+                        case 11:
+                            _context6.prev = 11;
                             _context6.t0 = _context6["catch"](1);
 
                             next(_context6.t0);
 
-                        case 13:
+                        case 14:
                         case "end":
                             return _context6.stop();
                     }
                 }
-            }, _callee6, _this3, [[1, 10]]);
+            }, _callee6, _this3, [[1, 11]]);
         }))();
     },
     updateBarter: function updateBarter(req, res, next) {
@@ -373,28 +381,28 @@ exports.default = {
                             if (req.body.imgs) req.body.imgs = (0, _utils.handleImgs)(req.body.imgs, "barters", id, req);
 
                             _context7.next = 10;
-                            return _barter2.default.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser');
+                            return _barter2.default.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser barterOffer');
 
                         case 10:
                             updatedBarter = _context7.sent;
 
-
+                            updatedBarter = (0, _BarterAuctionHelper.isIn_MyOffers_favourites)(updatedBarter, req);
                             res.status(200).send(updatedBarter);
-                            _context7.next = 17;
+                            _context7.next = 18;
                             break;
 
-                        case 14:
-                            _context7.prev = 14;
+                        case 15:
+                            _context7.prev = 15;
                             _context7.t0 = _context7["catch"](6);
 
                             next(_context7.t0);
 
-                        case 17:
+                        case 18:
                         case "end":
                             return _context7.stop();
                     }
                 }
-            }, _callee7, _this4, [[6, 14]]);
+            }, _callee7, _this4, [[6, 15]]);
         }))();
     },
     deleteBarter: function deleteBarter(req, res, next) {

@@ -99,71 +99,76 @@ const router = express.Router();
  *         description: Get An Array of Auctions
  *         example: 
  *               {
- *               "links": {
- *                   "self": "http://localhost:3000/api/v1/auctions?page=1&limit=2",
- *                   "next": "http://localhost:3000/api/v1/auctions?page=2&limit=2",
- *                   "last": "http://localhost:3000/api/v1/auctions?page=2&limit=2"
- *               },
- *               "data": [
- *                   {
- *                   "title": "opel astra",
- *                   "description": "good car",
- *                   "startPrice": 1000,
- *                   "relatedCategory": {
- *                       "name": "سيارات",
- *                       "id": "5a2442fb4311cd0014c1bfb9"
+ *                   "links": {
+ *                       "self": "http://localhost:3000/api/v1/auctions?page=1&limit=2",
+ *                       "next": "http://localhost:3000/api/v1/auctions?page=2&limit=2",
+ *                       "last": "http://localhost:3000/api/v1/auctions?page=3&limit=2"
  *                   },
- *                   "relatedUser": {
- *                       "email": "hazem.tarek@gmail.com",
- *                       "fullName": "Hazem Tarek",
- *                       "phone": "01014466503",
- *                       "country": "مصر",
- *                       "address": "بورسعيد",
- *                       "id": "5a24117b4bc62c0014489e43"
- *                   },
- *                   "endDate": "2017-12-24T00:00:00.000Z",
- *                   "highestPrice": 1000,
- *                   "creationDate": "2017-12-04T16:14:53.719Z",
- *                   "finished": false,
- *                   "imgs": [
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093721.jpeg",
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg",
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg"
+ *                   "data": [
+ *                       {
+ *                           "title": "opel astra",
+ *                           "description": "good car",
+ *                           "startPrice": 1000,
+ *                           "relatedCategory": {
+ *                               "name": "سيارات",
+ *                               "id": "5a2442fb4311cd0014c1bfb9"
+ *                           },
+ *                           "relatedUser": {
+ *                               "email": "hazem.tarek@gmail.com",
+ *                               "fullName": "Hazem Tarek",
+ *                               "phone": "01014466503",
+ *                               "country": "مصر",
+ *                               "address": "بورسعيد",
+ *                               "img": "http://kayed-api.herokuapp.com/uploads/5a24117b4bc62c0014489e43.png",
+ *                               "id": "5a24117b4bc62c0014489e43"
+ *                           },
+ *                           "endDate": "2017-12-24T00:00:00.000Z",
+ *                           "highestPrice": 10000000000000,
+ *                           "creationDate": "2017-12-04T16:14:53.719Z",
+ *                           "finished": false,
+ *                           "favUsers": [],
+ *                           "imgs": [
+ *                               "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093721.jpeg",
+ *                               "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg",
+ *                               "http://kayed-api.herokuapp.com/uploads/auctions/5a25747dcda9950014db1bc11512404093722.jpeg"
+ *                           ],
+ *                           "id": "5a25747dcda9950014db1bc1",
+ *                           "inMyFavourites": false
+ *                       },
+ *                       {
+ *                           "title": "new Car",
+ *                           "description": "Full HD , 3d support",
+ *                           "startPrice": 10000,
+ *                           "endDate": "2017-12-05T22:00:00.000Z",
+ *                           "relatedUser": {
+ *                               "fullName": "Magdyxy",
+ *                               "email": "x2x@x2x.com",
+ *                               "address": "82 Fatma",
+ *                               "phone": "01157954393",
+ *                               "country": "Egypt",
+ *                               "id": "5a23d9a74bc62c0014489e3b"
+ *                           },
+ *                           "relatedCategory": {
+ *                               "name": "تلفزيونات",
+ *                               "id": "5a25841337560312b08bb05b"
+ *                           },
+ *                           "highestPrice": 12000,
+ *                           "creationDate": "2017-12-04T17:24:29.201Z",
+ *                           "finished": false,
+ *                           "favUsers": [],
+ *                           "imgs": [
+ *                               "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+ *                           ],
+ *                           "id": "5a2584cd37560312b08bb05c",
+ *                           "inMyFavourites": false
+ *                       }
  *                   ],
- *                   "id": "5a25747dcda9950014db1bc1"
- *                   },
- *                   {
- *                   "title": "oppo",
- *                   "description": "good device",
- *                   "startPrice": 100000,
- *                   "relatedCategory": {
- *                       "name": "مجديات",
- *                       "id": "5a2443970b92ff001421a3b9"
- *                   },
- *                   "relatedUser": {
- *                       "email": "hazem.tarek@gmail.com",
- *                       "fullName": "Hazem Tarek",
- *                       "phone": "01014466503",
- *                       "country": "مصر",
- *                       "address": "بورسعيد",
- *                       "id": "5a24117b4bc62c0014489e43"
- *                   },
- *                   "endDate": "2017-12-31T00:00:00.000Z",
- *                   "highestPrice": 100001,
- *                   "creationDate": "2017-12-03T19:27:58.447Z",
- *                   "finished": false,
- *                   "imgs": [
- *                       "http://kayed-api.herokuapp.com/uploads/auctions/5a24503e7585730014f103c61512329278453.jpeg"
- *                   ],
- *                   "id": "5a24503e7585730014f103c6"
- *                   }
- *               ],
- *               "page": 1,
- *               "pageCount": 2,
- *               "limit": "2",
- *               "totalCount": 4
+ *                   "page": 1,
+ *                   "pageCount": 3,
+ *                   "limit": "2",
+ *                   "totalCount": 5
  *               }
-*/
+ */
 
 /**
  * @swagger
@@ -241,30 +246,38 @@ router.route('/')
  *         description: Get an Auction
  *         example: 
  *               {
- *               "title": "new Car",
- *               "description": "Full HD , 3d support",
- *               "startPrice": 10000,
- *               "endDate": "2017-12-05T22:00:00.000Z",
- *               "relatedUser": {
- *                   "fullName": "Magdy",
- *                   "email": "xx@xx.com",
- *                   "address": "82 Fatma",
- *                   "phone": "01157954393",
- *                   "country": "Egypt",
- *                   "id": "5a23d9a74bc62c0014489e3b"
- *               },
- *               "relatedCategory": {
- *                   "name": "تلفزيونات",
- *                   "id": "5a25841337560312b08bb05b"
- *               },
- *               "highestPrice": 10000,
- *               "creationDate": "2017-12-04T17:24:29.201Z",
- *               "finished": false,
- *               "imgs": [
- *                   "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
- *               ],
- *               "id": "5a2584cd37560312b08bb05c",
- *               "offersCount": 0
+ *                   "title": "new Car",
+ *                   "description": "Full HD , 3d support",
+ *                   "startPrice": 10000,
+ *                   "endDate": "2017-12-05T22:00:00.000Z",
+ *                   "relatedUser": {
+ *                       "fullName": "Magdyxy",
+ *                       "email": "x2x@x2x.com",
+ *                       "address": "82 Fatma",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a23d9a74bc62c0014489e3b"
+ *                   },
+ *                   "relatedCategory": {
+ *                       "name": "تلفزيونات",
+ *                       "id": "5a25841337560312b08bb05b"
+ *                   },
+ *                   "highestPrice": 12000,
+ *                   "creationDate": "2017-12-04T17:24:29.201Z",
+ *                   "finished": false,
+ *                   "favUsers": [],
+ *                   "imgs": [
+ *                       "http://localhost:3000/uploads/auctions/5a2584cd37560312b08bb05c1512408269292.jpeg"
+ *                   ],
+ *                   "id": "5a2584cd37560312b08bb05c",
+ *                   "offersCount": 1,
+ *                   "topBids": {
+ *                       "1": {
+ *                           "bidderName": "Magdyxy",
+ *                           "price": 12000
+ *                       }
+ *                   },
+ *                   "inMyFavourites": false
  *               }
  *       404:
  *         description: Auction with this id not found
