@@ -1,6 +1,7 @@
 import express from "express";
 import BarterController from "../controllers/barter.controller";
 import barterOfferRoute from "./barter-offer.route" ;
+import userOffersRoute from "./user.offers.route" ;
 
 const router = express.Router();
 
@@ -376,5 +377,6 @@ router.route('/:id')
 
 
 router.use(barterOfferRoute)
+router.use(userOffersRoute)
 
 export default router;

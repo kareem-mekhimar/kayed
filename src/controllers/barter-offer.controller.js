@@ -146,14 +146,13 @@ export default {
                 });
             }
 
-
-            if (req.body.status === 'REJECTED'){
-                let barter = await Barter.findById(barterId);
-                barter.offerUsers = barter.offerUsers.filter(user => { 
-                    user != barterOffer.relatedUser.id });
-                console.log("Rejected offer in :" , barter);
-                barter.save();
-            }
+            // if (req.body.status === 'REJECTED'){
+            //     let barter = await Barter.findById(barterId);
+            //     barter.offerUsers = barter.offerUsers.filter(user => { 
+            //         user != barterOffer.relatedUser.id });
+            //     console.log("Rejected offer in :" , barter);
+            //     barter.save();
+            // }
 
             const updatedBarterOffer = await BarterOffer.findByIdAndUpdate(offerId, { status: req.body.status} , { new: true });
             res.status(200).send(updatedBarterOffer);    
