@@ -33,7 +33,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try {
-            let userBartersOffers = await BarterOffer.find(query).select('relatedBarter').populate({
+            let userBartersOffers = await BarterOffer.find(query).populate({
                 path: 'relatedBarter',
                 model: 'barter',
                 populate: {
@@ -59,6 +59,13 @@ export default {
             }   
 
             parentBarters = isInAll_MyOffers_favourites(parentBarters.reverse(), req);
+            
+            for(let userBarterOffer of userBartersOffers){ 
+                for(let parentBarter of parentBarters) {
+                    if(userBarterOffer.relatedBarter.id == parentBarter.id && parentBarter.inMyOffers == true)
+                        parentBarter.MyOfferId = userBarterOffer.id;
+                }
+            }
             
             const pageCount = Math.ceil(userBartersInMyOffersCount / limit);
             let response = new ApiResponse(parentBarters, page, pageCount, limit, userBartersInMyOffersCount);
@@ -95,6 +102,7 @@ export default {
                                         .limit(limit)
                                         .skip((page - 1) * limit);
 
+            
             const auctionsWithMyOfferCount = await Auction.count(query);
 
             auctionsWithMyOffer = isInAll_MyOffers_favourites(auctionsWithMyOffer, req, false);
