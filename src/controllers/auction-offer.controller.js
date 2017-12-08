@@ -4,8 +4,6 @@ import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import Auction from "../models/auction.model";
 
-
-
 const validateAuctionOfferBody = (req, highestPrice) => {
     req.checkBody("bidder").notEmpty().withMessage("bidder Required")
         .custom(value => {
@@ -24,6 +22,9 @@ const validateAuctionOfferBody = (req, highestPrice) => {
 
 };
 
+const registerMyOfferInAuction = async (auctionId, userId) => {
+    await Auction.findByIdAndUpdate(auctionId, { $addToSet: { offerUsers: userId } }, { new: true });    
+};
 
 export default {
 
@@ -36,7 +37,6 @@ export default {
             next(new ApiError(404, "Auction Not Found"));
 
         else {
-
             let result = await validateAuctionOfferBody(req, auction.highestPrice);
 
             if (!result.isEmpty())
@@ -47,6 +47,8 @@ export default {
 
                 auction.highestPrice = offer.price;
                 auction.save();
+
+                registerMyOfferInAuction(auctionId, req.user.id);
 
                 offer = await AuctionOffer.findById(offer.id).populate("bidder relatedAuction");
                 res.status(201).send(offer);

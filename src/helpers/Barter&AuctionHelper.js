@@ -17,12 +17,9 @@ export function isIn_MyOffers_favourites(item, req, isBarter = true) {
         return favUser.equals(req.user.id);
     });
 
-    let inMyOffers
-    if (isBarter) {
-        inMyOffers = item.offerUsers.some((offerUser) => {
-            return offerUser.equals(req.user.id);
-        });
-    }
+    let inMyOffers = item.offerUsers.some((offerUser) => {
+        return offerUser.equals(req.user.id);
+    });
 
     newItem = { ...item.toJSON(), inMyOffers, inMyFavourites }
     return newItem;

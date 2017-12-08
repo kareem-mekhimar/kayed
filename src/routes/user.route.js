@@ -1,5 +1,7 @@
 import express from "express";
 import UserController from "../controllers/user.controller";
+import userOffersRoute from "./user-offers.route" ;
+
 const router = express.Router();
 
 /**
@@ -507,5 +509,7 @@ router.route('/:id/favourites/auctions')
  *         description: User FavouriteAuction Not Found
 */
 router.route('/:id/favourites/auctions/:auctionId').delete(UserController.deleteFavAuction);
+
+router.use(userOffersRoute)
 
 export default router;

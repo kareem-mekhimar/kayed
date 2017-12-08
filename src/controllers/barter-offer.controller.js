@@ -28,10 +28,8 @@ const validateBarterOffer = (req, isUpdate = false) => {
     return req.getValidationResult();
 };
 
-const registerMeInBarter = async (barterId, req) => {
-    const wantedBarter =  await Barter.findById(barterId).where('offerUsers').equals(req.user.id);
-    if(!wantedBarter)
-        await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });    
+const registerMyOfferInBarter = async (barterId, userId) => {
+    await Barter.findByIdAndUpdate(barterId, { $addToSet: { offerUsers: userId } }, { new: true });    
 };
 
 export default {
@@ -90,7 +88,8 @@ export default {
             
             await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
-            registerMeInBarter(barterId, req);            
+            registerMyOfferInBarter(barterId, req.user.id);
+                       
             const barterOffer = await BarterOffer.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
                         
             res.status(201).send(barterOffer);            
