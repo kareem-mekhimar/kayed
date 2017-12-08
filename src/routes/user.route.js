@@ -89,7 +89,7 @@ const router = express.Router();
  *              - country is Required 
  */
 
-router.route('/:id').put(UserController.updateUser);
+router.route('/:id').put(UserController.updateUser).get(UserController.findById);
 
 
 /**
