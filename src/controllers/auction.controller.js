@@ -124,7 +124,8 @@ export default {
             next(new ApiError(404, "Auction with this id not found"));
         } else {
 
-            auction = { ...auction.toJSON() }
+            auction = isIn_MyOffers_favourites(auction, req);
+
             let count  = await AuctionOffer.count({ relatedAuction: id }) ;
             auction.offersCount = count ;
 
@@ -143,16 +144,6 @@ export default {
                 auction.topBids = topBids ;
             }
 
-            let isInMyFavourites = false
-            for(let userId of auction.favUsers)
-            {
-                if (userId == req.user.id) {
-                    isInMyFavourites = true;
-                    break;
-                }
-            }
-            auction.inMyFavourites =  isInMyFavourites;
-            
             res.send(auction)
         }
     },
