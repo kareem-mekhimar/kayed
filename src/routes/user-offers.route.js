@@ -267,6 +267,54 @@ router.route('/:id/auction-offers').get(UserOffersController.getUserAuctionsInMy
  *       200:
  *         description: Get An Array of User's Winned Auctions
  *         example: 
+ *               {
+ *                   "links": {
+ *                       "self": "http://localhost:3000/api/v1/users/5a2698c11287c23b1868278b/winned-auctions?page=1&limit=1",
+ *                       "next": "http://localhost:3000/api/v1/users/5a2698c11287c23b1868278b/winned-auctions?page=2&limit=1",
+ *                       "last": "http://localhost:3000/api/v1/users/5a2698c11287c23b1868278b/winned-auctions?page=2&limit=1"
+ *                   },
+ *                   "data": [
+ *                       {
+ *                           "title": "rber",
+ *                           "description": "rhrehE",
+ *                           "startPrice": 65745274,
+ *                           "relatedCategory": {
+ *                               "name": "مجديات",
+ *                               "id": "5a2443970b92ff001421a3b9"
+ *                           },
+ *                           "relatedUser": {
+ *                               "email": "rrr@rrr.com",
+ *                               "fullName": "MuhammaD",
+ *                               "phone": "123456",
+ *                               "country": "مصر",
+ *                               "address": "دمنهور",
+ *                               "img": "http://kayed-api.herokuapp.com/uploads/5a29772f175e2300149d15cb.jpeg",
+ *                               "id": "5a29772f175e2300149d15cb"
+ *                           },
+ *                           "endDate": "2017-12-09T00:00:00.000Z",
+ *                           "highestPrice": 65745278,
+ *                           "auctionOffer": {
+ *                               "bidder": "5a2698c11287c23b1868278b",
+ *                               "price": 65745275,
+ *                               "relatedAuction": "5a29c00537dc24001493d7a4",
+ *                               "winned": false,
+ *                               "id": "5a2aaf97c03eea2da8170f26"
+ *                           },
+ *                           "creationDate": "2017-12-07T22:26:13.957Z",
+ *                           "finished": true,
+ *                           "imgs": [
+ *                               "http://kayed-api.herokuapp.com/uploads/auctions/5a29c00537dc24001493d7a41512685573962.jpeg"
+ *                           ],
+ *                           "id": "5a29c00537dc24001493d7a4",
+ *                           "inMyOffers": true,
+ *                           "inMyFavourites": false
+ *                       }
+ *                   ],
+ *                   "page": 1,
+ *                   "pageCount": 2,
+ *                   "limit": 1,
+ *                   "totalCount": 2
+ *               }
  */
 
 router.route('/:id/winned-auctions').get(UserOffersController.getUserWinnedAuctions);
