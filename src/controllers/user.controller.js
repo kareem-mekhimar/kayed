@@ -7,7 +7,7 @@ import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import jwt from "jsonwebtoken";
 import config from "../config";
-import { writeBase64AndReturnUrl } from "../utils";
+import { writeBase64AndReturnUrl, isValidImgUrl } from "../utils";
 import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
 
 const { jwtSecret } = config;
@@ -132,8 +132,11 @@ export default {
                 return next(new ApiError.NotFound('User'));
 
             if (img) {
-                updatedUser.img = writeBase64AndReturnUrl(img, id, req);
-                updatedUser.save();
+                if(!isValidImgUrl(img))
+                {
+                    updatedUser.img = writeBase64AndReturnUrl(img, id, req);
+                    updatedUser.save();
+                }
             }
 
             res.status(200).send({ user: updatedUser });

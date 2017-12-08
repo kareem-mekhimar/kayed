@@ -265,7 +265,7 @@ router.route('/:id/auction-offers').get(UserOffersController.getUserAuctionsInMy
  *         type: number
  *     responses:
  *       200:
- *         description: Get An Array of User's Auctions which has offered on
+ *         description: Get An Array of User's Winned Auctions
  *         example: 
  */
 

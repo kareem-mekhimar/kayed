@@ -28,6 +28,9 @@ export function handleImgs(imgs, folderName="", relatedId, req) {
   return imgsUrls;
 }
 
+export function isValidImgUrl(url) {
+  return(url.match(/\.(jpeg|jpg|png)$/) != null);
+}
 
 function base64MimeType(encoded) {
     var result = null;
