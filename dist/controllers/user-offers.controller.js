@@ -80,7 +80,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var id, query, _req$query, page, limit, status, userBartersOffers, userBartersInMyOffersCount, parentBarters, prevItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, userBarterOffer, pageCount, response;
+            var id, query, _req$query, page, limit, status, userBartersOffers, userBartersInMyOffersCount, parentBarters, prevItem, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, userBarterOffer, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, _userBarterOffer, _iteratorNormalCompletion3, _didIteratorError3, _iteratorError3, _iterator3, _step3, parentBarter, pageCount, response;
 
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
@@ -103,7 +103,7 @@ exports.default = {
 
                             _context2.prev = 7;
                             _context2.next = 10;
-                            return _barterOffer2.default.find(query).select('relatedBarter').populate({
+                            return _barterOffer2.default.find(query).populate({
                                 path: 'relatedBarter',
                                 model: 'barter',
                                 populate: {
@@ -189,6 +189,102 @@ exports.default = {
 
                             parentBarters = (0, _BarterAuctionHelper.isInAll_MyOffers_favourites)(parentBarters.reverse(), req);
 
+                            _iteratorNormalCompletion2 = true;
+                            _didIteratorError2 = false;
+                            _iteratorError2 = undefined;
+                            _context2.prev = 49;
+                            _iterator2 = userBartersOffers[Symbol.iterator]();
+
+                        case 51:
+                            if (_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done) {
+                                _context2.next = 75;
+                                break;
+                            }
+
+                            _userBarterOffer = _step2.value;
+                            _iteratorNormalCompletion3 = true;
+                            _didIteratorError3 = false;
+                            _iteratorError3 = undefined;
+                            _context2.prev = 56;
+
+                            for (_iterator3 = parentBarters[Symbol.iterator](); !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                                parentBarter = _step3.value;
+
+                                if (_userBarterOffer.relatedBarter.id == parentBarter.id && parentBarter.inMyOffers == true) parentBarter.MyOfferId = _userBarterOffer.id;
+                            }
+                            _context2.next = 64;
+                            break;
+
+                        case 60:
+                            _context2.prev = 60;
+                            _context2.t1 = _context2["catch"](56);
+                            _didIteratorError3 = true;
+                            _iteratorError3 = _context2.t1;
+
+                        case 64:
+                            _context2.prev = 64;
+                            _context2.prev = 65;
+
+                            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                _iterator3.return();
+                            }
+
+                        case 67:
+                            _context2.prev = 67;
+
+                            if (!_didIteratorError3) {
+                                _context2.next = 70;
+                                break;
+                            }
+
+                            throw _iteratorError3;
+
+                        case 70:
+                            return _context2.finish(67);
+
+                        case 71:
+                            return _context2.finish(64);
+
+                        case 72:
+                            _iteratorNormalCompletion2 = true;
+                            _context2.next = 51;
+                            break;
+
+                        case 75:
+                            _context2.next = 81;
+                            break;
+
+                        case 77:
+                            _context2.prev = 77;
+                            _context2.t2 = _context2["catch"](49);
+                            _didIteratorError2 = true;
+                            _iteratorError2 = _context2.t2;
+
+                        case 81:
+                            _context2.prev = 81;
+                            _context2.prev = 82;
+
+                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                _iterator2.return();
+                            }
+
+                        case 84:
+                            _context2.prev = 84;
+
+                            if (!_didIteratorError2) {
+                                _context2.next = 87;
+                                break;
+                            }
+
+                            throw _iteratorError2;
+
+                        case 87:
+                            return _context2.finish(84);
+
+                        case 88:
+                            return _context2.finish(81);
+
+                        case 89:
                             pageCount = Math.ceil(userBartersInMyOffersCount / limit);
                             response = new _ApiResponse2.default(parentBarters, page, pageCount, limit, userBartersInMyOffersCount);
 
@@ -201,21 +297,21 @@ exports.default = {
                                 response.addNextLink(req);
                             }
                             res.send(response);
-                            _context2.next = 57;
+                            _context2.next = 100;
                             break;
 
-                        case 54:
-                            _context2.prev = 54;
-                            _context2.t1 = _context2["catch"](7);
+                        case 97:
+                            _context2.prev = 97;
+                            _context2.t3 = _context2["catch"](7);
 
-                            next(_context2.t1);
+                            next(_context2.t3);
 
-                        case 57:
+                        case 100:
                         case "end":
                             return _context2.stop();
                     }
                 }
-            }, _callee2, _this, [[7, 54], [19, 33, 37, 45], [38,, 40, 44]]);
+            }, _callee2, _this, [[7, 97], [19, 33, 37, 45], [38,, 40, 44], [49, 77, 81, 89], [56, 60, 64, 72], [65,, 67, 71], [82,, 84, 88]]);
         }))();
     },
     getUserAuctionsInMyOffers: function getUserAuctionsInMyOffers(req, res, next) {
@@ -289,7 +385,7 @@ exports.default = {
         var _this3 = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
-            var id, _req$query3, page, limit, winnedAuctionsOffers, winnedAuctionsOffersCount, parentAuctions, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, winnedAuctionOffer, pageCount, response;
+            var id, _req$query3, page, limit, winnedAuctionsOffers, winnedAuctionsOffersCount, parentAuctions, _iteratorNormalCompletion4, _didIteratorError4, _iteratorError4, _iterator4, _step4, winnedAuctionOffer, pageCount, response;
 
             return regeneratorRuntime.wrap(function _callee4$(_context4) {
                 while (1) {
@@ -323,13 +419,13 @@ exports.default = {
                         case 11:
                             winnedAuctionsOffersCount = _context4.sent;
                             parentAuctions = [];
-                            _iteratorNormalCompletion2 = true;
-                            _didIteratorError2 = false;
-                            _iteratorError2 = undefined;
+                            _iteratorNormalCompletion4 = true;
+                            _didIteratorError4 = false;
+                            _iteratorError4 = undefined;
                             _context4.prev = 16;
 
-                            for (_iterator2 = winnedAuctionsOffers[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                winnedAuctionOffer = _step2.value;
+                            for (_iterator4 = winnedAuctionsOffers[Symbol.iterator](); !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                                winnedAuctionOffer = _step4.value;
 
                                 parentAuctions.push(winnedAuctionOffer.relatedAuction);
                             }_context4.next = 24;
@@ -338,26 +434,26 @@ exports.default = {
                         case 20:
                             _context4.prev = 20;
                             _context4.t0 = _context4["catch"](16);
-                            _didIteratorError2 = true;
-                            _iteratorError2 = _context4.t0;
+                            _didIteratorError4 = true;
+                            _iteratorError4 = _context4.t0;
 
                         case 24:
                             _context4.prev = 24;
                             _context4.prev = 25;
 
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
+                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                _iterator4.return();
                             }
 
                         case 27:
                             _context4.prev = 27;
 
-                            if (!_didIteratorError2) {
+                            if (!_didIteratorError4) {
                                 _context4.next = 30;
                                 break;
                             }
 
-                            throw _iteratorError2;
+                            throw _iteratorError4;
 
                         case 30:
                             return _context4.finish(27);
