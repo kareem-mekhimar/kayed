@@ -42,6 +42,9 @@ export default {
             if (!result.isEmpty())
                 next(new ApiError(422, result.mapped()));
             else {
+                if(req.body.winned)
+                    return next(new ApiError(403, "You aren't allowed to overwrite this field"));
+
                 req.body.relatedAuction = auctionId;
                 let offer = await AuctionOffer.create(req.body);
 

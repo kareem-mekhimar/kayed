@@ -17,6 +17,10 @@ const AuctionOfferSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref:"auction",
         required:true
+    },
+    winned: {
+        type: Boolean,
+        default: false
     }
 
 }) ;

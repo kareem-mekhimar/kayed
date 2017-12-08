@@ -5,7 +5,7 @@ import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import BarterOffer from "../models/barter-offer.model"; 
 import AuctionOffer from "../models/auction-offer.model";
-
+import mongoose from 'mongoose';
 import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
 
 const checkIfUserExist = async (id, next) => {
@@ -125,17 +125,28 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try {
-            let winnedAuctions = await Auction.find({ finished: true, 'auctionOffer.bidder': req.user.id }).populate('relatedUser relatedCategory auctionOffer')
-                                        .sort({ creationDate: -1 })
-                                        .limit(limit)
-                                        .skip((page - 1) * limit);
-
-            const winnedAuctionsCount = await Auction.count({ finished: true, 'auctionOffer.bidder': req.user.id });
-
-            winnedAuctions = isInAll_MyOffers_favourites(winnedAuctions, req, false);
+            let winnedAuctionsOffers = await AuctionOffer.find({ winned: true , bidder: req.user.id })
+            .select('relatedAuction').populate({
+                path: 'relatedAuction',
+                model: 'auction',
+                populate: {
+                  path: 'relatedUser relatedCategory auctionOffer'
+                }
+            })
+            .sort({ creationDate: -1 })
+            .limit(limit)
+            .skip((page - 1) * limit);
             
-            const pageCount = Math.ceil(winnedAuctionsCount / limit);
-            let response = new ApiResponse(winnedAuctions, page, pageCount, limit, winnedAuctionsCount);
+            const winnedAuctionsOffersCount = await AuctionOffer.count({ winned: true , bidder: req.user.id });
+                        
+            let parentAuctions = [];
+            for(let winnedAuctionOffer of winnedAuctionsOffers)
+                parentAuctions.push(winnedAuctionOffer.relatedAuction);
+
+            parentAuctions = isInAll_MyOffers_favourites(parentAuctions.reverse(), req, false);
+            
+            const pageCount = Math.ceil(winnedAuctionsOffersCount / limit);
+            let response = new ApiResponse(parentAuctions, page, pageCount, limit, winnedAuctionsOffersCount);
             response.addSelfLink(req);
 
             if (page > 1) {
