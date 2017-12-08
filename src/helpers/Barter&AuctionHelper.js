@@ -1,51 +1,29 @@
+
+
 export function isInAll_MyOffers_favourites(items, req, isBarter = true) {
     let newItems = [];
-    let isInMyOffer = isBarter? false : undefined;
-    let isInMyFavourites = false;    
-    for(let item of items) {
 
-        for (let userId of item.favUsers) {
-            if (userId == req.user.id){
-                inMyFavourites = true;
-                break; 
-            }
-        }
-
-        if(isBarter) {
-            for(let userId of item.offerUsers)
-            {
-                if (userId == req.user.id) 
-                {
-                    isInMyOffer = true;
-                    break;
-                }
-            }           
-        }
-        item = { ...item.toJSON(),inMyOffers: isInMyOffer, inMyFavourites : isInMyFavourites }
-        newItems.push(item);
+    for (let item of items) {
+        newItems.push(isIn_MyOffers_favourites(item, req, isBarter));
     }
+
     return newItems.reverse();
 }
 
 export function isIn_MyOffers_favourites(item, req, isBarter = true) {
     let newItem;
-    let isInMyOffer = isBarter? false : undefined;
-    let isInMyFavourites = false;
-    for(let userId of item.favUsers)
-    {
-        if (userId == req.user.id) 
-            isInMyFavourites = true;
+    
+    let inMyFavourites = item.favUsers.some((favUser) => {
+        return favUser.equals(req.user.id);
+    });
+
+    let inMyOffers
+    if (isBarter) {
+        inMyOffers = item.offerUsers.some((offerUser) => {
+            return offerUser.equals(req.user.id);
+        });
     }
 
-    if(isBarter) { 
-        for(let userId of item.offerUsers)
-        {
-            if (userId == req.user.id) {
-                isInMyOffer = true;
-                break;
-            }
-        }
-    }
-    newItem = { ...item.toJSON(),inMyOffers: isInMyOffer, inMyFavourites : isInMyFavourites }
+    newItem = { ...item.toJSON(), inMyOffers, inMyFavourites }
     return newItem;
 }
