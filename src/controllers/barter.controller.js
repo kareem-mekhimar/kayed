@@ -71,7 +71,7 @@ export default {
             const bartersCount = await Barter.count(query);
             
             const pageCount = Math.ceil(bartersCount / limit);
-
+  
             barters = isInAll_MyOffers_favourites(barters, req);
 
             let response = new ApiResponse(barters, page, pageCount, limit, bartersCount);

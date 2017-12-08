@@ -85,6 +85,8 @@ export default {
             req.body.relatedBarter = barterId;
             
             let createdBarterOffer = await BarterOffer.create({_id : newBarterOfferId, ...req.body});
+            
+            await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
             registerMyOfferInBarter(barterId, req.user.id);
                        

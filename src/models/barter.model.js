@@ -66,6 +66,37 @@ BarterSchema.set('toJSON', {
     }
 });
 
+// BarterSchema.pre("init", function (next, req, callback) {
+//     const barter = this;    
+//     if(barter.offerUsers.indexOf(req.user.id) > -1)
+//     barter.inMyOffers = true;
+//     else this.barter.inMyOffers = false;
+// });
+
+
+// BarterSchema.virtual('inMyOffers').get(function () {
+//     console.log("offerUsers: " , this.offerUsers)
+//     console.log("USER: " , req.user.id)    
+//   return this.offerUsers.indexOf(req.user.id) > -1;
+// })
+
+// BarterSchema.pre('find', function (next) {
+//     // let barter = this;    
+//     // console.log("UserID: ", this.options.userId);
+//     // if(.offerUsers.indexOf(this.options.userId) > -1)
+//     //     barter.inMyOffers = true;
+//     // else barter.inMyOffers = false;
+//     // next();
+// });
+
+// .set(function (setFullNameTo) {
+//   var split = setFullNameTo.split(' ')
+//     , firstName = split[0]
+//     , lastName = split[1];
+
+//   this.set('name.first', firstName);
+//   this.set('name.last', lastName);
+// });
 const Barter = mongoose.model('barter', BarterSchema);
 
 export default Barter;
