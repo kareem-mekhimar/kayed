@@ -58,23 +58,19 @@ const checkIfUserExist = async (id, next) => {
         return next(new ApiError.NotFound('User'));
 }
 
-
-const registerAsMyFavourite = async (itemId, userId, isBarter = true) => {
+const registerAsMyFavourite = async (itemId, userId, isBarter=true) => {
     if (isBarter)
-        await Barter.findByIdAndUpdate(itemId, { $addToSet: { favUsers: userId } });
+        await Barter.findByIdAndUpdate(itemId, { $addToSet: { favUsers: userId } });    
     else
-        await Auction.findByIdAndUpdate(itemId, { $addToSet: { favUsers: userId } });
+        await Auction.findByIdAndUpdate(itemId, { $addToSet: { favUsers: userId } });    
 };
 
-
-const UnRegisterAsMyFavourite = async (itemId, userId, isBarter = true) => {
+const UnRegisterAsMyFavourite = async (itemId, userId, isBarter=true) => {
     if (isBarter)
         await Barter.findByIdAndUpdate(itemId, { '$pull': { favUsers: userId } });
     else
         await Auction.findByIdAndUpdate(itemId, { '$pull': { favUsers: userId } });
 };
-
-
 
 export default {
 
@@ -229,7 +225,7 @@ export default {
         page = page ? parseInt(page) : 1;
         limit = limit ? parseInt(limit) : 20;
 
-        try {
+        try { 
             const userFavBarters = await FavBarter.find({ user: req.user.id }).select('barter').populate({
                 path: 'barter',
                 model: 'barter',
@@ -237,12 +233,12 @@ export default {
                     path: 'relatedUser relatedCategory barterOffer'
                 }
             })
-                .sort({ creationDate: -1 })
-                .limit(limit)
-                .skip((page - 1) * limit);
-
-            const userFavBartersCount = await FavBarter.count({ user: id });
-
+            .sort({ creationDate: -1 })
+            .limit(limit)
+            .skip((page - 1) * limit);
+            
+            const userFavBartersCount = await FavBarter.count({ user : id });
+                        
             const pageCount = Math.ceil(userFavBartersCount / limit);
             let response = new ApiResponse(userFavBarters, page, pageCount, limit, userFavBartersCount);
             response.addSelfLink(req);
@@ -269,7 +265,7 @@ export default {
         page = page ? parseInt(page) : 1;
         limit = limit ? parseInt(limit) : 20;
 
-        try {
+        try { 
             let userFavAuctions = await FavAuction.find({ user: req.user.id }).select('auction').populate({
                 path: 'auction',
                 model: 'auction',
@@ -311,12 +307,12 @@ export default {
             const barter = await Barter.findById(req.body.barter);
             if (!barter)
                 return next(new ApiError.NotFound('Barter'))
-
-            const userFavBarter = await FavBarter.findOne({ user: req.user.id, barter: barter.id });
+            
+            const userFavBarter = await FavBarter.findOne({ user: req.user.id , barter: barter.id });
             if (!userFavBarter) {
                 registerAsMyFavourite(barter.id, req.user.id);
-
-                const createdUserFavBarter = await FavBarter.create({ user: req.user.id, barter: req.body.barter });
+    
+                const createdUserFavBarter = await FavBarter.create({ user: req.user.id , barter: req.body.barter });
                 res.status(200).send(createdUserFavBarter);
             }
             console.log("Fav Barter ", barter.favUsers);
@@ -343,15 +339,15 @@ export default {
             if (!auction)
                 return next(new ApiError.NotFound('Auction'))
 
-            const userFavAuction = await FavAuction.findOne({ user: req.user.id, auction: auction.id });
+            const userFavAuction = await FavAuction.findOne({ user: req.user.id , auction: auction.id });
             if (!userFavAuction) {
                 registerAsMyFavourite(auction.id, req.user.id, false);
-
-                const createdUserFavAuction = await FavAuction.create({ user: req.user.id, auction: req.body.auction });
+                
+                const createdUserFavAuction= await FavAuction.create({ user: req.user.id , auction: req.body.auction });
                 res.status(200).send(createdUserFavAuction);
             }
             console.log("Fav Auctions ", auction.favUsers);
-
+            
             // Already Exist Nothing to do..
             res.send();
         }
@@ -366,7 +362,7 @@ export default {
             const deletedFavBarter = await FavBarter.findOne({ user: id, barter: barterId }).remove();
             if (!deletedFavBarter)
                 return next(new ApiError.NotFound('User FavouriteBarter'));
-
+           
             UnRegisterAsMyFavourite(barterId, req.user.id);
             res.status(204).send();
         }
@@ -382,8 +378,8 @@ export default {
             const deletedFavAuction = await FavAuction.findOne({ user: id, auction: auctionId }).remove();
             if (!deletedFavAuction)
                 return next(new ApiError.NotFound('User FavouriteAuction'));
-
-
+            
+            
             UnRegisterAsMyFavourite(auctionId, req.user.id, false);
             // let auction = await Auction.findById(auctionId);
             // auction.favUsers = auction.favUsers.filter(user => { 

@@ -40,9 +40,9 @@ export default {
                   path: 'relatedUser relatedCategory barterOffer'
                 }
             })
-                                        .sort({ creationDate: -1 })
-                                        .limit(limit)
-                                        .skip((page - 1) * limit);
+            .sort({ creationDate: -1 })
+            .limit(limit)
+            .skip((page - 1) * limit);
 
             let userBartersInMyOffersCount = await BarterOffer.count(query);
 

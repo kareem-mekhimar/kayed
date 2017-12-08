@@ -1,6 +1,6 @@
 
 
-export function isInAll_MyOffers_favourites(items, req, isBarter = true) {
+export function isInAll_MyOffers_favourites(items, req, isBarter= true) {
     let newItems = [];
 
     for (let item of items) {
@@ -10,7 +10,7 @@ export function isInAll_MyOffers_favourites(items, req, isBarter = true) {
     return newItems.reverse();
 }
 
-export function isIn_MyOffers_favourites(item, req, isBarter = true) {
+export function isIn_MyOffers_favourites(item, req, isBarter= true) {
     let newItem;
     
     let inMyFavourites = item.favUsers.some((favUser) => {
