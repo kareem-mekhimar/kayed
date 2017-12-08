@@ -122,7 +122,7 @@ export default {
             if (img) {
                 if(!isValidImgUrl(img))
                 {
-                    updatedUser.img = writeBase64AndReturnUrl(img, id, req);
+                    updatedUser.img = writeBase64AndReturnUrl(img, "users/" + id, req);
                     updatedUser.save();
                 }
             }
