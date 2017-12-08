@@ -42,6 +42,36 @@ const router = express.Router();
 *         readOnly: true
 */
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Get a specific user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string 
+ *     responses:
+ *       200:
+ *         description: Return Updated User
+ *         example:                  
+ *              {
+ *                       "fullName": "Magdy",
+ *                       "email": "demo@demo.com",
+ *                       "address": "82 Fatma El zhraa",
+ *                       "phone": "01157954393",
+ *                       "country": "Egypt",
+ *                       "id": "5a1db2b8a3c9862828910bef"
+ *              }
+ *       404:
+ *         description:  User Not Found
+ */
+
 
 /**
  * @swagger
