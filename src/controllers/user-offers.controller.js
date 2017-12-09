@@ -84,10 +84,6 @@ export default {
                                         .sort({ creationDate: -1 })
                                         .limit(limit)
                                         .skip((page - 1) * limit);
-<<<<<<< HEAD
-
-=======
->>>>>>> c20af0b577071b558ef634dcf76fcc587115e8bb
             
             const auctionsWithMyOfferCount = await Auction.count(query);
 
