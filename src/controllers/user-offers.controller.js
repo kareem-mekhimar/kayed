@@ -60,13 +60,13 @@ export default {
 
             parentBarters = isInAll_MyOffers_favourites(parentBarters.reverse(), req);
             
-            for(let userBarterOffer of userBartersOffers){ 
+            for(let userBarterOffer of userBartersOffers) { 
                 for(let parentBarter of parentBarters) {
                     if(userBarterOffer.relatedBarter.id == parentBarter.id && parentBarter.inMyOffers == true)
                         parentBarter.MyOfferId = userBarterOffer.id;
                 }
             }
-            
+              
             const pageCount = Math.ceil(userBartersInMyOffersCount / limit);
             let response = new ApiResponse(parentBarters, page, pageCount, limit, userBartersInMyOffersCount);
             response.addSelfLink(req);
@@ -101,7 +101,10 @@ export default {
                                         .sort({ creationDate: -1 })
                                         .limit(limit)
                                         .skip((page - 1) * limit);
+<<<<<<< HEAD
 
+=======
+>>>>>>> c20af0b577071b558ef634dcf76fcc587115e8bb
             
             const auctionsWithMyOfferCount = await Auction.count(query);
 
