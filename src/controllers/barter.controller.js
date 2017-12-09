@@ -6,7 +6,7 @@ import mongoose from "mongoose" ;
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import { handleImgs } from "../utils";
-import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
+import { checkAllMyOfferAndFavouriteIn, checkMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
 
 const validateBarter = (req, isUpdate = false) => {
     req.checkBody("title").notEmpty().withMessage("titles is Required")
@@ -72,7 +72,7 @@ export default {
             
             const pageCount = Math.ceil(bartersCount / limit);
   
-            barters = isInAll_MyOffers_favourites(barters, req);
+            barters = await checkAllMyOfferAndFavouriteIn(barters, req);
 
             let response = new ApiResponse(barters, page, pageCount, limit, bartersCount);
             response.addSelfLink(req);
@@ -118,7 +118,7 @@ export default {
             if (!barter)
                return next(new ApiError.NotFound('Barter'));
            
-            barter = isIn_MyOffers_favourites(barter, req);
+            barter = await checkMyOfferAndFavouriteIn(barter, req);
             res.send(barter);
         } catch(err) {
             next(err);
@@ -139,7 +139,7 @@ export default {
                 req.body.imgs = handleImgs(req.body.imgs, "barters", id , req);
             
             let updatedBarter = await Barter.findByIdAndUpdate(id, req.body, { new: true }).populate('relatedCategory relatedUser barterOffer');
-            updatedBarter = isIn_MyOffers_favourites(updatedBarter, req);
+            updatedBarter = await checkMyOfferAndFavouriteIn(updatedBarter, req);
             res.status(200).send(updatedBarter);
         } 
         catch (err) {
