@@ -1,18 +1,18 @@
-
-
-export function isInAll_MyOffers_favourites(items, req, isBarter= true) {
+import BarterOffer from '../models/barter-offer.model';
+        
+export async function checkAllMyOfferAndFavouriteIn(items, req, isBarter= true) {
     let newItems = [];
 
-    for (let item of items) {
-        newItems.push(isIn_MyOffers_favourites(item, req, isBarter));
-    }
+    for (let item of items) 
+        newItems.push(await checkMyOfferAndFavouriteIn(item, req, isBarter));
 
-    return newItems.reverse();
+    return newItems
 }
 
-export function isIn_MyOffers_favourites(item, req, isBarter= true) {
+export async function checkMyOfferAndFavouriteIn(item, req, isBarter= true) {
     let newItem;
-    
+    let myOfferId = undefined;
+
     let inMyFavourites = item.favUsers.some((favUser) => {
         return favUser.equals(req.user.id);
     });
@@ -21,6 +21,11 @@ export function isIn_MyOffers_favourites(item, req, isBarter= true) {
         return offerUser.equals(req.user.id);
     });
 
-    newItem = { ...item.toJSON(), inMyOffers, inMyFavourites }
+    if (isBarter && inMyOffers) {
+        let barterOffer = await BarterOffer.findOne({ relatedBarter: item.id , relatedUser: req.user.id })
+        myOfferId = barterOffer.id;
+    }
+    
+    newItem = { ...item.toJSON(), inMyOffers, inMyFavourites, myOfferId}
     return newItem;
 }

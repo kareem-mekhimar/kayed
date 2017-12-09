@@ -8,7 +8,7 @@ import ApiError from "../helpers/ApiError";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import { writeBase64AndReturnUrl, isValidImgUrl } from "../utils";
-import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
+import { checkAllMyOfferAndFavouriteIn, checkMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
 
 const { jwtSecret } = config;
 
@@ -158,13 +158,13 @@ export default {
 
         try {
             let userBarters = await Barter.find({ relatedUser: id }).populate('relatedCategory relatedUser')
-                .sort({ creationDate: -1 })
-                .limit(limit)
-                .skip((page - 1) * limit);
-
-            const userBartersCount = await Barter.count({ relatedUser: id });
-
-            userBarters = isInAll_MyOffers_favourites(userBarters, req);
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+            
+            const userBartersCount = await Barter.count({ relatedUser : id});
+            
+            userBarters = await checkAllMyOfferAndFavouriteIn(userBarters, req);
 
             const pageCount = Math.ceil(userBartersCount / limit);
             let response = new ApiResponse(userBarters, page, pageCount, limit, userBartersCount);
@@ -194,13 +194,13 @@ export default {
 
         try {
             let userAuctions = await Auction.find({ relatedUser: id }).populate('relatedCategory relatedUser')
-                .sort({ creationDate: -1 })
-                .limit(limit)
-                .skip((page - 1) * limit);
-
-            const userAuctionsCount = await Auction.count({ relatedUser: id });
-
-            userAuctions = isInAll_MyOffers_favourites(userAuctions, req, false);
+                                .sort({ creationDate: -1 })
+                                .limit(limit)
+                                .skip((page - 1) * limit);
+                                
+            const userAuctionsCount = await Auction.count({ relatedUser : id});
+            
+            userAuctions = await checkAllMyOfferAndFavouriteIn(userAuctions, req, false);
 
             const pageCount = Math.ceil(userAuctionsCount / limit);
             let response = new ApiResponse(userAuctions, page, pageCount, limit, userAuctionsCount);
@@ -318,8 +318,7 @@ export default {
                 const createdUserFavBarter = await FavBarter.create({ user: req.user.id , barter: req.body.barter });
                 res.status(200).send(createdUserFavBarter);
             }
-            console.log("Fav Barter ", barter.favUsers);
-
+            
             // Already Exist Nothing to do..
             res.send();
         }
@@ -349,7 +348,6 @@ export default {
                 const createdUserFavAuction= await FavAuction.create({ user: req.user.id , auction: req.body.auction });
                 res.status(200).send(createdUserFavAuction);
             }
-            console.log("Fav Auctions ", auction.favUsers);
             
             // Already Exist Nothing to do..
             res.send();
@@ -382,13 +380,7 @@ export default {
             if (!deletedFavAuction)
                 return next(new ApiError.NotFound('User FavouriteAuction'));
             
-            
             UnRegisterAsMyFavourite(auctionId, req.user.id, false);
-            // let auction = await Auction.findById(auctionId);
-            // auction.favUsers = auction.favUsers.filter(user => { 
-            //     user != id});
-            // auction.save();
-
             res.status(204).send();
         }
         catch (err) {

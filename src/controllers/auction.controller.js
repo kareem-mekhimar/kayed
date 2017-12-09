@@ -5,7 +5,7 @@ import Category from "../models/category.model";
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 
-import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
+import { checkAllMyOfferAndFavouriteIn, checkMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
 
 import { writeBase64AndReturnUrl } from "../utils";
 
@@ -97,7 +97,7 @@ export default {
             .limit(parseInt(limit))
             .skip((page - 1) * limit);
 
-        results = isInAll_MyOffers_favourites(results, req, false);
+        results = await checkAllMyOfferAndFavouriteIn(results, req, false);
         let count = await countQuery
         let pageCount = Math.ceil(count / limit);
         let response = new ApiResponse(results, page, pageCount, limit, count);
@@ -124,7 +124,7 @@ export default {
             next(new ApiError(404, "Auction with this id not found"));
         } else {
 
-            auction = isIn_MyOffers_favourites(auction, req);
+            auction = await checkMyOfferAndFavouriteIn(auction, req, false);
 
             let count  = await AuctionOffer.count({ relatedAuction: id }) ;
             auction.offersCount = count ;

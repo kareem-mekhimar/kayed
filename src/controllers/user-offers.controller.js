@@ -6,7 +6,7 @@ import ApiError from "../helpers/ApiError";
 import BarterOffer from "../models/barter-offer.model"; 
 import AuctionOffer from "../models/auction-offer.model";
 import mongoose from 'mongoose';
-import { isInAll_MyOffers_favourites, isIn_MyOffers_favourites } from "../helpers/Barter&AuctionHelper";
+import { checkAllMyOfferAndFavouriteIn, checkMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
 
 const checkIfUserExist = async (id, next) => {
     const user = await User.findById(id);
@@ -20,9 +20,7 @@ export default {
         let { id } = req.params;
         checkIfUserExist(id, next);
 
-        let query = {
-            relatedUser: req.user.id
-        };
+        let query = { relatedUser: req.user.id };
 
         let { page, limit, status } = req.query;
         
@@ -45,27 +43,12 @@ export default {
             .skip((page - 1) * limit);
 
             let userBartersInMyOffersCount = await BarterOffer.count(query);
-
             let parentBarters = [];
-            let prevItem;
-            for(let userBarterOffer of userBartersOffers)
-            {
-                if(prevItem && prevItem.relatedBarter.id  == userBarterOffer.relatedBarter.id) { 
-                    userBartersInMyOffersCount--;
-                    continue;
-                }
-                prevItem = userBarterOffer
-                parentBarters.push(userBarterOffer.relatedBarter);
-            }   
-
-            parentBarters = isInAll_MyOffers_favourites(parentBarters.reverse(), req);
             
-            for(let userBarterOffer of userBartersOffers) { 
-                for(let parentBarter of parentBarters) {
-                    if(userBarterOffer.relatedBarter.id == parentBarter.id && parentBarter.inMyOffers == true)
-                        parentBarter.MyOfferId = userBarterOffer.id;
-                }
-            }
+            for(let userBarterOffer of userBartersOffers)
+                parentBarters.push(userBarterOffer.relatedBarter);
+
+            parentBarters = await checkAllMyOfferAndFavouriteIn(parentBarters, req);
               
             const pageCount = Math.ceil(userBartersInMyOffersCount / limit);
             let response = new ApiResponse(parentBarters, page, pageCount, limit, userBartersInMyOffersCount);
@@ -108,7 +91,7 @@ export default {
             
             const auctionsWithMyOfferCount = await Auction.count(query);
 
-            auctionsWithMyOffer = isInAll_MyOffers_favourites(auctionsWithMyOffer, req, false);
+            auctionsWithMyOffer = await checkAllMyOfferAndFavouriteIn(auctionsWithMyOffer, req, false);
             
             const pageCount = Math.ceil(auctionsWithMyOfferCount / limit);
             let response = new ApiResponse(auctionsWithMyOffer, page, pageCount, limit, auctionsWithMyOfferCount);
@@ -154,7 +137,7 @@ export default {
             for(let winnedAuctionOffer of winnedAuctionsOffers)
                 parentAuctions.push(winnedAuctionOffer.relatedAuction);
 
-            parentAuctions = isInAll_MyOffers_favourites(parentAuctions.reverse(), req, false);
+            parentAuctions = await checkAllMyOfferAndFavouriteIn(parentAuctions, req, false);
             
             const pageCount = Math.ceil(winnedAuctionsOffersCount / limit);
             let response = new ApiResponse(parentAuctions, page, pageCount, limit, winnedAuctionsOffersCount);
