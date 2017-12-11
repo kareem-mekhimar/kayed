@@ -145,7 +145,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            let userBarters = await Barter.find({ relatedUser: id }).populate('relatedCategory relatedUser')
+            let userBarters = await Barter.find({ relatedUser: id }).populate('relatedCategory relatedUser barterOffer')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
@@ -181,7 +181,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            let userAuctions = await Auction.find({ relatedUser: id }).populate('relatedCategory relatedUser')
+            let userAuctions = await Auction.find({ relatedUser: id }).populate('relatedCategory relatedUser auctionOffer')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
@@ -261,7 +261,7 @@ export default {
                 path: 'auction',
                 model: 'auction',
                 populate: {
-                  path: 'relatedUser relatedCategory'
+                  path: 'relatedUser relatedCategory auctionOffer'
                 }
             })
             .sort({ creationDate: -1 })
