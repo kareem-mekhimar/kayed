@@ -59,6 +59,7 @@ const AuctionSchema = new Schema({
 
 });
 
+AuctionSchema.index({ title: 'text', description: 'text'});
 
 AuctionSchema.set('toJSON', {
     transform: function (doc, ret, options) {

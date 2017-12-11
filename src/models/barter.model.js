@@ -55,6 +55,7 @@ const BarterSchema = new Schema({
         default: Date.now
     }
 });
+BarterSchema.index({ title: 'text', description: 'text'});
 
 BarterSchema.set('toJSON', {
     transform: function (doc, ret, options) {

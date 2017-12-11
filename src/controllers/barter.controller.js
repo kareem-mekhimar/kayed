@@ -99,7 +99,7 @@ export default {
             const newBarterId = mongoose.Types.ObjectId();
             if (req.body.imgs)
                 req.body.imgs = handleImgs(req.body.imgs, "barters", newBarterId , req);
-
+            
             const createdBarter = await Barter.create({_id: newBarterId , ...req.body});               
 
             const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');
