@@ -34,7 +34,6 @@ const server = http.Server(app);
 const io = new SocketIO(server);
 new EventHandler(io) ;
 
-
 app.use(cors());
 app.use(helmet());
 
