@@ -63,7 +63,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try { 
-            let barters = await Barter.find(query).populate('relatedCategory relatedUser')
+            let barters = await Barter.find(query).populate('relatedCategory relatedUser barterOffer')
                                 .sort({ creationDate: -1 })
                                 .limit(limit)
                                 .skip((page - 1) * limit);
@@ -99,7 +99,7 @@ export default {
             const newBarterId = mongoose.Types.ObjectId();
             if (req.body.imgs)
                 req.body.imgs = handleImgs(req.body.imgs, "barters", newBarterId , req);
-
+            
             const createdBarter = await Barter.create({_id: newBarterId , ...req.body});               
 
             const barter = await Barter.findById(createdBarter.id).populate('relatedCategory relatedUser');

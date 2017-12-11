@@ -6,6 +6,7 @@ import userRoute from "./user.route" ;
 import categoryRoute from "./category.route" ;
 import barterRoute from "./barter.route" ;
 import auctionRoute from "./auction.route" ;
+import searchRoute from "./search.route" ;
 
 const requireAuth = passport.authenticate('jwt',{ session : false }) ;
 
@@ -13,10 +14,14 @@ const router = express.Router();
   
 router.use("/", authRoute);
 
+router.use("/search", requireAuth, searchRoute);
+
 router.use("/users", requireAuth, userRoute);
 
 router.use("/categories", requireAuth, categoryRoute) ;
+
 router.use("/barters", requireAuth, barterRoute);
+
 router.use("/auctions", requireAuth, auctionRoute) ;
 
 

@@ -88,7 +88,7 @@ export default {
             countQuery.where("finished").equals(finished)
         }
 
-        findQuery.populate('relatedUser relatedCategory');
+        findQuery.populate('relatedUser relatedCategory auctionOffer');
 
         page = page ? parseInt(page) : 1;
         limit = limit ? limit : 20;
@@ -118,7 +118,7 @@ export default {
     async findById(req, res, next) {
 
         let id = req.params.id;
-        let auction = await Auction.findById(id).populate('relatedUser relatedCategory');
+        let auction = await Auction.findById(id).populate('relatedUser relatedCategory auctionOffer');
 
         if (!auction) {
             next(new ApiError(404, "Auction with this id not found"));
