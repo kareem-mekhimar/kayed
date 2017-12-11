@@ -20,9 +20,7 @@ class OfferMessageHandler{
            });
 
            socket.on("newMessage",async data => {
-               console.log(data) ;
                let message = await OfferMessage.create(data) ;
-               console.log(message);
                message = await OfferMessage.findById(message.id).populate("relatedUser") ;
               
                nsp.to(socket.room).emit("newMessage",message) ;

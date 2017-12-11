@@ -33,6 +33,7 @@ const app = express();
 const server = http.Server(app);
 const io = new SocketIO(server);
 new EventHandler(io) ;
+app.set('io', io);
 
 
 app.use(cors());

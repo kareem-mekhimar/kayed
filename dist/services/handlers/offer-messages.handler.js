@@ -47,24 +47,21 @@ var OfferMessageHandler = function () {
                             while (1) {
                                 switch (_context.prev = _context.next) {
                                     case 0:
-                                        console.log(data);
-                                        _context.next = 3;
+                                        _context.next = 2;
                                         return _offerMessage2.default.create(data);
 
-                                    case 3:
+                                    case 2:
                                         message = _context.sent;
-
-                                        console.log(message);
-                                        _context.next = 7;
+                                        _context.next = 5;
                                         return _offerMessage2.default.findById(message.id).populate("relatedUser");
 
-                                    case 7:
+                                    case 5:
                                         message = _context.sent;
 
 
                                         nsp.to(socket.room).emit("newMessage", message);
 
-                                    case 9:
+                                    case 7:
                                     case "end":
                                         return _context.stop();
                                 }

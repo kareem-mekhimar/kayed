@@ -8,6 +8,10 @@ var _auctionOffer = require("../models/auction-offer.model");
 
 var _auctionOffer2 = _interopRequireDefault(_auctionOffer);
 
+var _auctionNotification = require("../models/auction-notification.model");
+
+var _auctionNotification2 = _interopRequireDefault(_auctionNotification);
+
 var _user = require("../models/user.model");
 
 var _user2 = _interopRequireDefault(_user);
@@ -23,6 +27,8 @@ var _ApiError2 = _interopRequireDefault(_ApiError);
 var _auction = require("../models/auction.model");
 
 var _auction2 = _interopRequireDefault(_auction);
+
+var _assert = require("assert");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -69,7 +75,7 @@ exports.default = {
         var _this = this;
 
         return _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-            var auctionId, auction, result, offer;
+            var auctionId, auction, result, offer, notification, io, nsp;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
                 while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -88,7 +94,7 @@ exports.default = {
 
                             next(new _ApiError2.default(404, "Auction Not Found"));
 
-                            _context2.next = 28;
+                            _context2.next = 38;
                             break;
 
                         case 8:
@@ -104,7 +110,7 @@ exports.default = {
                             }
 
                             next(new _ApiError2.default(422, result.mapped()));
-                            _context2.next = 28;
+                            _context2.next = 38;
                             break;
 
                         case 15:
@@ -128,17 +134,36 @@ exports.default = {
                             auction.highestPrice = offer.price;
                             auction.save();
 
-                            registerMyOfferInAuction(auctionId, req.user.id);
-
-                            _context2.next = 26;
+                            _context2.next = 25;
                             return _auctionOffer2.default.findById(offer.id).populate("bidder relatedAuction");
 
-                        case 26:
+                        case 25:
                             offer = _context2.sent;
 
                             res.status(201).send(offer);
+                            registerMyOfferInAuction(auctionId, req.user.id);
 
-                        case 28:
+                            notification = {
+                                user: auction.relatedUser,
+                                relatedAuction: auctionId,
+                                bidder: req.user.id
+                            };
+                            _context2.next = 31;
+                            return _auctionNotification2.default.create(notification);
+
+                        case 31:
+                            notification = _context2.sent;
+                            _context2.next = 34;
+                            return _auctionNotification2.default.findById(notification.id).populate("bidder relatedAuction");
+
+                        case 34:
+                            notification = _context2.sent;
+                            io = req.app.get('io');
+                            nsp = io.of("/notifications/" + auction.relatedUser);
+
+                            nsp.emit("newMessage", notification);
+
+                        case 38:
                         case "end":
                             return _context2.stop();
                     }

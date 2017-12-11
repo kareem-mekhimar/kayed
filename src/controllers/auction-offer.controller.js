@@ -1,8 +1,10 @@
 import AuctionOffer from "../models/auction-offer.model";
+import AuctionOfferNotification from "../models/auction-notification.model" ;
 import User from "../models/user.model";
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import Auction from "../models/auction.model";
+import { notDeepEqual } from "assert";
 
 const validateAuctionOfferBody = (req, highestPrice) => {
     req.checkBody("bidder").notEmpty().withMessage("bidder Required")
@@ -51,10 +53,22 @@ export default {
                 auction.highestPrice = offer.price;
                 auction.save();
 
-                registerMyOfferInAuction(auctionId, req.user.id);
-
                 offer = await AuctionOffer.findById(offer.id).populate("bidder relatedAuction");
                 res.status(201).send(offer);
+                registerMyOfferInAuction(auctionId, req.user.id);
+
+
+                let notification = {
+                    user: auction.relatedUser,
+                    relatedAuction: auctionId,
+                    bidder: req.user.id
+                } ;
+                notification = await AuctionOfferNotification.create(notification) ;
+                notification = await AuctionOfferNotification.findById(notification.id).populate("bidder relatedAuction") ;
+              
+                let io = req.app.get('io');
+                let nsp = io.of("/notifications/"+auction.relatedUser) ;
+                nsp.emit("newMessage", notification) ;
             }
         }
 
