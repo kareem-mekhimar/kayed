@@ -9,6 +9,7 @@ import ApiError from "../helpers/ApiError";
 export default {
     async findAll(req, res, next) {
         let { id } = req.params;
+
         const user = await User.findById(id);
         if (!user)
             return next(new ApiError.NotFound('User'));

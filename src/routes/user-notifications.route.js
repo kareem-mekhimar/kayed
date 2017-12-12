@@ -41,7 +41,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /users/:id/notifications/auctions:
+ * /users/{id}/notifications/auctions:
  *   get:
  *     tags:
  *       - Notifications
@@ -142,7 +142,7 @@ const router = express.Router();
 
 /**
 * @swagger
-* /users/:id/notifications/auctions/unseen:
+* /users/{id}/notifications/auctions/unseen:
 *   get:
 *     tags:
 *       - Notifications
@@ -235,7 +235,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /users/:id/notifications/auctions/reset:
+ * /users/{id}/notifications/auctions/reset:
  *   put:
  *     tags:
  *       - Notifications
