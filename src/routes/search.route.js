@@ -17,6 +17,14 @@ const router = express.Router();
  *         in: "query"
  *         type: string
  *         description: Search Word
+ *       - name: "page"
+ *         in: "query"
+ *         type: number
+ *         default: 1
+ *       - name: "limit"
+ *         in: "query"
+ *         type: number
+ *         default: 20
  *     responses:
  *       200:
  *         description: |
@@ -110,7 +118,14 @@ const router = express.Router();
  *                           "inMyOffers": false,
  *                           "inMyFavourites": false
  *                       }
- *                   ]
+ *                   ],
+ *                   "links": {
+ *                       "self": "http://localhost:3000/api/v1/search?page=1&limit=20"
+ *                   },
+ *                   "page": 1,
+ *                   "pageCount": 1,
+ *                   "limit": 20,
+ *                   "totalCount": 3
  *               }
  */
 
