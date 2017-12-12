@@ -49,7 +49,7 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *      - name: id
+ *       - name: id
  *         in: path
  *         required: true
  *         type: string
