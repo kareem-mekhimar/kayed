@@ -3,17 +3,16 @@ import Barter from "../models/barter.model";
 import Auction from "../models/auction.model";
 import { ApiResponse2 } from "../helpers/ApiResponse"
 import { checkAllMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
+import { escapeRegExp } from 'lodash';
 
 export default {
     async search(req, res, next) {
         let { q, page, limit } = req.query;
-        if (!q) {
+        if (!q)
             res.send({ barters: [], auctions: [] });
-        }
-
-        let query = {
-            $text: { $search: q }
-        };
+        
+        const matchQueryRegx = new RegExp(escapeRegExp(q), 'i') // 'i' to convert upper case to lower.
+        let query = { '$or': [{ title: matchQueryRegx }, { description: matchQueryRegx }] };
 
         page = page ? parseInt(page) : 1;
         limit = limit ? parseInt(limit) : 10;
@@ -26,13 +25,13 @@ export default {
             let halfLimit = limit ? Math.ceil(limit / 2) : 5;
             let pageCount = Math.ceil(barterCount + auctionCount / limit);
 
-            
-            if (page == 1 && (barterCount < halfLimit || auctionCount< halfLimit))
+
+            if (page == 1 && (barterCount < halfLimit || auctionCount < halfLimit))
                 halfLimit += halfLimit - Math.min(barterCount, auctionCount)
-           
-            if (page > Math.ceil((Math.min(barterCount, auctionCount) / limit) * 2 ))
+
+            if (page > Math.ceil((Math.min(barterCount, auctionCount) / limit) * 2))
                 halfLimit = limit;
- 
+
             let barters = await Barter.find(query)
                 .populate('relatedCategory relatedUser')
                 .sort({ creationDate: -1 })
