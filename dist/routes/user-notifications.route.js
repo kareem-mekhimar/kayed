@@ -58,7 +58,7 @@ var router = _express2.default.Router();
  *     produces:
  *       - application/json
  *     parameters:
- *      - name: id
+ *       - name: id
  *         in: path
  *         required: true
  *         type: string
