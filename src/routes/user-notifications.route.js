@@ -49,6 +49,10 @@ const router = express.Router();
  *     produces:
  *       - application/json
  *     parameters:
+ *      - name: id
+ *         in: path
+ *         required: true
+ *         type: string
  *       - name: "page"
  *         in: "query"
  *         type: number
@@ -59,7 +63,7 @@ const router = express.Router();
  *         default: 20
  *     responses:
  *       200:
- *         description: Get An Array of Auctions
+ *         description: Get a page of auctions notifications
  *         example: 
  *               {
  *                   "links": {
@@ -145,9 +149,14 @@ const router = express.Router();
 *     summary: Get last 10 unseen notifications
 *     produces:
 *       - application/json
+*     parameters:
+*       - name: id
+*         in: path
+*         required: true
+*         type: string
 *     responses:
 *       200:
-*         description: Get An Array of Auctions
+*         description: Get An Array of Auctions Notifications
 *         example: 
 *               {
 *                   "links": {
@@ -233,9 +242,14 @@ const router = express.Router();
  *     summary: Reset notifications
  *     produces:
  *       - application/json 
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
  *     responses:
- *       201:
- *         description: Return Created Auction
+ *       204:
+ *         description: Success No Content
  *         example:           
  *               {
  *               "title": "new Car",

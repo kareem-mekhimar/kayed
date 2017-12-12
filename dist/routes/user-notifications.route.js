@@ -58,6 +58,10 @@ var router = _express2.default.Router();
  *     produces:
  *       - application/json
  *     parameters:
+ *      - name: id
+ *         in: path
+ *         required: true
+ *         type: string
  *       - name: "page"
  *         in: "query"
  *         type: number
@@ -68,7 +72,7 @@ var router = _express2.default.Router();
  *         default: 20
  *     responses:
  *       200:
- *         description: Get An Array of Auctions
+ *         description: Get a page of auctions notifications
  *         example: 
  *               {
  *                   "links": {
@@ -154,9 +158,14 @@ var router = _express2.default.Router();
 *     summary: Get last 10 unseen notifications
 *     produces:
 *       - application/json
+*     parameters:
+*       - name: id
+*         in: path
+*         required: true
+*         type: string
 *     responses:
 *       200:
-*         description: Get An Array of Auctions
+*         description: Get An Array of Auctions Notifications
 *         example: 
 *               {
 *                   "links": {
@@ -242,9 +251,14 @@ var router = _express2.default.Router();
  *     summary: Reset notifications
  *     produces:
  *       - application/json 
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         type: string
  *     responses:
- *       201:
- *         description: Return Created Auction
+ *       204:
+ *         description: Success No Content
  *         example:           
  *               {
  *               "title": "new Car",
