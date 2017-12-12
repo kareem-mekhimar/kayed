@@ -114,5 +114,6 @@ const router = express.Router();
  *               }
  */
 
+ 
 router.route('/').get(SearchController.search);
 export default router;

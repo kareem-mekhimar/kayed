@@ -1,6 +1,7 @@
 import express from "express";
 import UserController from "../controllers/user.controller";
 import userOffersRoute from "./user-offers.route" ;
+import userNotifications from "./user-notifications.route" ;
 
 const router = express.Router();
 
@@ -540,6 +541,7 @@ router.route('/:id/favourites/auctions')
 */
 router.route('/:id/favourites/auctions/:auctionId').delete(UserController.deleteFavAuction);
 
+router.use(userNotifications) ;
 router.use(userOffersRoute)
 
 export default router;
