@@ -67,7 +67,7 @@ export default {
                 notification = await AuctionOfferNotification.findById(notification.id).populate("bidder relatedAuction") ;
               
                 let io = req.app.get('io');
-                let nsp = io.of("/notifications/"+auction.relatedUser) ;
+                let nsp = io.of("/notifications/"+auction.relatedUser+"/auctions") ;
                 nsp.emit("newMessage", notification) ;
             }
         }
