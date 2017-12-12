@@ -189,9 +189,6 @@ const router = express.Router();
  *              - Provide at least one image
 */
 
-router.route('/')
-    .get(AuctionController.findAll)
-    .post(AuctionController.create)
 
 /**
  * @swagger
