@@ -103,11 +103,11 @@ export default {
         res.status(200).send({ user, token: generateToken(user.id) });
     },
 
+    
     async findById(req, res, next) {
         const { id } = req.params;
 
         let user = await User.findById(id);
-        
         if (!user)
             return next(new ApiError.NotFound("User"));
 

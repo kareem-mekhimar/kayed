@@ -76,9 +76,8 @@ export default {
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
        
-        const { barterId } = req.params;
-
         try {
+       
             const newBarterOfferId = mongoose.Types.ObjectId();
             if (req.body.imgs)
                 req.body.imgs = handleImgs(req.body.imgs, "barter-offers", newBarterOfferId , req);
@@ -88,11 +87,25 @@ export default {
             
             await Barter.findByIdAndUpdate(barterId, { $push: { offerUsers: req.user.id } });
 
+            const barterOffer = await BarterOffer.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');            
+            res.status(201).send(barterOffer);   
+
             registerMyOfferInBarter(barterId, req.user.id);
-                       
-            const barterOffer = await BarterOffer.findById(createdBarterOffer.id).populate('relatedBarter relatedUser');
-                        
-            res.status(201).send(barterOffer);            
+            
+
+            let barter = await Barter.findById(req.params.barterId);
+            
+            let barterOfferNotification = {
+                user: barter.relatedUser,
+                relatedBarter: barterId,
+                offerUser: req.user.id                
+            };
+            barterOfferNotification = await BarterOfferNotification.create(barterOfferNotification) ;
+            barterOfferNotification = await BarterOfferNotification.findById(barterOfferNotification.id).populate("offerUser relatedBarter") ;
+          
+            let io = req.app.get('io');
+            let nsp = io.of("/notifications/" + barter.relatedUser + "/barter-offers") ;
+            nsp.emit("newMessage", barterOfferNotification);
         }
         catch (err) {
             next(err);
