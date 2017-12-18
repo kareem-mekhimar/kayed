@@ -59,20 +59,18 @@ var UserSchema = new Schema({
 
 UserSchema.pre("save", function (next) {
     var account = this;
-    _bcryptjs2.default.genSalt(10).then(function (salt) {
-        _bcryptjs2.default.hash(account.password, salt).then(function (hash) {
-            account.password = hash;
-            next();
-        }).catch(function (err) {
-            return console.log(err);
-        });
+
+    _bcryptjs2.default.hash(account.password, 10).then(function (hash) {
+        account.password = hash;
+        next();
     }).catch(function (err) {
-        return next(err);
+        return console.log(err);
     });
 });
 
 UserSchema.methods.isValidPassword = function (newPassword, callback) {
-    _bcryptjs2.default.compare(newPassword, this.password, function (err, isMatch) {
+    var user = this;
+    _bcryptjs2.default.compare(newPassword, user.password, function (err, isMatch) {
         if (err) return callback(err);
 
         callback(null, isMatch);

@@ -47,22 +47,23 @@ const UserSchema = new Schema({
 
 UserSchema.pre("save", function (next) {
     const account = this;
-    bycrypt.genSalt(10).then(salt => {
-        bycrypt.hash(account.password, salt).then(hash => {
-            account.password = hash;
-            next();
-        }).catch(err => console.log(err));
-    }).catch(err => next(err));
+
+    bycrypt.hash(account.password, 10).then(hash => {
+        account.password = hash;
+        next();
+    }).catch(err => console.log(err));
 });
 
 UserSchema.methods.isValidPassword = function (newPassword, callback) {
-    bycrypt.compare(newPassword, this.password, function (err, isMatch) {
+    let user = this;
+    bycrypt.compare(newPassword, user.password, function (err, isMatch) {
         if (err)
             return callback(err);
 
         callback(null, isMatch);
     })
 };
+
 
 UserSchema.set('toJSON', {
     transform: function (doc, ret, options) {
