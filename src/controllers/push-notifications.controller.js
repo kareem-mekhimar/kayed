@@ -12,8 +12,8 @@ const validateSubcribtion = req => {
         if (userSub) 
             throw new Error("User is already subscribed");
     }).withMessage('User is already subscribed');
-    req.checkBody("keys.p256dh").notEmpty().withMessage("keys.p256dh required");
-    req.checkBody("keys.auth").notEmpty().withMessage("Keys.auth required");
+    // req.checkBody("keys.p256dh").notEmpty().withMessage("keys.p256dh required");
+    // req.checkBody("keys.auth").notEmpty().withMessage("Keys.auth required");
     return req.getValidationResult();
 }
 
