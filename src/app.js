@@ -31,7 +31,7 @@ mongoose.connection.on('disconnected', () => console.log('\x1b[31m%s\x1b[0m', '[
 
 const app = express();
 
-const server = http.Server(options, app);
+const server = http.Server(app);
 const io = new SocketIO(server);
 new EventHandler(io) ;
 app.set('io', io);

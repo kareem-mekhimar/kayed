@@ -87,7 +87,7 @@ _mongoose2.default.connection.on('disconnected', function () {
 
 var app = (0, _express2.default)();
 
-var server = _http2.default.Server(options, app);
+var server = _http2.default.Server(app);
 var io = new _socket2.default(server);
 new _handlers2.default(io);
 app.set('io', io);
