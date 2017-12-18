@@ -1,6 +1,6 @@
 import User from "../models/user.model";
 import PushNotification from '../models/push.model';
-import webPush from'web-push';
+import webPush from 'web-push';
 
 export async function sendNotificationToUser(title, body, userId) {
 
