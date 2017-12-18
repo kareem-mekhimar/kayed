@@ -19,10 +19,11 @@ const validateSubcribtion = req => {
 
 export default {
     async subscribe(req, res, next) {
+        console.log('BODY Of push notification: ', req.body);
+        
         const validationErrors = await validateSubcribtion(req);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
-        
         req.body.relatedUser = req.user.id;
         try {
             let pushNotification = await PushNotification.create(req.body);
@@ -34,7 +35,7 @@ export default {
                 console.log('Notification couldnt be saved to db.. ')
                 sendNotificationToUser('HIIIIIII' , { } , req.user.id);
             }
-            
+
             res.status(204).end();
         } catch(err) {
             next(err);
