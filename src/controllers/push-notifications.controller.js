@@ -4,7 +4,7 @@ import { ApiResponse2 } from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import { isUserNotExist } from "../helpers/CheckMethods";
 import PushNotification from '../models/push.model';
-
+import { sendNotificationToUser } from '../helpers/PushNotificationsHelper';
 
 const validateSubcribtion = req => {
     req.checkBody("endpoint").notEmpty().withMessage("endpoint required").custom(async value => { 
@@ -19,13 +19,23 @@ const validateSubcribtion = req => {
 
 export default {
     async subscribe(req, res, next) {
-        const validationErrors = await validateSubcribtion(req);
-        if (!validationErrors.isEmpty())
-            return next(new ApiError(422, validationErrors.mapped()));
+        console.log('BODY Of push notification: ', req.body);
         
+        // const validationErrors = await validateSubcribtion(req);
+        // if (!validationErrors.isEmpty())
+        //     return next(new ApiError(422, validationErrors.mapped()));
         req.body.relatedUser = req.user.id;
         try {
             let pushNotification = await PushNotification.create(req.body);
+            if (pushNotification) {
+                console.log('Notification Saved TO DB')
+                sendNotificationToUser('Welcome..' , { } , req.user.id);
+            }
+            else {
+                console.log('Notification couldnt be saved to db.. ')
+                sendNotificationToUser('HIIIIIII' , { } , req.user.id);
+            }
+
             res.status(204).end();
         } catch(err) {
             next(err);
@@ -33,9 +43,7 @@ export default {
     },
 
     async unsubscribe(req, res, next) {
-        
         await PushNotification.find({ relatedUser: req.user.id}).remove();
-
         req.status(204).end();
     }
 }
