@@ -22,10 +22,7 @@ export default {
         const validationErrors = await validateSubcribtion(req);
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
-
-        if(await isUserNotExist(req.params.id))
-            return next(new ApiError.NotFound('User'));
-
+        
         req.body.relatedUser = req.user.id;
         try {
             let pushNotification = await PushNotification.create(req.body);
@@ -36,9 +33,7 @@ export default {
     },
 
     async unsubscribe(req, res, next) {
-        if(isUserNotExist(req.params.id))
-            return next(new ApiError.NotFound('User'));
-
+        
         await PushNotification.find({ relatedUser: req.user.id}).remove();
 
         req.status(204).end();
