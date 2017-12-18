@@ -1,6 +1,5 @@
 import express from "express";
 import http from 'http';
-import https from 'https';
 import fs from 'fs';
 import path from "path";
 import bodyparser from "body-parser";
@@ -32,11 +31,8 @@ mongoose.connection.on('error', err => console.log('\x1b[31m%s\x1b[0m', '[DB] Er
 mongoose.connection.on('disconnected', () => console.log('\x1b[31m%s\x1b[0m', '[DB] DisConnected...'));
 
 const app = express();
-let options = {
-    key: fs.readFileSync('kayed-key.pem'),
-    cert: fs.readFileSync('kayed-cert.pem')
-};
-const server = https.Server(options, app);
+
+const server = http.Server(app);
 const io = new SocketIO(server);
 new EventHandler(io) ;
 app.set('io', io);

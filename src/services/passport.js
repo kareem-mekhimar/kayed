@@ -5,6 +5,7 @@ import passportLocal from "passport-local" ;
 import config from "../config" ;
 import User from "../models/user.model" ;
 
+
 const JwtStrategy = passportJwt.Strategy;
 const LocalStrategy = passportLocal.Strategy;
 const { ExtractJwt } = passportJwt ;
