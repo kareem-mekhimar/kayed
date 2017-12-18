@@ -7,7 +7,7 @@ import categoryRoute from "./category.route" ;
 import barterRoute from "./barter.route" ;
 import auctionRoute from "./auction.route" ;
 import searchRoute from "./search.route" ;
-
+import pushNotificationsRoute from './push-notifications.route';
 const requireAuth = passport.authenticate('jwt',{ session : false }) ;
 
 const router = express.Router();
@@ -24,5 +24,6 @@ router.use("/barters", requireAuth, barterRoute);
 
 router.use("/auctions", requireAuth, auctionRoute) ;
 
+router.use("/notifications", requireAuth, pushNotificationsRoute);
 
 export default router ;

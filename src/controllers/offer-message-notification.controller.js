@@ -1,29 +1,26 @@
 import User from "../models/user.model";
-import BarterOfferNotifcation from "../models/barter-offer-notification.model";
+import OfferMessageNotification from "../models/offer-message-notification.model";
 import { ApiResponse2 } from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
-import { isUserNotExist } from '../helpers/CheckMethods';
-
+import { isUserNotExist } from "../helpers/CheckMethods";
 
 export default {
     async findAll(req, res, next) {
-        
         if(await isUserNotExist(req.params.id))
-            return next(new ApiError.NotFound('User'));    
+            return next(new ApiError.NotFound('User'));
         
-
         let { page, limit } = req.query;
 
         page = page ? parseInt(page) : 1;
         limit = limit ? parseInt(limit) : 20;
 
         try {
-            let notifications = await BarterOfferNotifcation.find({ user: req.user.id }).populate("offerUser relatedBarter")
+            let notifications = await OfferMessageNotification.find({ user: req.user.id }).populate("offerUser relatedBarterOffer")
                 .sort({ creationDate: -1 })
                 .limit(limit)
                 .skip((page - 1) * limit);
 
-            const notificationsCount = await BarterOfferNotifcation.count({ user: req.user.id });
+            const notificationsCount = await OfferMessageNotification.count({ user: req.user.id });
 
             const pageCount = Math.ceil(notificationsCount / limit);
             let response = new ApiResponse2(notifications, page, pageCount, limit, notificationsCount, req);
@@ -38,10 +35,9 @@ export default {
     async findManyUnseen(req, res, next) {
 
         if(await isUserNotExist(req.params.id))
-            return next(new ApiError.NotFound('User'));    
-        
+            return next(new ApiError.NotFound('User'));        
 
-        let notifications = await BarterOfferNotifcation.find({ user: req.user.id, seen: false }).populate("offerUser relatedBarter")
+        let notifications = await OfferMessageNotification.find({ user: req.user.id, seen: false }).populate("offerUser relatedBarterOffer")
             .sort({ creationDate: -1 })
             .limit(10);
 
@@ -54,7 +50,7 @@ export default {
         if(await isUserNotExist(req.params.id))
             return next(new ApiError.NotFound('User'));    
 
-        await BarterOfferNotifcation.update({ user: req.user.id, seen: false }, { seen: true }, { multi: true });
+        await OfferMessageNotification.update({ user: req.user.id, seen: false }, { seen: true }, { multi: true });
 
         res.status(204).end();
     }

@@ -22,9 +22,11 @@ export default {
         }
 
         let messages = await OfferMessage.find({ relatedBarterOffer: offerId }).populate("relatedUser") ;
-        res.send(messages) ;
+        res.send(messages);
 
     },
-    
+
+
+
 
 }

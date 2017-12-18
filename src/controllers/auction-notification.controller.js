@@ -3,12 +3,13 @@ import User from "../models/user.model";
 import AuctionNotifcation from "../models/auction-notification.model";
 import ApiResponse2 from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
-import { checkUserExist } from '../helpers/CheckMethods';
+import { isUserNotExist } from '../helpers/CheckMethods';
 
 export default {
     async findAll(req, res, next) {
 
-        await checkUserExist(req.params.id, next);
+        if(await isUserNotExist(req.params.id))
+            return next(new ApiError.NotFound('User'));    
         
         let { page, limit } = req.query;
 
@@ -35,7 +36,8 @@ export default {
 
 
     async findUnseen(req, res, next) {
-        await checkUserExist(req.params.id, next);
+        if(await isUserNotExist(req.params.id))
+            return next(new ApiError.NotFound('User'));    
 
         let notifications = await AuctionNotifcation.find({ user: req.user.id, seen: false }).populate("bidder relatedAuction")
             .sort({ creationDate: -1 })
@@ -46,7 +48,8 @@ export default {
 
 
     async reset(req, res, next) {
-        await checkUserExist(req.params.id, next);
+        if(await isUserNotExist(req.params.id))
+            return next(new ApiError.NotFound('User'));    
 
         await AuctionNotifcation.update({ user: req.user.id, seen: false }, { seen: true }, { multi: true });
 

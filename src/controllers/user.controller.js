@@ -103,7 +103,7 @@ export default {
         res.status(200).send({ user, token: generateToken(user.id) });
     },
 
-    
+
     async findById(req, res, next) {
         const { id } = req.params;
 

@@ -1,7 +1,8 @@
 import OfferMessage from "../../models/offer-message.model";
 import Barter from "../../models/barter.model";
 import BarterOffer from "../../models/barter-offer.model";
-
+import OfferMessageNotification from "../../models/offer-message-notification.model";
+import { sendNotificationToUser} from '../../helpers/PushNotificationsHelper';
 class OfferMessageHandler {
 
     constructor(io) {
@@ -31,12 +32,23 @@ class OfferMessageHandler {
         })
     }
 
+
     async sendNotificationToOwner(message) {
         const barterOffer = await BarterOffer.findById(message.relatedBarterOffer);
         const barter = await Barter.findById(barterOffer.relatedBarter);
+        
         if (barter.relatedUser !== message.relatedUser) {
+            let offerMessageNotification = await OfferMessageNotification.create({ 
+                user: barter.relatedUser,
+                offerUser: message.relatedUser,
+                relatedBarterOffer: message.relatedBarterOffer
+            });
+            offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
+
             let nsp = this.io.of("/notifications/" + barter.relatedUser + "/offer-messages");
-            nsp.emit("newMessage", message);
+            nsp.emit("newMessage", OfferMessageNotification);
+
+            await sendNotificationToUser('رسالة جديدة', OfferMessageNotification, barter.relatedUser);
         }
     }
 }

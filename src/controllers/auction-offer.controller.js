@@ -5,6 +5,8 @@ import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import Auction from "../models/auction.model";
 import { notDeepEqual } from "assert";
+import { sendNotificationToUser } from '../helpers/PushNotificationsHelper';
+
 
 const validateAuctionOfferBody = (req, highestPrice) => {
     req.checkBody("bidder").notEmpty().withMessage("bidder Required")
@@ -69,6 +71,8 @@ export default {
                 let io = req.app.get('io');
                 let nsp = io.of("/notifications/"+auction.relatedUser+"/auctions") ;
                 nsp.emit("newMessage", notification) ;
+
+                sendNotificationToUser('مزايدة جديدة',notification, auction.relatedUser);
             }
         }
 

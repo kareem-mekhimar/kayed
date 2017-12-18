@@ -8,7 +8,8 @@ import cors from "cors";
 import expressValidator from "express-validator";
 import helmet from "helmet";
 import mongoose from "mongoose";
-import SocketIO from "socket.io" ;
+import SocketIO from "socket.io";
+import webPush from 'web-push';
 
 import EventHandler from "./services/handlers"
 import swaggerSpec from "./services/swagger";
@@ -43,6 +44,12 @@ app.set('io', io);
  
 app.use(cors());
 app.use(helmet());
+
+webPush.setVapidDetails(
+    'mailto:kimo@justmarkup.com',
+    "BNPqooZHrgEIqo_RkMV8WPadPAUJH6RKi1IVPJFwEr_PEVVqKC2etABtXp_ZpzMm28mBuul-TcPHOOXXjNlEcQs",
+    "QH-1Rr84rMfSvreQDjyhCxrC8eNTgnTbpAP_cGlOcdA"
+);
 
 
 app.get('/swagger.json', function (req, res) {

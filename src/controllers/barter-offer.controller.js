@@ -6,6 +6,7 @@ import { handleImgs }  from "../utils";
 
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
+import { sendNotificationToUser } from '../helpers/PushNotificationsHelper';
 
 const validateBarterOffer = (req, isUpdate = false) => {
     if (isUpdate)
@@ -106,6 +107,8 @@ export default {
             let io = req.app.get('io');
             let nsp = io.of("/notifications/" + barter.relatedUser + "/barter-offers") ;
             nsp.emit("newMessage", barterOfferNotification);
+
+            sendNotificationToUser('مقايضة جديدة',barterOfferNotification, barter.relatedUser);
         }
         catch (err) {
             next(err);
