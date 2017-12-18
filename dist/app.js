@@ -12,10 +12,6 @@ var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
 
-var _https = require('https');
-
-var _https2 = _interopRequireDefault(_https);
-
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -90,11 +86,8 @@ _mongoose2.default.connection.on('disconnected', function () {
 });
 
 var app = (0, _express2.default)();
-var options = {
-    key: _fs2.default.readFileSync('../kayed-key.pem'),
-    cert: _fs2.default.readFileSync('../kayed-cert.pem')
-};
-var server = _https2.default.Server(options, app);
+
+var server = _http2.default.Server(options, app);
 var io = new _socket2.default(server);
 new _handlers2.default(io);
 app.set('io', io);
