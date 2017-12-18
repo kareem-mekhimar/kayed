@@ -5,6 +5,7 @@ import webPush from 'web-push';
 export async function sendNotificationToUser(title, body, userId) {
 
     let userSubcribtions = await PushNotification.find({ relatedUser: userId });
+    console.log('Found UserSubscribtion', userSubcribtions);
     for(let userSub of userSubcribtions) {
         delete userSub.relatedUser;
 
