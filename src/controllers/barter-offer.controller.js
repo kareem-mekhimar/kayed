@@ -77,6 +77,7 @@ export default {
         if (!validationErrors.isEmpty())
             return next(new ApiError(422, validationErrors.mapped()));
        
+        let { barterId } = req.params;
         try {
        
             const newBarterOfferId = mongoose.Types.ObjectId();
@@ -94,7 +95,7 @@ export default {
             registerMyOfferInBarter(barterId, req.user.id);
             
 
-            let barter = await Barter.findById(req.params.barterId);
+            let barter = await Barter.findById(barterId);
             
             let barterOfferNotification = {
                 user: barter.relatedUser,

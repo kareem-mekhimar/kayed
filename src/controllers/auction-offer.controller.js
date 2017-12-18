@@ -38,13 +38,13 @@ export default {
 
         let auction = await Auction.findById(auctionId);
         if (!auction)
-            next(new ApiError(404, "Auction Not Found"));
+            return next(new ApiError(404, "Auction Not Found"));
 
         else {
             let result = await validateAuctionOfferBody(req, auction.highestPrice);
 
             if (!result.isEmpty())
-                next(new ApiError(422, result.mapped()));
+                return next(new ApiError(422, result.mapped()));
             else {
                 if(req.body.winned)
                     return next(new ApiError(403, "You aren't allowed to overwrite this field"));
