@@ -16,7 +16,7 @@ var swaggerDefinition = {
         version: '1.0.0',
         description: 'Kayed Rest Api'
     },
-    host: 'kayed-api.herokuapp.com',
+    host: 'localhost:3000',
     basePath: '/api/v1',
     securityDefinitions: {
         JWT: {
