@@ -1,20 +1,19 @@
 import User from "../models/user.model";
-import PushNotification from '../models/push.model';
-import webPush from 'web-push';
+import mongoose from "mongoose" ;
+import * as admin from "firebase-admin";
+
 
 export async function sendNotificationToUser(title, body, userId) {
-
-    let userSubcribtions = await PushNotification.find({ relatedUser: userId });
-    console.log('Found UserSubscribtion', userSubcribtions);
-    for(let userSub of userSubcribtions) {
-        delete userSub.relatedUser;
-
-        const payload = JSON.stringify({
-            title,
-            body,
-            icon: 'https://image.flaticon.com/icons/png/128/148/148921.png'
-          });
-      
-        await webPush.sendNotification(userSub, payload);
-    }
-}
+    const payload = {
+        title,
+        body,
+        icon: 'https://image.flaticon.com/icons/png/128/148/148921.png'
+    };
+    let newMessageId = new mongoose.Types.ObjectId();
+    let savedMessage = await admin.database().ref('messages/' + userId + '/' + newMessageId ).set(payload);
+    
+    if(savedMessage) 
+        console.log("Saved message ..");
+    else 
+        console.log("Unsaved Message...", savedMessage);
+}   

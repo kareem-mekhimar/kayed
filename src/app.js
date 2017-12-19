@@ -8,13 +8,13 @@ import expressValidator from "express-validator";
 import helmet from "helmet";
 import mongoose from "mongoose";
 import SocketIO from "socket.io";
-import webPush from 'web-push';
 
 import EventHandler from "./services/handlers"
 import swaggerSpec from "./services/swagger";
 import config from "./config";
 import router from "./routes";
 import * as AuctionWorker from "./services/auction-worker";
+import * as admin from "firebase-admin";
 
 
 mongoose.Promise = global.Promise;
@@ -26,9 +26,13 @@ mongoose.connection.on('connected', () => {
 
     AuctionWorker.start();
 });
-
 mongoose.connection.on('error', err => console.log('\x1b[31m%s\x1b[0m', '[DB] Error : ' + err));
 mongoose.connection.on('disconnected', () => console.log('\x1b[31m%s\x1b[0m', '[DB] DisConnected...'));
+
+admin.initializeApp({
+  credential: admin.credential.cert(config.adminFirebase),
+  databaseURL: "https://kayed-c0a37.firebaseio.com"
+});
 
 const app = express();
 
@@ -40,12 +44,6 @@ app.set('io', io);
  
 app.use(cors());
 app.use(helmet());
-
-webPush.setVapidDetails(
-    'mailto:kimo@justmarkup.com',
-    "BNPqooZHrgEIqo_RkMV8WPadPAUJH6RKi1IVPJFwEr_PEVVqKC2etABtXp_ZpzMm28mBuul-TcPHOOXXjNlEcQs",
-    "QH-1Rr84rMfSvreQDjyhCxrC8eNTgnTbpAP_cGlOcdA"
-);
 
 
 app.get('/swagger.json', function (req, res) {
