@@ -19,7 +19,7 @@ var sendNotificationToUser = exports.sendNotificationToUser = function () {
                         };
                         newMessageId = new _mongoose2.default.Types.ObjectId();
                         _context.next = 4;
-                        return admin.database().ref('messages/' + userId + '/' + newMessageId).set(payload);
+                        return admin.database().ref('messages').child(userId).child("sdfsfdfd").set(payload);
 
                     case 4:
                         savedMessage = _context.sent;
