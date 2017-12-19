@@ -95,45 +95,48 @@ var OfferMessageHandler = function () {
         key: "sendNotificationToOwner",
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(message) {
-                var barterOffer, barter, offerMessageNotification, targetUserId, nsp;
+                var barterOffer, barter, fromUserId, targetUserId, offerMessageNotification, nsp;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
-                                console.log("Send to owner");
-                                _context2.next = 3;
+                                _context2.next = 2;
                                 return _barterOffer2.default.findById(message.relatedBarterOffer);
 
-                            case 3:
+                            case 2:
                                 barterOffer = _context2.sent;
-                                _context2.next = 6;
+                                _context2.next = 5;
                                 return _barter2.default.findById(barterOffer.relatedBarter);
 
-                            case 6:
+                            case 5:
                                 barter = _context2.sent;
-                                _context2.next = 9;
-                                return _offerMessageNotification2.default.create({
-                                    user: barter.relatedUser,
-                                    offerUser: message.relatedUser,
-                                    relatedBarterOffer: message.relatedBarterOffer
-                                });
-
-                            case 9:
-                                offerMessageNotification = _context2.sent;
+                                fromUserId = null;
                                 targetUserId = null;
 
 
                                 if (barterOffer.relatedUser == offerMessageNotification.user) {
                                     // Send To owner
                                     targetUserId = barter.relatedUser;
+                                    fromUserId = barterOffer.relatedUser;
                                 } else {
                                     // Send to offer guy
                                     targetUserId = barterOffer.relatedUser;
+                                    fromUserId = barter.relatedUser;
                                 }
 
+                                _context2.next = 11;
+                                return _offerMessageNotification2.default.create({
+                                    user: targetUserId,
+                                    fromUser: fromUserId,
+                                    relatedBarterOffer: barterOffer.id,
+                                    relatedBarter: barter.id
+                                });
+
+                            case 11:
+                                offerMessageNotification = _context2.sent;
                                 nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
                                 _context2.next = 15;
-                                return _offerMessageNotification2.default.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
+                                return _offerMessageNotification2.default.findById(offerMessageNotification.id).populate('fromUser');
 
                             case 15:
                                 offerMessageNotification = _context2.sent;

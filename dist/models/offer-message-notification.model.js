@@ -19,12 +19,17 @@ var OfferMessageNotificationSchema = new Schema({
         ref: 'user',
         required: true
     },
-    offerUser: {
+    fromUser: {
         type: Schema.Types.ObjectId,
         ref: 'user',
         required: true
     },
     relatedBarterOffer: {
+        type: Schema.Types.ObjectId,
+        ref: "barterOffer",
+        required: true
+    },
+    relatedBarter: {
         type: Schema.Types.ObjectId,
         ref: "barter",
         required: true
