@@ -75,7 +75,7 @@ var OfferMessageHandler = function () {
                                         nsp.to(socket.room).emit("newMessage", message);
 
                                         _context.next = 9;
-                                        return sendNotificationToOwner(message);
+                                        return _this.sendNotificationToOwner(message);
 
                                     case 9:
                                     case "end":
@@ -95,27 +95,22 @@ var OfferMessageHandler = function () {
         key: "sendNotificationToOwner",
         value: function () {
             var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(message) {
-                var barterOffer, barter, offerMessageNotification, nsp;
+                var barterOffer, barter, offerMessageNotification, targetUserId, nsp;
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                     while (1) {
                         switch (_context2.prev = _context2.next) {
                             case 0:
-                                _context2.next = 2;
+                                console.log("Send to owner");
+                                _context2.next = 3;
                                 return _barterOffer2.default.findById(message.relatedBarterOffer);
 
-                            case 2:
+                            case 3:
                                 barterOffer = _context2.sent;
-                                _context2.next = 5;
+                                _context2.next = 6;
                                 return _barter2.default.findById(barterOffer.relatedBarter);
 
-                            case 5:
+                            case 6:
                                 barter = _context2.sent;
-
-                                if (!(barter.relatedUser !== message.relatedUser)) {
-                                    _context2.next = 17;
-                                    break;
-                                }
-
                                 _context2.next = 9;
                                 return _offerMessageNotification2.default.create({
                                     user: barter.relatedUser,
@@ -125,19 +120,30 @@ var OfferMessageHandler = function () {
 
                             case 9:
                                 offerMessageNotification = _context2.sent;
-                                _context2.next = 12;
+                                targetUserId = null;
+
+
+                                if (barterOffer.relatedUser == offerMessageNotification.user) {
+                                    // Send To owner
+                                    targetUserId = barter.relatedUser;
+                                } else {
+                                    // Send to offer guy
+                                    targetUserId = barterOffer.relatedUser;
+                                }
+
+                                nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
+                                _context2.next = 15;
                                 return _offerMessageNotification2.default.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
 
-                            case 12:
+                            case 15:
                                 offerMessageNotification = _context2.sent;
-                                nsp = this.io.of("/notifications/" + barter.relatedUser + "/offer-messages");
 
-                                nsp.emit("newMessage", _offerMessageNotification2.default);
+                                nsp.emit("newMessage", offerMessageNotification);
 
-                                _context2.next = 17;
-                                return (0, _PushNotificationsHelper.sendNotificationToUser)('رسالة جديدة', _offerMessageNotification2.default, barter.relatedUser);
+                                _context2.next = 19;
+                                return (0, _PushNotificationsHelper.sendNotificationToUser)('رسالة جديدة', offerMessageNotification, targetUserId);
 
-                            case 17:
+                            case 19:
                             case "end":
                                 return _context2.stop();
                         }

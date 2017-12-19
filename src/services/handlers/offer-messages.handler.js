@@ -27,29 +27,38 @@ class OfferMessageHandler {
                 message = await OfferMessage.findById(message.id).populate("relatedUser");
                 nsp.to(socket.room).emit("newMessage", message);
 
-                await sendNotificationToOwner(message);
+                await this.sendNotificationToOwner(message);
             });
         })
     }
 
 
     async sendNotificationToOwner(message) {
+        console.log("Send to owner") ;
         const barterOffer = await BarterOffer.findById(message.relatedBarterOffer);
         const barter = await Barter.findById(barterOffer.relatedBarter);
         
-        if (barter.relatedUser !== message.relatedUser) {
-            let offerMessageNotification = await OfferMessageNotification.create({ 
-                user: barter.relatedUser,
-                offerUser: message.relatedUser,
-                relatedBarterOffer: message.relatedBarterOffer
-            });
-            offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
+        let offerMessageNotification = await OfferMessageNotification.create({ 
+            user: barter.relatedUser,
+            offerUser: message.relatedUser,
+            relatedBarterOffer: message.relatedBarterOffer
+        });
 
-            let nsp = this.io.of("/notifications/" + barter.relatedUser + "/offer-messages");
-            nsp.emit("newMessage", OfferMessageNotification);
-
-            await sendNotificationToUser('رسالة جديدة', OfferMessageNotification, barter.relatedUser);
+        let targetUserId = null ;
+        
+        if(barterOffer.relatedUser == offerMessageNotification.user){ // Send To owner
+             targetUserId = barter.relatedUser ;
         }
+        else{ // Send to offer guy
+             targetUserId = barterOffer.relatedUser ; 
+        }
+        
+        let nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
+
+        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
+        nsp.emit("newMessage", offerMessageNotification);
+
+        await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId);
     }
 }
 
