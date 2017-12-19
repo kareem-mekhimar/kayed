@@ -51,7 +51,6 @@ class OfferMessageHandler {
         }
 
 
-        
         let offerMessageNotification = await OfferMessageNotification.create({ 
             user: targetUserId,
             fromUser: fromUserId,
