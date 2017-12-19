@@ -65,7 +65,7 @@ class OfferMessageHandler {
         offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('fromUser');
         nsp.emit("newMessage", offerMessageNotification);
 
-        await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId);
+        await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId, `barters/${barter.id}/offers/${barterOffer.id}`);
     }
 }
 
