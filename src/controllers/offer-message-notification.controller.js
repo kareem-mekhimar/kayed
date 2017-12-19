@@ -15,12 +15,12 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try {
-            let notifications = await OfferMessageNotification.find({ user: req.user.id }).populate("fromUser")
+            let notifications = await OfferMessageNotification.find({ user: req.params.id }).populate("fromUser")
                 .sort({ creationDate: -1 })
                 .limit(limit)
                 .skip((page - 1) * limit);
 
-            const notificationsCount = await OfferMessageNotification.count({ user: req.user.id });
+            const notificationsCount = await OfferMessageNotification.count({ user: req.params.id });
 
             const pageCount = Math.ceil(notificationsCount / limit);
             let response = new ApiResponse2(notifications, page, pageCount, limit, notificationsCount, req);
@@ -37,7 +37,7 @@ export default {
         if(await isUserNotExist(req.params.id))
             return next(new ApiError.NotFound('User'));        
 
-        let notifications = await OfferMessageNotification.find({ user: req.user.id, seen: false }).populate("fromUser")
+        let notifications = await OfferMessageNotification.find({ user: req.params.id, seen: false }).populate("fromUser")
             .sort({ creationDate: -1 })
             .limit(10);
 
@@ -50,7 +50,7 @@ export default {
         if(await isUserNotExist(req.params.id))
             return next(new ApiError.NotFound('User'));    
 
-        await OfferMessageNotification.update({ user: req.user.id, seen: false }, { seen: true }, { multi: true });
+        await OfferMessageNotification.update({ user: req.params.id, seen: false }, { seen: true }, { multi: true });
 
         res.status(204).end();
     }
