@@ -114,7 +114,7 @@ var OfferMessageHandler = function () {
                                 targetUserId = null;
 
 
-                                if (barterOffer.relatedUser == offerMessageNotification.user) {
+                                if (barterOffer.relatedUser == message.relatedUser.id) {
                                     // Send To owner
                                     targetUserId = barter.relatedUser;
                                     fromUserId = barterOffer.relatedUser;

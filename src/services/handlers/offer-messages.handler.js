@@ -41,7 +41,7 @@ class OfferMessageHandler {
         let fromUserId = null ;
         let targetUserId = null ;
         
-        if(barterOffer.relatedUser == offerMessageNotification.user){ // Send To owner
+        if(barterOffer.relatedUser == message.relatedUser.id){ // Send To owner
              targetUserId = barter.relatedUser ;
              fromUserId = barterOffer.relatedUser ;
         }
