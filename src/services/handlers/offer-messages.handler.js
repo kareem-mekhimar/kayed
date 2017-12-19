@@ -34,28 +34,36 @@ class OfferMessageHandler {
 
 
     async sendNotificationToOwner(message) {
-        console.log("Send to owner") ;
+        
         const barterOffer = await BarterOffer.findById(message.relatedBarterOffer);
         const barter = await Barter.findById(barterOffer.relatedBarter);
         
-        let offerMessageNotification = await OfferMessageNotification.create({ 
-            user: barter.relatedUser,
-            offerUser: message.relatedUser,
-            relatedBarterOffer: message.relatedBarterOffer
-        });
-
+        let fromUserId = null ;
         let targetUserId = null ;
         
         if(barterOffer.relatedUser == offerMessageNotification.user){ // Send To owner
              targetUserId = barter.relatedUser ;
+             fromUserId = barterOffer.relatedUser ;
         }
         else{ // Send to offer guy
              targetUserId = barterOffer.relatedUser ; 
+             fromUserId = barter.relatedUser  ;
         }
+
+
+        
+        let offerMessageNotification = await OfferMessageNotification.create({ 
+            user: targetUserId,
+            fromUser: fromUserId,
+            relatedBarterOffer: barterOffer.id,
+            relatedBarter: barter.id
+        });
+
+
         
         let nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
 
-        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
+        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('fromUser');
         nsp.emit("newMessage", offerMessageNotification);
 
         await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId);
