@@ -9,20 +9,9 @@ const router = express.Router();
 * definitions:
 *   PushNotification:
 *     type: "object"
-*     required:
-*     - "title"
-*     - "description"
-*     - "neededProduct"
-*     - "relatedUser"
-*     - "relatedCategory"
 *     properties:
-*       id:
+*       token:
 *         type: string
-*         readOnly: true
-*       endpoint:
-*         type: string
-*       keys:
-*         type: object
 */
 
 
@@ -42,25 +31,13 @@ const router = express.Router();
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/PushNotification'   
+ *           $ref: '#/definitions/PushNotification'
  *     responses:
  *       204:
  *         description: Success
  *       422:
  *         description: |
- *              - relatedBarter is Required
- *              - Enter a valid barter id
- *              ----------------------------
- *              - relatedUser is Required
- *              - Enter a valid user id
- *              ----------------------------
- *              - description is Required 
- *              - offeredProduct is Required 
- *              ----------------------------
- *              - imgs is Required 
- *              - Imgs Should be an array of imgs's urls
- *              ----------------------------
- *              - Optional status: you can't overwrite status it's PENDING by default
+ *              - To Be Added
  */
  
  

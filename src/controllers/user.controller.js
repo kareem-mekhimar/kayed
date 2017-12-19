@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 import { writeBase64AndReturnUrl, isValidImgUrl } from "../utils";
 import { checkAllMyOfferAndFavouriteIn, checkMyOfferAndFavouriteIn } from "../helpers/Barter&AuctionHelper";
-
+import { sendNotificationToUser } from "../helpers/PushNotificationsHelper"
 const { jwtSecret } = config;
 
 
@@ -148,6 +148,7 @@ export default {
 
 
     async getUserBarters(req, res, next) {
+        sendNotificationToUser('Abooooooooooooo Ragab', {}, "5a37cc5ec657200c4a93536f", "");
         let { id } = req.params;
         checkIfUserExist(id, next);
 

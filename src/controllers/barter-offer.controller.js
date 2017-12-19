@@ -109,7 +109,7 @@ export default {
             let nsp = io.of("/notifications/" + barter.relatedUser + "/barter-offers") ;
             nsp.emit("newMessage", barterOfferNotification);
 
-            sendNotificationToUser('مقايضة جديدة',barterOfferNotification, barter.relatedUser);
+            sendNotificationToUser('مقايضة جديدة',barterOfferNotification, barter.relatedUser, `barters/${barter.id}`);
         }
         catch (err) {
             next(err);

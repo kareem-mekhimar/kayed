@@ -6,20 +6,11 @@ import { isUserNotExist } from "../helpers/CheckMethods";
 import { sendNotificationToUser } from '../helpers/PushNotificationsHelper';
 import * as admin from "firebase-admin";
 
-// const validateSubcribtion = req => {
-//     req.checkBody("endpoint").notEmpty().withMessage("endpoint required").custom(async value => { 
-//         let userSub = PushNotification.findOne({endpoint: value, relatedUser: req.user.id})
-//         if (userSub) 
-//             throw new Error("User is already subscribed");
-//     }).withMessage('User is already subscribed');
-//     req.checkBody("keys.p256dh").notEmpty().withMessage("keys.p256dh required");
-//     req.checkBody("keys.auth").notEmpty().withMessage("Keys.auth required");
-//     return req.getValidationResult();
-// }
-
 export default {
     async subscribe(req, res, next) {
-        console.log('BODY Of push notification: ', req.body);
+        let { token } = req.body;
+        if(!token)
+            return next(new ApiError.NotFound('Token'));
         
         try {
             await admin.database().ref('fcmTokens/').set({ [req.user.id]: req.body.token });
@@ -28,6 +19,7 @@ export default {
             next(err);
         }    
     },
+
 
     async unsubscribe(req, res, next) {
         try{

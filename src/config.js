@@ -19,5 +19,6 @@ config.adminFirebase= {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-sx8wc%40kayed-c0a37.iam.gserviceaccount.com"
 };
-
+config.serverKeyFirebase = "AAAAH1caNVA:APA91bHLvP5LVxrbM0gK-Rl6fkXqcCJ2vr8qR3uaugciPFb5-S5hHwSv6APihEeuZvNWgzGH0bFvdiTWydgJfvIqtI-RPhyXmgWHRXOepWGhmbDM9yN7n7VOfJbWIj-qsrDwCLYgrr80"
+config.clientUrl = "localhost:4200"
 export default config ;

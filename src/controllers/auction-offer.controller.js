@@ -64,7 +64,7 @@ export default {
                     user: auction.relatedUser,
                     relatedAuction: auctionId,
                     bidder: req.user.id
-                } ;
+                };
                 notification = await AuctionOfferNotification.create(notification) ;
                 notification = await AuctionOfferNotification.findById(notification.id).populate("bidder relatedAuction") ;
               
@@ -72,7 +72,7 @@ export default {
                 let nsp = io.of("/notifications/"+auction.relatedUser+"/auctions") ;
                 nsp.emit("newMessage", notification) ;
 
-                sendNotificationToUser('مزايدة جديدة',notification, auction.relatedUser);
+                sendNotificationToUser('مزايدة جديدة', notification, auction.relatedUser, `auctions/${auction.id}`);
             }
         }
 

@@ -48,7 +48,7 @@ class OfferMessageHandler {
             let nsp = this.io.of("/notifications/" + barter.relatedUser + "/offer-messages");
             nsp.emit("newMessage", OfferMessageNotification);
 
-            await sendNotificationToUser('رسالة جديدة', OfferMessageNotification, barter.relatedUser);
+            sendNotificationToUser('رسالة جديدة', OfferMessageNotification, barter.relatedUser, `barters/${barter.id}/offers/${barterOffer.id}`);
         }
     }
 }
