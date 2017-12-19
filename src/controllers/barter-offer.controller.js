@@ -3,7 +3,7 @@ import BarterOffer from "../models/barter-offer.model";
 import User from "../models/user.model";
 import mongoose from "mongoose" ;
 import { handleImgs }  from "../utils";
-
+import BarterOfferNotification from "../models/barter-offer-notification.model";
 import ApiResponse from "../helpers/ApiResponse";
 import ApiError from "../helpers/ApiError";
 import { sendNotificationToUser } from '../helpers/PushNotificationsHelper';
@@ -109,7 +109,7 @@ export default {
             let nsp = io.of("/notifications/" + barter.relatedUser + "/barter-offers") ;
             nsp.emit("newMessage", barterOfferNotification);
 
-            sendNotificationToUser('مقايضة جديدة',barterOfferNotification, barter.relatedUser, `barters/${barter.id}`);
+            sendNotificationToUser('مقايضة جديدة', ` أرسل إليك طلب خدمة : ${barterOfferNotification.offerUser.fullName}`, barter.relatedUser, `barters/${barter.id}`);
         }
         catch (err) {
             next(err);

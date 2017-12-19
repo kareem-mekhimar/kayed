@@ -72,7 +72,7 @@ export default {
                 let nsp = io.of("/notifications/"+auction.relatedUser+"/auctions") ;
                 nsp.emit("newMessage", notification) ;
 
-                sendNotificationToUser('مزايدة جديدة', notification, auction.relatedUser, `auctions/${auction.id}`);
+                sendNotificationToUser('مزايدة جديدة', `${auction.title} : قام بالمزايدة على  ${offer.bidder.fullName}` , auction.relatedUser, `auctions/${auction.id}`);
             }
         }
 
