@@ -62,7 +62,7 @@ class OfferMessageHandler {
         
         let nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
 
-        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('fromUser');
+        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('fromUser relatedBarter');
         nsp.emit("newMessage", offerMessageNotification);
 
         await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId, `barters/${barter.id}/offers/${barterOffer.id}`);

@@ -15,7 +15,7 @@ export default {
         limit = limit ? parseInt(limit) : 20;
 
         try {
-            let notifications = await OfferMessageNotification.find({ user: req.params.id }).populate("fromUser")
+            let notifications = await OfferMessageNotification.find({ user: req.params.id }).populate("fromUser relatedBarter")
                 .sort({ creationDate: -1 })
                 .limit(limit)
                 .skip((page - 1) * limit);
@@ -37,7 +37,7 @@ export default {
         if(await isUserNotExist(req.params.id))
             return next(new ApiError.NotFound('User'));        
 
-        let notifications = await OfferMessageNotification.find({ user: req.params.id, seen: false }).populate("fromUser")
+        let notifications = await OfferMessageNotification.find({ user: req.params.id, seen: false }).populate("fromUser relatedBarter")
             .sort({ creationDate: -1 })
             .limit(10);
 

@@ -136,7 +136,7 @@ var OfferMessageHandler = function () {
                                 offerMessageNotification = _context2.sent;
                                 nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
                                 _context2.next = 15;
-                                return _offerMessageNotification2.default.findById(offerMessageNotification.id).populate('fromUser');
+                                return _offerMessageNotification2.default.findById(offerMessageNotification.id).populate('fromUser relatedBarter');
 
                             case 15:
                                 offerMessageNotification = _context2.sent;

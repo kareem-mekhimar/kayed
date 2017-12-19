@@ -55,7 +55,7 @@ exports.default = {
 
                             _context.prev = 7;
                             _context.next = 10;
-                            return _offerMessageNotification2.default.find({ user: req.params.id }).populate("fromUser").sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
+                            return _offerMessageNotification2.default.find({ user: req.params.id }).populate("fromUser relatedBarter").sort({ creationDate: -1 }).limit(limit).skip((page - 1) * limit);
 
                         case 10:
                             notifications = _context.sent;
@@ -108,7 +108,7 @@ exports.default = {
 
                         case 4:
                             _context2.next = 6;
-                            return _offerMessageNotification2.default.find({ user: req.params.id, seen: false }).populate("fromUser").sort({ creationDate: -1 }).limit(10);
+                            return _offerMessageNotification2.default.find({ user: req.params.id, seen: false }).populate("fromUser relatedBarter").sort({ creationDate: -1 }).limit(10);
 
                         case 6:
                             notifications = _context2.sent;
