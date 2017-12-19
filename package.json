@@ -37,6 +37,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.2",
     "express-validator": "^4.3.0",
+    "firebase-admin": "^5.5.1",
     "helmet": "^3.9.0",
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
