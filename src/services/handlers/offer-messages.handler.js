@@ -27,29 +27,45 @@ class OfferMessageHandler {
                 message = await OfferMessage.findById(message.id).populate("relatedUser");
                 nsp.to(socket.room).emit("newMessage", message);
 
-                await sendNotificationToOwner(message);
+                await this.sendNotificationToOwner(message);
             });
         })
     }
 
 
     async sendNotificationToOwner(message) {
+        
         const barterOffer = await BarterOffer.findById(message.relatedBarterOffer);
         const barter = await Barter.findById(barterOffer.relatedBarter);
         
-        if (barter.relatedUser !== message.relatedUser) {
-            let offerMessageNotification = await OfferMessageNotification.create({ 
-                user: barter.relatedUser,
-                offerUser: message.relatedUser,
-                relatedBarterOffer: message.relatedBarterOffer
-            });
-            offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('offerUser relatedBarterOffer');
-
-            let nsp = this.io.of("/notifications/" + barter.relatedUser + "/offer-messages");
-            nsp.emit("newMessage", OfferMessageNotification);
-
-            sendNotificationToUser('رسالة جديدة', OfferMessageNotification, barter.relatedUser, `barters/${barter.id}/offers/${barterOffer.id}`);
+        let fromUserId = null ;
+        let targetUserId = null ;
+        
+        if(barterOffer.relatedUser == message.relatedUser.id){ // Send To owner
+             targetUserId = barter.relatedUser ;
+             fromUserId = barterOffer.relatedUser ;
         }
+        else{ // Send to offer guy
+             targetUserId = barterOffer.relatedUser ; 
+             fromUserId = barter.relatedUser  ;
+        }
+
+
+        let offerMessageNotification = await OfferMessageNotification.create({ 
+            user: targetUserId,
+            fromUser: fromUserId,
+            relatedBarterOffer: barterOffer.id,
+            relatedBarter: barter.id
+        });
+
+
+        
+        let nsp = this.io.of("/notifications/" + targetUserId + "/offer-messages");
+
+        offerMessageNotification = await OfferMessageNotification.findById(offerMessageNotification.id).populate('fromUser');
+        nsp.emit("newMessage", offerMessageNotification);
+
+        await sendNotificationToUser('رسالة جديدة', offerMessageNotification, targetUserId);
     }
 }
 
