@@ -13,7 +13,7 @@ export default {
             return next(new ApiError.NotFound('Token'));
         
         try {
-            await admin.database().ref('fcmTokens/').set({ [req.user.id]: req.body.token });
+            await admin.database().ref('fcmTokens').child(req.user.id).set(token);
             res.status(204).end();
         } catch(err) {
             next(err);
