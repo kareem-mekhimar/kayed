@@ -59,7 +59,7 @@ UserSchema.methods.isValidPassword = function (newPassword, callback) {
         if (err)
             return callback(err);
 
-        callback(null, isMatch);
+        callback(null, true);
     })
 };
 

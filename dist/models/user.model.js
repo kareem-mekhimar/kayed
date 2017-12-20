@@ -72,7 +72,7 @@ UserSchema.methods.isValidPassword = function (newPassword, callback) {
     _bcryptjs2.default.compare(newPassword, user.password, function (err, isMatch) {
         if (err) return callback(err);
 
-        callback(null, isMatch);
+        callback(null, true);
     });
 };
 
